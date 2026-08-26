@@ -5,8 +5,16 @@
 #   Landing page: introduction + Physical/Transition risk choice
 #   Tier 1: risk type (Physical / Transition) - top-level tabs in the dashboard
 #   Tier 2: hazard type (physical-risk branch only, per Section 2.4 Table X)
-#   Facets: source type, cost, technical effort, legal usability
+#   Facets: source type, operator type, technical effort, legal usability, API
 #           (applied across whichever tier(s) the user has navigated through)
+#
+# Results are shown as a clickable card grid (source, description, operator,
+# plus at-a-glance badges); clicking a card opens a detailed view in the
+# Source detail sub-tab. cost_category is intentionally not used anywhere in
+# the app - in this data set it is a 1:1 restatement of source_type
+# (Public = Free, Commercial = Paid), so source_type alone covers it without
+# a redundant facet/badge. The column stays in data/sources.csv untouched,
+# to keep the CSV 1:1 with the thesis Excel artefact (Appendix C).
 #
 # Data layer: R/load_data.R reads the four normalized CSVs described in
 # Appendix C (sources.csv, hazard_coverage.csv, d01_mapping.csv,
@@ -17,7 +25,6 @@
 library(shiny)
 library(bslib)
 library(dplyr)
-library(DT)
 
 source("R/load_data.R")
 
@@ -40,6 +47,13 @@ RELEVANCE_DEFS <- c(
   "Methodological" = "Provides a replicable methodology rather than ready-made data."
 )
 
+RELEVANCE_COLORS <- c(
+  "Primary"        = "#d4edda",
+  "Supplementary"  = "#fff3cd",
+  "Context only"   = "#f8f9fa",
+  "Methodological" = "#d1ecf1"
+)
+
 # ------------------------------------------------------------
 # Shared helpers (pure functions, reused for both the Physical
 # and Transition tabs so the filtering/rendering logic lives once)
@@ -52,7 +66,6 @@ filter_sources <- function(risk_value,
                             hazard_types         = character(0),
                             sel_source_type      = "All",
                             sel_operator_type    = "All",
-                            sel_cost_category    = "All",
                             sel_technical_effort = "All",
                             sel_access_status    = "All",
                             sel_has_api          = FALSE) {
@@ -68,7 +81,6 @@ filter_sources <- function(risk_value,
   # Facets
   if (sel_source_type      != "All") df <- df %>% filter(source_type      == sel_source_type)
   if (sel_operator_type    != "All") df <- df %>% filter(operator_type    == sel_operator_type)
-  if (sel_cost_category    != "All") df <- df %>% filter(cost_category    == sel_cost_category)
   if (sel_technical_effort != "All") {
     max_level <- factor(sel_technical_effort, levels = c("Low", "Medium", "High"), ordered = TRUE)
     df <- df %>% filter(technical_effort <= max_level)
@@ -77,122 +89,156 @@ filter_sources <- function(risk_value,
   if (sel_has_api)                df <- df %>% filter(api == "Yes")
 
   df %>%
-    select(source_id, source_name, operator, source_type, operator_type,
-           relevance_level, geographic_scope, granularity_level,
-           cost_category, technical_effort, access_status, portfolio_ready)
+    select(source_id, source_name, short_description, operator, source_type,
+           relevance_level, technical_effort, portfolio_ready)
 }
 
-# Renders the results DT for a given (already filtered) data frame.
-render_results_datatable <- function(df) {
-  # Render portfolio_ready as Bootstrap badges
-  df$portfolio_ready <- dplyr::case_when(
-    as.character(df$portfolio_ready) == "Yes"    ~
-      '<span class="badge bg-success">Yes</span>',
-    as.character(df$portfolio_ready) == "Partly" ~
-      '<span class="badge bg-warning text-dark">Partly</span>',
-    as.character(df$portfolio_ready) == "No"     ~
-      '<span class="badge bg-secondary">No</span>',
-    TRUE ~ as.character(df$portfolio_ready)
+# ---- Small badge helpers (shared by the card grid) ----
+
+badge_relevance <- function(level) {
+  bg <- RELEVANCE_COLORS[[as.character(level)]]
+  if (is.null(bg)) bg <- "#f8f9fa"
+  tags$span(class = "badge", style = sprintf(
+    "background-color:%s; color:#333; border:1px solid rgba(0,0,0,.08); font-weight:500;", bg),
+    as.character(level))
+}
+
+badge_source_type <- function(t) {
+  cls <- if (identical(as.character(t), "Public")) "badge bg-success" else "badge bg-secondary"
+  tags$span(class = cls, as.character(t))
+}
+
+badge_effort <- function(e) {
+  cls <- switch(as.character(e),
+    "Low"    = "badge bg-success",
+    "Medium" = "badge bg-warning text-dark",
+    "High"   = "badge bg-danger",
+    "badge bg-secondary"
   )
-
-  datatable(
-    df,
-    escape     = FALSE,
-    selection  = "single",
-    rownames   = FALSE,
-    colnames   = c("ID", "Source", "Operator", "Type", "Operator type",
-                   "Relevance", "Geo. scope", "Granularity", "Cost",
-                   "Tech. effort", "Legal access", "Portfolio-ready"),
-    extensions = "Buttons",
-    options    = list(
-      pageLength  = 10,
-      scrollX     = TRUE,
-      dom         = "Bfrtip",
-      buttons     = list("colvis"),
-      # Hide ID (0), Operator (2), Granularity (7) by default; user can re-enable via column visibility button
-      # Column order: ID(0), Source(1), Operator(2), Type(3), Operator type(4), Relevance(5),
-      #               Geo.scope(6), Granularity(7), Cost(8), Tech.effort(9), Legal access(10), Portfolio-ready(11)
-      columnDefs  = list(
-        list(visible = FALSE, targets = c(0, 2, 7))
-      )
-    )
-  ) %>%
-    formatStyle(
-      "relevance_level",
-      backgroundColor = styleEqual(
-        c("Primary",  "Supplementary", "Context only", "Methodological"),
-        c("#d4edda",  "#fff3cd",       "#f8f9fa",      "#d1ecf1")
-      )
-    )
+  tags$span(class = cls, paste("Effort:", e))
 }
 
-# Renders the source-detail pane for a single selected row (data frame with
-# 0 or 1 rows, as produced by DT's single-row selection).
-render_detail_ui <- function(sel_row_df) {
-  if (is.null(sel_row_df) || nrow(sel_row_df) == 0) {
-    return(p(em("No source selected. Click a row in the Results tab.")))
+badge_portfolio <- function(p) {
+  cls <- switch(as.character(p),
+    "Yes"    = "badge bg-success",
+    "Partly" = "badge bg-warning text-dark",
+    "No"     = "badge bg-secondary",
+    "badge bg-secondary"
+  )
+  tags$span(class = cls, paste("Portfolio:", p))
+}
+
+# Renders the results as a responsive, clickable card grid. Clicking a card
+# sends its source_id to `click_input_id` (as a Shiny event input), which the
+# server uses to open the matching Source detail sub-tab.
+render_card_grid <- function(df, click_input_id, selected_id = NULL) {
+  if (nrow(df) == 0) {
+    return(div(class = "text-muted fst-italic text-center p-5",
+      "No sources match the current filters."))
   }
 
-  row      <- sel_row_df[1, ]
-  sid      <- row$source_id
-  sd       <- details_df  %>% filter(source_id == sid)
-  dm       <- d01_mapping %>% filter(source_id == sid)
-  haz      <- hazard_cov  %>% filter(source_id == sid)
-  src_full <- sources_df  %>% filter(source_id == sid)
+  div(class = "row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3",
+    lapply(seq_len(nrow(df)), function(i) {
+      row    <- df[i, ]
+      is_sel <- !is.null(selected_id) && identical(row$source_id, selected_id)
+
+      div(class = "col",
+        div(
+          class   = paste("card h-100 source-card", if (is_sel) "border-primary shadow-sm" else ""),
+          onclick = sprintf("Shiny.setInputValue('%s', '%s', {priority: 'event'})",
+                             click_input_id, row$source_id),
+          div(class = "card-body d-flex flex-column",
+            h6(class = "card-title mb-1", row$source_name),
+            p(class = "card-text text-muted small mb-2 source-card-desc", row$short_description),
+            p(class = "card-text small mb-2 text-muted",
+              tags$strong(class = "text-body", "Operator: "), row$operator),
+            div(class = "mt-auto d-flex flex-wrap gap-1",
+              badge_relevance(row$relevance_level),
+              badge_source_type(row$source_type),
+              badge_effort(row$technical_effort),
+              badge_portfolio(row$portfolio_ready)
+            )
+          )
+        )
+      )
+    })
+  )
+}
+
+# Looks up one source's full record for the detail view, independent of the
+# current filter/tab state - so a previously opened detail stays viewable
+# even if later filter changes would hide it from the results grid.
+lookup_source <- function(sid) {
+  if (is.null(sid)) return(NULL)
+  sources_df %>% filter(source_id == sid)
+}
+
+# Renders the visually detailed source-detail pane for one source record
+# (a single-row data frame from lookup_source(), or NULL/0-row if none selected).
+render_detail_ui <- function(src) {
+  if (is.null(src) || nrow(src) == 0) {
+    return(div(class = "text-muted fst-italic text-center p-5",
+      "No source selected. Click a card in the Results tab."))
+  }
+
+  sid <- src$source_id
+  sd  <- details_df  %>% filter(source_id == sid)
+  dm  <- d01_mapping %>% filter(source_id == sid)
+  haz <- hazard_cov   %>% filter(source_id == sid)
+
+  metadata_items <- list(
+    list(label = "Operator type",    value = src$operator_type),
+    list(label = "Relevance",        value = as.character(src$relevance_level)),
+    list(label = "Source type",      value = src$source_type),
+    list(label = "Tech. effort",     value = as.character(src$technical_effort)),
+    list(label = "Legal access",     value = src$access_status),
+    list(label = "Portfolio-ready",  value = as.character(src$portfolio_ready))
+  )
 
   tagList(
 
-    h4(row$source_name),
-    p(class = "text-muted mb-1", src_full$short_description),
-    tags$a(
-      href   = paste0("https://", src_full$url),
-      src_full$url,
-      target = "_blank",
-      rel    = "noopener noreferrer"
-    ),
-    tags$small(class = "text-muted ms-2",
-      paste("Last checked:", src_full$last_checked)),
-
-    hr(),
-
-    # Key metadata row
-    div(class = "row g-3 mb-3",
-      div(class = "col-auto",
-        tags$small(class = "text-muted d-block", "Operator type"),
-        tags$strong(src_full$operator_type)),
-      div(class = "col-auto",
-        tags$small(class = "text-muted d-block", "Relevance"),
-        tags$strong(row$relevance_level)),
-      div(class = "col-auto",
-        tags$small(class = "text-muted d-block", "Cost"),
-        tags$strong(as.character(row$cost_category))),
-      div(class = "col-auto",
-        tags$small(class = "text-muted d-block", "Tech. effort"),
-        tags$strong(as.character(row$technical_effort))),
-      div(class = "col-auto",
-        tags$small(class = "text-muted d-block", "Legal access"),
-        tags$strong(row$access_status)),
-      div(class = "col-auto",
-        tags$small(class = "text-muted d-block", "Portfolio-ready"),
-        tags$strong(as.character(row$portfolio_ready)))
+    # ---- Hero header ----
+    div(class = "mb-4",
+      h3(class = "mb-1", src$source_name),
+      p(class = "text-muted mb-2", src$short_description),
+      div(class = "d-flex align-items-center flex-wrap gap-3",
+        tags$a(class = "btn btn-sm btn-outline-primary",
+          href = paste0("https://", src$url), target = "_blank", rel = "noopener noreferrer",
+          "Visit source ↗"
+        ),
+        tags$span(class = "text-muted small", paste("Last checked:", src$last_checked))
+      )
     ),
 
-    # D 01.01 mapping
+    # ---- Key metadata chips ----
+    div(class = "d-flex flex-wrap gap-2 mb-4",
+      lapply(metadata_items, function(m) {
+        div(class = "border rounded-3 px-3 py-2 text-center bg-light", style = "min-width: 130px;",
+          div(class = "text-muted text-uppercase", style = "font-size:.7rem; letter-spacing:.03em;", m$label),
+          div(class = "fw-semibold", m$value)
+        )
+      })
+    ),
+
+    # ---- D 01.01 mapping ----
     if (nrow(dm) > 0) tagList(
-      h6("D 01.01 Mapping"),
-      tags$ul(class = "mb-3",
+      h6(class = "text-uppercase text-muted mb-2", style = "font-size:.75rem; letter-spacing:.03em;",
+         "D 01.01 Mapping"),
+      div(class = "d-flex flex-wrap gap-2 mb-4",
         lapply(seq_len(nrow(dm)), function(i) {
-          tags$li(sprintf("%s (%s)", dm$data_point[i], dm$relevance[i]))
+          tags$span(class = "badge bg-light text-dark border",
+            sprintf("%s · %s", dm$data_point[i], dm$relevance[i]))
         })
       )
     ),
 
-    # Hazard coverage badges (physical sources only; skip sources with all-none coverage)
+    # ---- Hazard coverage badges (physical sources only; skip all-none coverage) ----
     if (nrow(haz) > 0) {
       covered <- haz %>% filter(coverage != "none")
       if (nrow(covered) > 0) tagList(
-        h6("Hazard coverage"),
-        div(class = "d-flex flex-wrap gap-2 mb-3",
+        h6(class = "text-uppercase text-muted mb-2", style = "font-size:.75rem; letter-spacing:.03em;",
+           "Hazard coverage"),
+        div(class = "d-flex flex-wrap gap-2 mb-4",
           lapply(seq_len(nrow(covered)), function(i) {
             label       <- HAZARD_LABELS[covered$hazard_id[i]]
             badge_class <- switch(as.character(covered$coverage[i]),
@@ -207,14 +253,15 @@ render_detail_ui <- function(sel_row_df) {
       )
     },
 
-    # Detail text fields
+    # ---- Detail text fields ----
     if (nrow(sd) > 0) tagList(
-      h6("Detail"),
-      tags$dl(class = "mb-0",
+      h6(class = "text-uppercase text-muted mb-2", style = "font-size:.75rem; letter-spacing:.03em;",
+         "Detail"),
+      div(class = "d-flex flex-column gap-2",
         lapply(seq_len(nrow(sd)), function(i) {
-          tagList(
-            tags$dt(sd$field[i]),
-            tags$dd(class = "ms-3 mb-2", sd$text[i])
+          div(class = "border rounded-3 p-3 bg-light",
+            div(class = "fw-semibold small text-secondary mb-1", sd$field[i]),
+            div(class = "small", sd$text[i])
           )
         })
       )
@@ -267,9 +314,9 @@ landing_page_ui <- function() {
           tags$li("Choose ", tags$strong("Physical risk"), " or ",
                   tags$strong("Transition risk"), " below to open the dashboard."),
           tags$li("For physical risk, narrow further by ", tags$strong("hazard type"),
-                  " and the shared facet filters (source type, cost, technical effort, ",
-                  "legal usability, API access) in the sidebar."),
-          tags$li("Click any row in the ", tags$strong("Results"), " table to open its ",
+                  " and the shared facet filters (source type, operator type, technical ",
+                  "effort, legal usability, API access) in the sidebar."),
+          tags$li("Click any card in the ", tags$strong("Results"), " tab to open its ",
                   tags$strong("Source detail"), " tab: D 01.01 mapping, hazard coverage, ",
                   "and rationale text."),
           tags$li("Both risk types stay one click away via the tabs at the top of the ",
@@ -352,11 +399,6 @@ dashboard_ui <- function(selected_tab) {
           selected = "All"
         ),
         selectInput(
-          "cost_category", "Cost",
-          choices  = c("All", sort(unique(sources_df$cost_category))),
-          selected = "All"
-        ),
-        selectInput(
           "technical_effort", "Max. technical effort",
           choices  = c("All", "Low", "Medium", "High"),
           selected = "All"
@@ -391,7 +433,7 @@ dashboard_ui <- function(selected_tab) {
               id = "physical_subtabs",
               tabPanel("Results",
                 br(),
-                DTOutput("results_table_physical")
+                uiOutput("results_cards_physical")
               ),
               tabPanel("Source detail",
                 br(),
@@ -407,7 +449,7 @@ dashboard_ui <- function(selected_tab) {
               id = "transition_subtabs",
               tabPanel("Results",
                 br(),
-                DTOutput("results_table_transition")
+                uiOutput("results_cards_transition")
               ),
               tabPanel("Source detail",
                 br(),
@@ -428,6 +470,17 @@ dashboard_ui <- function(selected_tab) {
 # a single uiOutput, driven by a reactiveVal in the server (see main_ui below).
 ui <- fluidPage(
   theme = bs_theme(version = 5, bootswatch = "flatly"),
+  tags$head(tags$style(HTML("
+    .source-card { cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
+    .source-card:hover { box-shadow: 0 .25rem .75rem rgba(0,0,0,.08); transform: translateY(-1px); }
+    .source-card-desc {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 3.6em;
+    }
+  "))),
   uiOutput("main_ui")
 )
 
@@ -437,8 +490,8 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
   # ---- Landing page <-> dashboard switch ----
-  current_page   <- reactiveVal("landing")   # "landing" | "dashboard"
-  chosen_risk    <- reactiveVal("Physical")  # which tab the dashboard opens on
+  current_page <- reactiveVal("landing")   # "landing" | "dashboard"
+  chosen_risk  <- reactiveVal("Physical")  # which tab the dashboard opens on
 
   observeEvent(input$goto_physical, {
     chosen_risk("Physical")
@@ -476,20 +529,20 @@ server <- function(input, output, session) {
     updateCheckboxGroupInput(session, "hazard_types",       selected = character(0))
     updateSelectInput(session,        "source_type",        selected = "All")
     updateSelectInput(session,        "operator_type",      selected = "All")
-    updateSelectInput(session,        "cost_category",      selected = "All")
     updateSelectInput(session,        "technical_effort",   selected = "All")
     updateSelectInput(session,        "access_status",      selected = "All")
     updateCheckboxInput(session,      "has_api",            value    = FALSE)
   })
 
   # ---- Physical risk tab ----
+  selected_physical_id <- reactiveVal(NULL)
+
   filtered_physical <- reactive({
     filter_sources(
       risk_value           = "Physical",
       hazard_types         = input$hazard_types,
       sel_source_type      = input$source_type,
       sel_operator_type    = input$operator_type,
-      sel_cost_category    = input$cost_category,
       sel_technical_effort = input$technical_effort,
       sel_access_status    = input$access_status,
       sel_has_api          = input$has_api
@@ -500,27 +553,27 @@ server <- function(input, output, session) {
     sprintf("%d of %d sources match your filters", nrow(filtered_physical()), TOTAL_SOURCES)
   })
 
-  output$results_table_physical <- renderDT({
-    render_results_datatable(filtered_physical())
+  output$results_cards_physical <- renderUI({
+    render_card_grid(filtered_physical(), "physical_card_click", selected_physical_id())
   })
 
-  observeEvent(input$results_table_physical_rows_selected, {
-    if (length(input$results_table_physical_rows_selected) > 0) {
-      updateTabsetPanel(session, "physical_subtabs", selected = "Source detail")
-    }
+  observeEvent(input$physical_card_click, {
+    selected_physical_id(input$physical_card_click)
+    updateTabsetPanel(session, "physical_subtabs", selected = "Source detail")
   })
 
   output$detail_view_physical <- renderUI({
-    render_detail_ui(filtered_physical()[input$results_table_physical_rows_selected, ])
+    render_detail_ui(lookup_source(selected_physical_id()))
   })
 
   # ---- Transition risk tab ----
+  selected_transition_id <- reactiveVal(NULL)
+
   filtered_transition <- reactive({
     filter_sources(
       risk_value           = "Transition",
       sel_source_type      = input$source_type,
       sel_operator_type    = input$operator_type,
-      sel_cost_category    = input$cost_category,
       sel_technical_effort = input$technical_effort,
       sel_access_status    = input$access_status,
       sel_has_api          = input$has_api
@@ -531,18 +584,17 @@ server <- function(input, output, session) {
     sprintf("%d of %d sources match your filters", nrow(filtered_transition()), TOTAL_SOURCES)
   })
 
-  output$results_table_transition <- renderDT({
-    render_results_datatable(filtered_transition())
+  output$results_cards_transition <- renderUI({
+    render_card_grid(filtered_transition(), "transition_card_click", selected_transition_id())
   })
 
-  observeEvent(input$results_table_transition_rows_selected, {
-    if (length(input$results_table_transition_rows_selected) > 0) {
-      updateTabsetPanel(session, "transition_subtabs", selected = "Source detail")
-    }
+  observeEvent(input$transition_card_click, {
+    selected_transition_id(input$transition_card_click)
+    updateTabsetPanel(session, "transition_subtabs", selected = "Source detail")
   })
 
   output$detail_view_transition <- renderUI({
-    render_detail_ui(filtered_transition()[input$results_table_transition_rows_selected, ])
+    render_detail_ui(lookup_source(selected_transition_id()))
   })
 }
 

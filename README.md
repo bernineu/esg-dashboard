@@ -71,10 +71,14 @@ on data model" entry in that workbook's Legend sheet.
 
 -   **`sources.csv`** — one row per source. Key columns used by the app:
     `source_id`, `source_name`, `risk_type` (Physical/Transition/Both),
-    `relevance_level`, `source_type`, `cost_category`,
+    `relevance_level`, `source_type`,
     `technical_effort` (ordered factor: Low \< Medium \< High),
     `access_status` (legal usability), `api` (Yes/No),
-    `portfolio_ready`, `url`, `last_checked`.
+    `portfolio_ready`, `url`, `last_checked`. The `cost_category` column
+    is still present (kept 1:1 with the thesis Excel artefact) but is not
+    used anywhere in the app: in this data set it is a 1:1 restatement of
+    `source_type` (Public = Free, Commercial = Paid), so `source_type`
+    alone already covers it without a redundant filter/badge.
 -   **`hazard_coverage.csv`** — one row per source × hazard combination,
     `coverage` ∈ {none, partial, full}. Drives the Tier 2 (hazard type)
     filter and the hazard coverage badges in the detail view.
@@ -101,10 +105,10 @@ on data model" entry in that workbook's Legend sheet.
     shown in the sidebar only while the Physical risk tab is active. No
     Tier 2 exists for the Transition branch, since NACE classification
     sources apply uniformly across subsectors (see Section 2.5).
--   **Facets** (applied regardless of tier) — source type, cost, maximum
-    technical effort, legal usability, and API availability. These
-    dimensions determine practical usability independently of topical
-    relevance (e.g. the HORA case).
+-   **Facets** (applied regardless of tier) — source type, operator type,
+    maximum technical effort, legal usability, and API availability.
+    These dimensions determine practical usability independently of
+    topical relevance (e.g. the HORA case).
 
 ## Dashboard features
 
@@ -116,18 +120,20 @@ on data model" entry in that workbook's Legend sheet.
 -   **Relevance legend** — collapsible definitions for all four
     relevance levels (Primary, Supplementary, Context only,
     Methodological).
+-   **Card-based results** — each matching source is a clickable card
+    showing its name, short description, operator, and four at-a-glance
+    badges: relevance (color-coded), source type (Public/Commercial),
+    technical effort, and portfolio-readiness.
 -   **Hazard select all / clear** — quickly select or deselect all 12
     hazard checkboxes.
 -   **Reset all filters** — single button to restore all filters to
     their defaults.
--   **Column visibility** — toggle individual table columns on/off via
-    the column visibility button above the results table.
--   **Source detail tab** — clicking a row switches to a dedicated
-    detail tab showing: source URL and last-checked date, key metadata,
-    D 01.01 mapping, hazard coverage badges (color-coded: green = full,
-    amber = partial), and long-form rationale text.
--   **Portfolio-ready badges** — color-coded (green / amber / grey) in
-    the results table for quick scanning.
+-   **Source detail tab** — clicking a card switches to a dedicated
+    detail tab: hero header with description and external link, a row of
+    key-metadata chips, D 01.01 mapping badges, hazard coverage badges
+    (color-coded: green = full, amber = partial), and long-form rationale
+    text in styled cards. A selected source stays viewable here even if a
+    later filter change would hide it from the Results grid.
 
 ## Known limitations
 
