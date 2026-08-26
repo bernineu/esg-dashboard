@@ -1,0 +1,24 @@
+source_id,template,dpm_table,data_point,relevance
+eea_climate_adapt,D 01.01,K_41.01.a-b,0050,Secondary
+jrc_risk_data_hub,D 01.01,K_41.01.a-b,0050,Primary
+jrc_risk_data_hub,D 01.01,K_41.01.a-b,0090-0130,Secondary
+effis_wildfire,D 01.01,K_41.01.a-b,0050,Secondary
+copernicus_cds,D 01.01,K_41.01.a-b,0050,Primary
+copernicus_cds,D 01.01,K_41.01.a-b,0090-0130,Secondary
+eba_esg_dashboard,D 01.01,K_41.01.a-b,Benchmarking,Secondary
+ecb_physical_risk_indicators,D 01.01,K_41.01.a-b,0050,Secondary
+ecb_physical_risk_indicators,D 01.01,K_41.01.a-b,0090-0130,Secondary
+bundeslaender_open_data,D 01.01,K_41.01.a-b,0050,Primary
+hora,D 01.01,K_41.01.a-b,0050,Primary
+wri_aqueduct,D 01.01,K_41.01.a-b,0050,Secondary
+moodys_physical_risk,D 01.01,K_41.01.a-b,0050,Primary
+moodys_physical_risk,D 01.01,K_41.01.a-b,0090-0130,Secondary
+munich_re_nathan,D 01.01,K_41.01.a-b,0050,Primary
+munich_re_nathan,D 01.01,K_41.01.a-b,0090-0130,Secondary
+world_bank_gfdrr,D 01.01,K_41.01.a-b,Context/validation,Secondary
+kryomon_at,D 01.01,K_41.01.a-b,0050,Secondary
+statistik_austria_klassdb,D 01.01,K_41.01.a,NACE subsectors,Primary
+eurostat_nace,D 01.01,K_41.01.a,NACE subsectors,Primary
+klassifikationsmitteilung,D 01.01,K_41.01.a,NACE subsectors,Secondary
+firmenbuch_extract,D 01.01,K_41.01.a,NACE subsectors,Primary
+wirtschafts_compass,D 01.01,K_41.01.a,NACE subsectors,Primary

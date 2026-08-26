@@ -1,0 +1,33 @@
+source_id,field,text
+eea_climate_adapt,Processing effort rationale,Pure information portal without raw data to overlay; not usable at exposure level.
+eea_climate_adapt,Suitability assessment,"Good as entry point/screening level, too coarse for populating data points."
+jrc_risk_data_hub,Processing effort rationale,NUTS-aggregated layers usable directly; finer layers (SHP/raster) require geocoding and spatial overlay.
+jrc_risk_data_hub,Limitations,Risk Data Hub comprises four modules; Vulnerability and Risk Analysis were documented by JRC as 'ongoing work'. Coverage marks rely primarily on Exposure Analysis and Historical Events.
+jrc_risk_data_hub,Suitability assessment,Well suited to substantive risk determination (col. 0050); over-specified for the pure Geography reporting requirement.
+effis_wildfire,Processing effort rationale,"Pure raw data (historical events, hazard index) without ready-made exposure score; requires own geocoding and GIS overlay."
+effis_wildfire,Licensing notes,"Free, CC-BY 4.0 (attribution only)."
+copernicus_cds,Processing effort rationale,Raw climate variables (NetCDF grid data) without ready-made risk classification; requires climatological/GIS processing.
+copernicus_cds,Licensing notes,Since 2 July 2025 uniformly CC-BY 4.0; individual sub-datasets may carry stricter licences (e.g. E-OBS: non-commercial research/education only) - verify per dataset.
+eba_esg_dashboard,Suitability assessment,Not suitable for populating individual exposures; useful for benchmarking/peer comparison only.
+ecb_physical_risk_indicators,Limitations,"Based on AnaCredit/RIAD, not available to an SNCI; only the documented methodology is usable as a template."
+ecb_physical_risk_indicators,Suitability assessment,"Traceable methodology replicable with AnaCredit/JRC/Copernicus; useful methodological anchor, operates at NUTS3 rather than country level."
+bundeslaender_open_data,Processing effort rationale,Nine separate state datasets with potentially different structures/projections must be merged and overlaid with portfolio locations.
+bundeslaender_open_data,Suitability assessment,Same subject-matter data as HORA but usable without legal restriction; most important finding of the source search.
+hora,Limitations,Bulk download/API explicitly prohibited under terms of use; map content is not a legally binding statement.
+hora,Suitability assessment,"Suitable for individual address-level checks only, not for systematic portfolio classification."
+hora,Licensing notes,Free for individual queries; separate agreement with operator (LFRZ) required for portfolio-level use.
+wri_aqueduct,Suitability assessment,"Good supplementary dataset for chronic risk (water stress), since AT sources primarily cover acute hazards."
+moodys_physical_risk,Processing effort rationale,"Ready-made risk scores per location, directly integrable via API."
+moodys_physical_risk,Suitability assessment,High data quality and granularity; cost structure typically not designed for SNCI scale.
+munich_re_nathan,Processing effort rationale,Ready-made scores/maps via web tool or API.
+munich_re_nathan,Suitability assessment,"Very extensive (scenarios to 2100); commercial, geared towards larger institutions/reinsurers."
+world_bank_gfdrr,Suitability assessment,Country-level granularity too coarse for exposure/NUTS assignment; useful for plausibility checks only.
+kryomon_at,Limitations,"Station-/object-based trend reporting, not a nationwide spatial hazard layer; cannot be overlaid with individual portfolio locations."
+kryomon_at,Suitability assessment,Best available current Austrian permafrost source for context/discussion; not suitable for exposure-level classification.
+statistik_austria_klassdb,Limitations,Reference structure only; does not provide entity-level NACE assignment.
+eurostat_nace,Limitations,"Reference structure only, EU-wide; SPARQL access requires technical setup."
+klassifikationsmitteilung,Limitations,"Delivered only to the company itself, not to third parties such as banks; secondary activities not disclosed."
+firmenbuch_extract,Limitations,No bulk/batch access expected via a plain Firmenbuch extract; individual-query costs scale with portfolio size.
+firmenbuch_extract,Suitability assessment,"Realistic individual source for entity assignment, often already used in the KYC process; see Wirtschafts-Compass for a bulk-capable commercial alternative."
+wirtschafts_compass,Processing effort rationale,"Ready-made ÖNACE 2025 classification per entity, delivered via API; no manual extract handling required."
+wirtschafts_compass,Suitability assessment,"Addresses the bulk-access gap of a plain Firmenbuch extract: API supports automated, portfolio-wide queries and is already used by some institutions for KYC checks. Commercial licence cost is the main constraint for SNCI use."
