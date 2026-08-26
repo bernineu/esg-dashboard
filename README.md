@@ -87,9 +87,18 @@ on data model" entry in that workbook's Legend sheet.
 
 ## Navigation logic (Section 2.5)
 
--   **Tier 1** — Risk type: Physical or Transition (radio buttons).
+-   **Landing page** — on open, the app shows an introduction plus a choice
+    between Physical risk and Transition risk. Picking one opens the
+    dashboard on that tab; the dashboard itself keeps both tabs visible
+    afterwards, so returning to the landing page is not required to
+    switch risk type.
+-   **Tier 1** — Risk type: Physical or Transition, selected via the two
+    top-level tabs in the main panel. Each tab keeps its own Results /
+    Source detail sub-tabs and row selection, so switching between
+    Physical and Transition doesn't lose your place in either.
 -   **Tier 2** (Physical branch only) — Hazard type: multi-select
-    checkboxes over the 12 hazard types from Table X (Section 2.4). No
+    checkboxes over the 12 hazard types from Table X (Section 2.4),
+    shown in the sidebar only while the Physical risk tab is active. No
     Tier 2 exists for the Transition branch, since NACE classification
     sources apply uniformly across subsectors (see Section 2.5).
 -   **Facets** (applied regardless of tier) — source type, cost, maximum
@@ -99,6 +108,9 @@ on data model" entry in that workbook's Legend sheet.
 
 ## Dashboard features
 
+-   **Quick-start instructions** — the landing page carries a short
+    walkthrough alongside the Physical/Transition choice, shown once
+    before entering the dashboard.
 -   **Result count** — shows how many sources match the current filters
     out of the total.
 -   **Relevance legend** — collapsible definitions for all four
