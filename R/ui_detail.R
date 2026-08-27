@@ -157,12 +157,13 @@ render_detail_ui <- function(src, prefix = NULL, siblings = character(0)) {
       p(class = "mb-0", key_lim)
     ),
 
-    # ---- D 01.01 mapping ----
+    # ---- D 01.01 mapping (d01_mapping.csv dropped its per-mapping
+    #      `relevance` column - the source's overall Relevance chip above
+    #      already carries that) ----
     if (nrow(dm) > 0) .detail_section("D 01.01 Mapping",
       div(class = "d-flex flex-wrap gap-2",
         lapply(seq_len(nrow(dm)), function(i) {
-          tags$span(class = "badge bg-light text-dark border",
-            sprintf("%s · %s", dm$data_point[i], dm$relevance[i]))
+          tags$span(class = "badge bg-light text-dark border", dm$data_point[i])
         })
       )
     ),

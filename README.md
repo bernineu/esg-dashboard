@@ -107,8 +107,9 @@ on data model" entry in that workbook's Legend sheet.
     hazard badges (green = full, amber = partial, red = not covered) plus
     a collapsible per-hazard *Coverage detail* table for the covered ones.
 -   **`d01_mapping.csv`** — links each source to the specific D 01.01 /
-    DPM data point(s) it is relevant for (primary/secondary), shown in
-    the detail view.
+    DPM data point(s) it is relevant for, shown as badges in the detail
+    view. (No longer carries a per-mapping primary/secondary relevance -
+    that's the source's overall `relevance_level`, in the metadata chips.)
 -   **`source_details.csv`** — one `field` / `text` row per note. Three
     get their own section in the detail view: the factual cited
     **Abstract**, the **Suitability for an SNCI** verdict and the headline
