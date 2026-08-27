@@ -51,7 +51,7 @@ refs_df      <- load_references()
 # source_details.csv. Denormalise it back onto sources_df so the search
 # haystack and the detail-view callout can reach it without a join.
 sources_df <- sources_df %>% left_join(
-  details_df %>% filter(field == "Limitations") %>% select(source_id, limitation = text),
+  details_df %>% filter(field == "limitations") %>% select(source_id, limitation = text),
   by = "source_id"
 )
 

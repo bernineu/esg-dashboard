@@ -19,7 +19,7 @@ munich_re_nathan,D 01.01,K_41.01.a-b,0090-0130,Secondary
 world_bank_gfdrr,D 01.01,K_41.01.a-b,Context/validation,Secondary
 kryomon_at,D 01.01,K_41.01.a-b,0050,Secondary
 hvd_fbnr_oenace,D 01.01,K_41.01.a,NACE subsectors,Primary
-wirtschafts_compass,D 01.01,K_41.01.a,NACE subsectors,Secondary
+wirtschafts_compass,D 01.01,K_41.01.a,NACE subsectors,Primary
 geosphere_spartacus,D 01.01,K_41.01.a-b,0050,Primary
 geosphere_winfore_spei,D 01.01,K_41.01.a-b,0050,Primary
 climate_x,D 01.01,K_41.01.a-b,0050,Primary

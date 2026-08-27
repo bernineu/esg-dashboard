@@ -78,15 +78,16 @@ render_detail_ui <- function(src, prefix = NULL, siblings = character(0)) {
   # Abstract, the Suitability verdict and the headline Limitations note.
   # Everything else - pricing, formats, update frequency, licensing,
   # pipeline steps, methodology notes - stays in the collapsed "Details".
+  # `field` holds snake_case codes (see FIELD_LABELS in R/config.R for the
+  # display label of everything that isn't pulled out here by code).
   pull_field <- function(f) {
     v <- sd %>% filter(field == f) %>% pull(text)
     if (length(v) > 0) trimws(v[1]) else ""
   }
-  abstract_txt    <- pull_field("Abstract")
-  suitability_txt <- pull_field("Suitability assessment")
-  key_lim         <- pull_field("Limitations")
-  sd_rest <- sd %>% filter(!field %in% c(
-    "Abstract", "Suitability assessment", "Limitations"))
+  abstract_txt    <- pull_field("abstract")
+  suitability_txt <- pull_field("suitability_snci")
+  key_lim         <- pull_field("limitations")
+  sd_rest <- sd %>% filter(!field %in% c("abstract", "suitability_snci", "limitations"))
   has_abstract <- nzchar(abstract_txt)
 
   # portfolio_ready + its reason: shown once, as a chip whose value carries
@@ -225,8 +226,10 @@ render_detail_ui <- function(src, prefix = NULL, siblings = character(0)) {
           ),
           div(class = "d-flex flex-column gap-2 mt-3",
             lapply(seq_len(nrow(sd_rest)), function(i) {
+              lbl <- FIELD_LABELS[[sd_rest$field[i]]]
               div(class = "border rounded-3 p-3 bg-light",
-                div(class = "fw-semibold small text-secondary mb-1", sd_rest$field[i]),
+                div(class = "fw-semibold small text-secondary mb-1",
+                  if (is.null(lbl)) sd_rest$field[i] else lbl),
                 div(class = "small", sd_rest$text[i])
               )
             })

@@ -36,3 +36,23 @@ PORTFOLIO_REASON_SHORT <- c(
   "technical"   = "technical access",
   "granularity" = "granularity"
 )
+
+# source_details.csv's `field` column holds snake_case codes; this is the
+# only place their display labels are spelled out. abstract / limitations /
+# suitability_snci are pulled into their own sections in R/ui_detail.R
+# (looked up by code, not by this label); everything else falls into the
+# collapsed "Details" list, shown under its FIELD_LABELS entry (or the raw
+# code, unprettified, if a field ever shows up that isn't listed here).
+FIELD_LABELS <- c(
+  abstract                   = "Abstract",
+  suitability_snci           = "Suitability for an SNCI",
+  limitations                = "Limitations",
+  pricing                    = "Pricing details",
+  download_format            = "Download format",
+  web_interface_type         = "Web interface type",
+  data_update_frequency      = "Data update frequency",
+  licensing                  = "Licensing notes",
+  data_quality               = "Data quality notes",
+  portfolio_pipeline         = "Portfolio-ready pipeline",
+  technical_effort_rationale = "Technical effort rationale"
+)

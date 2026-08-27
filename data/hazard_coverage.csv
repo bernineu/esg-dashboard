@@ -1,32 +1,32 @@
 source_id,hazard_id,coverage,granularity_detail
-eea_climate_adapt,heat_stress,partial,"Only an indirect proxy (Universal Thermal Climate Index, UTCI) at 0.25 degree grid - no dedicated heat-stress index exists."
+eea_climate_adapt,heat_stress,partial,"0.25 degree grid (~28km). Partial because only an indirect proxy (Universal Thermal Climate Index, UTCI) exists - no dedicated heat-stress index."
 eea_climate_adapt,permafrost,none,
-eea_climate_adapt,heat_wave,full,"Dedicated ""extreme heat"" indices (Hot Days, Tropical Nights, Warmest 3-day Period, Climatological/Apparent Temperature Heatwave Days) at 0.25 degree grid (~28km), directly downloadable via the ECDE indicator dataset."
-eea_climate_adapt,wildfire,full,"Dedicated Fire Weather Index and High Fire Danger Days indices at 0.1 degree grid (~11km), based on the same EFFIS classification, directly downloadable via the ECDE indicator dataset."
-eea_climate_adapt,storm,full,"Dedicated ""severe windstorm"" index (Extreme Wind Speed Days) at 0.25 degree grid (~28km), directly downloadable via the ECDE indicator dataset."
-eea_climate_adapt,water_stress,partial,Only an indirect proxy (Aridity Actual index) at 5km grid - no dedicated water-stress index exists.
-eea_climate_adapt,flood,full,"Dedicated river-flood indices (Flood Recurrence, River Discharge) at 5km grid, directly downloadable via the ECDE indicator dataset."
-eea_climate_adapt,heavy_precip,full,"Dedicated ""extreme precipitation"" indices (Maximum Consecutive 5-Day Precipitation, Extreme Precipitation Total/Days) at 0.25 degree grid (~28km), directly downloadable via the ECDE indicator dataset."
-eea_climate_adapt,drought,full,"Dedicated meteorological drought indices (SPI-3 Duration/Magnitude) at 0.25 degree grid, plus a soil-moisture drought index at 5km grid, directly downloadable via the ECDE indicator dataset."
+eea_climate_adapt,heat_wave,full,"0.25 degree grid (~28km), via dedicated Hot Days, Tropical Nights, Warmest 3-day Period and Climatological/Apparent Temperature Heatwave Days indices."
+eea_climate_adapt,wildfire,full,0.1 degree grid (~11km) - finer than most other indices in this source - via dedicated Fire Weather Index and High Fire Danger Days indices.
+eea_climate_adapt,storm,full,"0.25 degree grid (~28km), via a dedicated Extreme Wind Speed Days index."
+eea_climate_adapt,water_stress,partial,5km grid. Partial because only an indirect proxy (Aridity Actual index) exists - no dedicated water-stress index.
+eea_climate_adapt,flood,full,5km grid - finer than most other indices in this source - via dedicated Flood Recurrence and River Discharge indices.
+eea_climate_adapt,heavy_precip,full,"0.25 degree grid (~28km), via dedicated Maximum Consecutive 5-Day Precipitation and Extreme Precipitation Total/Days indices."
+eea_climate_adapt,drought,full,0.25 degree grid (~28km) for the meteorological component (SPI-3); 5km grid for the soil-moisture component - resolution varies by sub-indicator.
 eea_climate_adapt,glacial_lake,none,
 eea_climate_adapt,soil_erosion,none,
 eea_climate_adapt,landslide,none,
-jrc_risk_data_hub,heat_stress,none,"Not covered: no distinct heat-stress index or category exists in either module (Heat wave loss data is a different, event-based metric)."
+jrc_risk_data_hub,heat_stress,none,
 jrc_risk_data_hub,permafrost,none,
-jrc_risk_data_hub,heat_wave,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Heat wave, abbreviation HW.)"
-jrc_risk_data_hub,wildfire,full,"Modelled hazard/risk layer confirmed in the Risk Analysis module (NUTS2/3), suitable for forward-looking exposure classification. Source data: EFFIS-derived Wildland-Urban Interface layer."
-jrc_risk_data_hub,storm,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Windstorm, abbreviation WS.)"
-jrc_risk_data_hub,water_stress,none,Not covered: no water-stress category exists in either the Risk Analysis or Loss Data catalogues.
-jrc_risk_data_hub,flood,full,"Modelled hazard/risk layer confirmed in the Risk Analysis module (NUTS2/3), suitable for forward-looking exposure classification."
-jrc_risk_data_hub,heavy_precip,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Flash Flood, abbreviation FLSH.)"
-jrc_risk_data_hub,drought,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Drought, abbreviation DR.)"
-jrc_risk_data_hub,glacial_lake,none,Not covered: no GLOF-related hazard appears in either the Risk Analysis or Loss Data catalogues.
-jrc_risk_data_hub,soil_erosion,none,"Not covered: the Risk Analysis module lists ""Subsidence"" (ground sinking from soil compaction/extraction), a physically distinct hazard from soil erosion (topsoil loss via wind/water). No soil erosion layer exists."
-jrc_risk_data_hub,landslide,full,"Modelled hazard/risk layer confirmed in the Risk Analysis module (NUTS2/3), suitable for forward-looking exposure classification. Source data: ELSUS_v2 susceptibility layer + GPCC precipitation, 200m/5km resolution."
+jrc_risk_data_hub,heat_wave,partial,"NUTS 2/3 regional. Partial because only historical loss/damage event counts exist (Loss Data module, EM-DAT/media/Wikipedia-sourced); no modelled forward-looking hazard layer."
+jrc_risk_data_hub,wildfire,full,"NUTS 2/3 regional, via the modelled Risk Analysis layer (EFFIS-derived Wildland-Urban Interface)."
+jrc_risk_data_hub,storm,partial,NUTS 2/3 regional. Partial because only historical loss/damage event counts exist (Loss Data module); no modelled forward-looking hazard layer.
+jrc_risk_data_hub,water_stress,none,
+jrc_risk_data_hub,flood,full,"NUTS 2/3 regional, via the modelled Risk Analysis layer."
+jrc_risk_data_hub,heavy_precip,partial,"NUTS 2/3 regional. Partial because only historical loss/damage event counts exist (Loss Data module, Flash Flood category); no modelled forward-looking hazard layer."
+jrc_risk_data_hub,drought,partial,NUTS 2/3 regional. Partial because only historical loss/damage event counts exist (Loss Data module); no modelled forward-looking hazard layer.
+jrc_risk_data_hub,glacial_lake,none,
+jrc_risk_data_hub,soil_erosion,none,
+jrc_risk_data_hub,landslide,full,200m/5km - finer than the source's overall NUTS 2/3 granularity - via the modelled Risk Analysis layer (ELSUS_v2 susceptibility layer plus GPCC precipitation).
 effis_wildfire,heat_stress,none,
 effis_wildfire,permafrost,none,
 effis_wildfire,heat_wave,none,
-effis_wildfire,wildfire,full,"Grid/raster (~1 km), daily fire danger index and burnt-area mapping"
+effis_wildfire,wildfire,full,"Resolution varies by product: approximately 8-16km (fire danger forecast, ECMWF/MeteoFrance numerical weather models) versus 250m/20m (burnt-area perimeters, MODIS/Sentinel-2). The forecast grid is coarse relative to Austria's size - only a handful of cells cover the whole country."
 effis_wildfire,storm,none,
 effis_wildfire,water_stress,none,
 effis_wildfire,flood,none,
@@ -35,50 +35,50 @@ effis_wildfire,drought,none,
 effis_wildfire,glacial_lake,none,
 effis_wildfire,soil_erosion,none,
 effis_wildfire,landslide,none,
-copernicus_cds,heat_stress,none,"UTCI is a complex multi-variable derived index (temperature, humidity, wind, radiation); no ready-made version exists among the raw CDS variables - see copernicus_climate_indicators for the standalone ERA5-HEAT product."
-copernicus_cds,permafrost,partial,"Raw ERA5 soil-temperature-at-depth variables could serve as model input for permafrost analysis, but no ready-made permafrost index or product exists."
-copernicus_cds,heat_wave,partial,"Dedicated ""extreme heat"" indices (tropical nights, hot days, heatwave days) exist as part of the sis-ecde-climate-indicators dataset on the CDS, but are not a prominently findable feature of Copernicus CDS as a general-purpose entry point - practically accessed via Climate-ADAPT rather than by browsing CDS directly."
-copernicus_cds,wildfire,none,"Fire Weather Index requires a specific multi-variable fire-danger model, not derivable from raw meteorological variables alone - see copernicus_climate_indicators for the standalone CEMS Fire Danger product."
-copernicus_cds,storm,partial,"Derived ""severe wind storm"" index exists as part of the sis-ecde-climate-indicators dataset on the CDS, but is not a prominently findable feature of Copernicus CDS as a general-purpose entry point - practically accessed via Climate-ADAPT rather than by browsing CDS directly. Raw 10m wind-speed ERA5 variables remain available for custom modelling."
-copernicus_cds,water_stress,none,"Aridity requires evapotranspiration modelling, not derivable from raw meteorological variables alone - see copernicus_climate_indicators for the standalone SMHI hydrology product."
-copernicus_cds,flood,none,"River discharge/flood recurrence requires hydrological modelling, not derivable from raw meteorological variables alone - see copernicus_climate_indicators for the standalone SMHI hydrology product."
-copernicus_cds,heavy_precip,partial,"Derived heavy-precipitation indices exist as part of the sis-ecde-climate-indicators dataset on the CDS, but are not a prominently findable feature of Copernicus CDS as a general-purpose entry point - practically accessed via Climate-ADAPT rather than by browsing CDS directly. Raw precipitation ERA5 variables remain available for custom modelling."
-copernicus_cds,drought,partial,Meteorological drought (SPI-3) is derivable from raw precipitation variables with moderate own processing; the soil-moisture drought component requires hydrological modelling - see copernicus_climate_indicators for the standalone SMHI hydrology product covering that component directly.
-copernicus_cds,glacial_lake,none,No GLOF-relevant dataset or index identified on the CDS.
-copernicus_cds,soil_erosion,partial,"No ready-made erosion index exists; would require independent erosion modelling (e.g. RUSLE-type) from raw precipitation intensity, soil moisture and wind-speed variables."
-copernicus_cds,landslide,none,No landslide-relevant dataset or index identified on the CDS.
-eba_esg_dashboard,heat_stress,partial,"Bank/aggregate level - EU supervisory reporting statistics, not spatially resolved"
+copernicus_cds,heat_stress,none,
+copernicus_cds,permafrost,partial,0.25 degree grid (ERA5 soil-temperature-at-depth). Partial because no ready-made permafrost index exists - only raw variables usable as model input.
+copernicus_cds,heat_wave,partial,"0.25 degree grid (~28km), via indices technically present in the sis-ecde-climate-indicators dataset. Partial because these are not a prominently findable feature of Copernicus CDS as a general-purpose entry point - practically accessed via Climate-ADAPT instead."
+copernicus_cds,wildfire,none,
+copernicus_cds,storm,partial,"0.25 degree grid (~28km), via a derived index technically present in the sis-ecde-climate-indicators dataset, plus raw 10m wind-speed variables. Partial for the same not-prominently-findable reason as heat_wave."
+copernicus_cds,water_stress,none,
+copernicus_cds,flood,none,
+copernicus_cds,heavy_precip,partial,"0.25 degree grid (~28km), via derived indices technically present in the sis-ecde-climate-indicators dataset, plus raw precipitation variables. Partial for the same not-prominently-findable reason as heat_wave."
+copernicus_cds,drought,partial,"0.25 degree grid (~28km) for the meteorological component (SPI-3, derivable from raw precipitation); 5km grid via the standalone SMHI hydrology product for the soil-moisture component (see copernicus_climate_indicators) - resolution varies by sub-indicator and the meteorological part requires own processing."
+copernicus_cds,glacial_lake,none,
+copernicus_cds,soil_erosion,partial,"0.25 degree grid (raw precipitation, soil-moisture and wind-speed variables). Partial because no ready-made erosion index exists - would require independent erosion modelling (e.g. RUSLE-type)."
+copernicus_cds,landslide,none,
+eba_esg_dashboard,heat_stress,partial,"Institution/portfolio (bank-aggregate) level. Partial because this is EU supervisory reporting statistics, not spatially resolved to individual exposures."
 eba_esg_dashboard,permafrost,none,
 eba_esg_dashboard,heat_wave,none,
 eba_esg_dashboard,wildfire,none,
 eba_esg_dashboard,storm,none,
 eba_esg_dashboard,water_stress,none,
-eba_esg_dashboard,flood,partial,"Bank/aggregate level - EU supervisory reporting statistics, not spatially resolved"
+eba_esg_dashboard,flood,partial,"Institution/portfolio (bank-aggregate) level. Partial because this is EU supervisory reporting statistics, not spatially resolved to individual exposures."
 eba_esg_dashboard,heavy_precip,none,
 eba_esg_dashboard,drought,none,
 eba_esg_dashboard,glacial_lake,none,
 eba_esg_dashboard,soil_erosion,none,
 eba_esg_dashboard,landslide,none,
-ecb_physical_risk_indicators,heat_stress,partial,"Documentation inconsistency: not named among the 9 hazards on the ECB's primary indicator methodology page, but other ECB communications (e.g. outreach seminar materials) describe ""heat and water stress"" as a chronic physical risk category. Rated partial pending clarification, not full."
-ecb_physical_risk_indicators,permafrost,none,Not covered: no permafrost-related indicator exists.
-ecb_physical_risk_indicators,heat_wave,partial,"Documentation inconsistency: not named among the 9 hazards on the ECB's primary indicator methodology page, but other ECB communications (e.g. outreach seminar materials) describe ""heat and water stress"" as a chronic physical risk category. Rated partial pending clarification, not full."
-ecb_physical_risk_indicators,wildfire,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
-ecb_physical_risk_indicators,storm,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."" (""Windstorms"".)"
-ecb_physical_risk_indicators,water_stress,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
-ecb_physical_risk_indicators,flood,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."" (Coastal and river flooding both covered.)"
-ecb_physical_risk_indicators,heavy_precip,partial,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."" (""Rainfall variation"" - covered, but as a chronic statistical indicator, not an event-based heavy-precipitation hazard map.)"
-ecb_physical_risk_indicators,drought,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
-ecb_physical_risk_indicators,glacial_lake,none,Not covered: no GLOF-related indicator exists.
-ecb_physical_risk_indicators,soil_erosion,none,"Only ""subsidence"" is covered (ground sinking from soil compaction/extraction), a physically distinct process from soil erosion. No soil erosion indicator exists."
-ecb_physical_risk_indicators,landslide,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
+ecb_physical_risk_indicators,heat_stress,partial,"Institution/portfolio (euro-area aggregate) level. Partial because of a documentation inconsistency: not named among the ECB's 9 core hazards on its primary methodology page, though other ECB communications describe 'heat and water stress' as a chronic category."
+ecb_physical_risk_indicators,permafrost,none,
+ecb_physical_risk_indicators,heat_wave,partial,Institution/portfolio (euro-area aggregate) level. Partial for the same documentation-inconsistency reason as heat_stress.
+ecb_physical_risk_indicators,wildfire,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
+ecb_physical_risk_indicators,storm,full,"Institution/portfolio (euro-area aggregate) level, explicitly named ('windstorms') among the ECB's 9 core hazards."
+ecb_physical_risk_indicators,water_stress,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
+ecb_physical_risk_indicators,flood,full,"Institution/portfolio (euro-area aggregate) level, explicitly named (coastal and river flooding) among the ECB's 9 core hazards."
+ecb_physical_risk_indicators,heavy_precip,partial,"Institution/portfolio (euro-area aggregate) level, named as 'rainfall variation' among the ECB's 9 core hazards. Partial because this is a chronic statistical indicator, not an event-based heavy-precipitation hazard map."
+ecb_physical_risk_indicators,drought,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
+ecb_physical_risk_indicators,glacial_lake,none,
+ecb_physical_risk_indicators,soil_erosion,none,
+ecb_physical_risk_indicators,landslide,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
 hq_flood_extent,heat_stress,none,
 hq_flood_extent,permafrost,none,
 hq_flood_extent,heat_wave,none,
 hq_flood_extent,wildfire,none,
 hq_flood_extent,storm,none,
 hq_flood_extent,water_stress,none,
-hq_flood_extent,flood,full,Parcel/cadastral level - official HQ30/HQ100/HQ300 flood hazard zone maps
-hq_flood_extent,heavy_precip,partial,"Grid, coverage and resolution vary by federal state (Starkregen-Gefahrenkarten not yet available everywhere)"
+hq_flood_extent,flood,full,"Parcel/cadastral level, via the official HQ30/HQ100/HQ300 flood hazard zone maps."
+hq_flood_extent,heavy_precip,partial,Grid. Partial because coverage and resolution vary by federal state - Starkregen-Gefahrenkarten (heavy-rain hazard maps) are not yet available everywhere.
 hq_flood_extent,drought,none,
 hq_flood_extent,glacial_lake,none,
 hq_flood_extent,soil_erosion,none,
@@ -89,74 +89,74 @@ wlv_gefahrenzonenplan,heat_wave,none,
 wlv_gefahrenzonenplan,wildfire,none,
 wlv_gefahrenzonenplan,storm,none,
 wlv_gefahrenzonenplan,water_stress,none,
-wlv_gefahrenzonenplan,flood,partial,"Partial - torrent-related flood only, parcel level where mapped, incomplete national coverage"
+wlv_gefahrenzonenplan,flood,partial,"Parcel/cadastral level where mapped. Partial because this covers torrent-related flood only, with incomplete national coverage."
 wlv_gefahrenzonenplan,heavy_precip,none,
 wlv_gefahrenzonenplan,drought,none,
-wlv_gefahrenzonenplan,glacial_lake,partial,"Partial - only where torrent catchments are affected, not a dedicated glacial-lake product"
-wlv_gefahrenzonenplan,soil_erosion,full,Parcel/cadastral level - core product of the official Gefahrenzonenplan (red/yellow zones)
-wlv_gefahrenzonenplan,landslide,full,Parcel/cadastral level - core product of the official Gefahrenzonenplan (red/yellow zones)
+wlv_gefahrenzonenplan,glacial_lake,partial,Parcel/cadastral level where mapped. Partial because coverage is limited to cases where torrent catchments are affected - not a dedicated glacial-lake product.
+wlv_gefahrenzonenplan,soil_erosion,full,"Parcel/cadastral level, the core product of the official Gefahrenzonenplan (red/yellow zones)."
+wlv_gefahrenzonenplan,landslide,full,"Parcel/cadastral level, the core product of the official Gefahrenzonenplan (red/yellow zones)."
 hora,heat_stress,none,
 hora,permafrost,none,
 hora,heat_wave,none,
 hora,wildfire,none,
-hora,storm,full,"Grid (~1 km), daily wind-speed maps, current-conditions rather than a long-term hazard zoning"
+hora,storm,full,"Grid (~1km), daily wind-speed maps - coarser than the source's overall parcel-level granularity, and current-conditions rather than a long-term hazard zoning."
 hora,water_stress,none,
-hora,flood,full,Parcel/cadastral level - based on the official flood risk zoning (Gefahrenzonenplan Fliessgewaesser)
-hora,heavy_precip,full,"Grid, derived from the same hydrological modelling as the flood layer but less validated at parcel level"
+hora,flood,full,"Parcel/cadastral level, based on the official flood risk zoning (Gefahrenzonenplan Fliessgewaesser)."
+hora,heavy_precip,full,"Grid, derived from the same hydrological modelling as the flood layer - coarser than the source's overall parcel-level granularity, and less validated at parcel level."
 hora,drought,none,
 hora,glacial_lake,none,
 hora,soil_erosion,none,
-hora,landslide,partial,"Grid/indicative screening layer - newer, less mature than the flood layer, added via cooperation with GeoSphere Austria"
+hora,landslide,partial,"Grid, indicative screening layer. Partial because this is newer and less mature than the flood layer, added via cooperation with GeoSphere Austria - coarser than the source's overall parcel-level granularity."
 wri_aqueduct,heat_stress,none,
 wri_aqueduct,permafrost,none,
 wri_aqueduct,heat_wave,none,
 wri_aqueduct,wildfire,none,
 wri_aqueduct,storm,none,
-wri_aqueduct,water_stress,full,"Confirmed: dedicated ""baseline water stress"" (bws), ""baseline water depletion"" (bwd), ""interannual variability"" (iav), ""seasonal variability"" (sev) and ""groundwater table decline"" (gtd) indicators (WRI, n.d.)."
-wri_aqueduct,flood,full,"Confirmed: dedicated ""riverine flood risk"" (rfr) and ""coastal flood risk"" (cfr) indicators, explicitly named in WRI's own 13-indicator framework (WRI, n.d.), not merely inferred from water-stress data."
+wri_aqueduct,water_stress,full,"Sub-catchment (watershed) level, via dedicated baseline water stress, baseline water depletion, interannual variability, seasonal variability and groundwater table decline indicators."
+wri_aqueduct,flood,full,"Sub-catchment (watershed) level, via dedicated riverine flood risk and coastal flood risk indicators, not merely inferred from water-stress data."
 wri_aqueduct,heavy_precip,none,
-wri_aqueduct,drought,full,"Confirmed: dedicated ""drought risk"" (drr) indicator, explicitly named in WRI's own 13-indicator framework (WRI, n.d.)."
+wri_aqueduct,drought,full,"Sub-catchment (watershed) level, via a dedicated drought risk indicator."
 wri_aqueduct,glacial_lake,none,
 wri_aqueduct,soil_erosion,none,
 wri_aqueduct,landslide,none,
-moodys_physical_risk,heat_stress,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,heat_stress,full,"Facility/object level, proprietary modelled risk scores."
 moodys_physical_risk,permafrost,none,
-moodys_physical_risk,heat_wave,none,"Not covered as a distinct category: Moody's consistently names only ""heat stress"" (a chronic/institution-level indicator), not a separate acute heat-wave event product."
-moodys_physical_risk,wildfire,full,"Confirmed: ""wildfires"" is consistently named across Moody's own marketing and methodology materials as one of six covered hazards."
-moodys_physical_risk,storm,none,"Not applicable for Austria: Moody's own marketing/methodology materials name ""hurricanes and typhoons"" specifically, not extratropical windstorms - a tropical-cyclone-specific hazard with no relevance to a landlocked Central European country."
-moodys_physical_risk,water_stress,full,"Facility/object level, proprietary modelled risk scores"
-moodys_physical_risk,flood,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,heat_wave,none,
+moodys_physical_risk,wildfire,full,"Facility/object level, proprietary modelled risk scores; wildfires is consistently named among Moody's six covered hazards."
+moodys_physical_risk,storm,none,
+moodys_physical_risk,water_stress,full,"Facility/object level, proprietary modelled risk scores."
+moodys_physical_risk,flood,full,"Facility/object level, proprietary modelled risk scores."
 moodys_physical_risk,heavy_precip,none,
-moodys_physical_risk,drought,none,"Not covered: drought does not appear in any of Moody's own published hazard lists (floods, heat stress, hurricanes and typhoons, sea-level rise, water stress, wildfires)."
+moodys_physical_risk,drought,none,
 moodys_physical_risk,glacial_lake,none,
 moodys_physical_risk,soil_erosion,none,
 moodys_physical_risk,landslide,none,
-munich_re_nathan,heat_stress,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
+munich_re_nathan,heat_stress,partial,"Facility/object level. Partial because coverage is only advertised via the separate 'Climate Change Edition' ('13 climate hazards'), not individually named in the materials reviewed."
 munich_re_nathan,permafrost,none,
-munich_re_nathan,heat_wave,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
-munich_re_nathan,wildfire,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence. A dedicated higher-resolution ""Wildfire HD Edition"" is also available separately."
-munich_re_nathan,storm,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence. (""Extratropical Storm"" is the Europe-relevant category, unlike tropical-cyclone-only competitor products.)"
-munich_re_nathan,water_stress,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
-munich_re_nathan,flood,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence. (River Flood, Flash Flood, Storm Surge.)"
-munich_re_nathan,heavy_precip,partial,"Not separately named; ""Flash Flood"" (a related, precipitation-driven hazard) is explicitly covered, but it is classified and scored as a flood hazard, not a distinct heavy-precipitation indicator."
-munich_re_nathan,drought,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
-munich_re_nathan,glacial_lake,none,Not covered: no GLOF-related hazard appears in the 15-hazard Natural Hazards Edition list.
-munich_re_nathan,soil_erosion,none,"Only ""Subsidence"" is listed (ground sinking from soil compaction/extraction), a physically distinct process from soil erosion. No soil erosion hazard exists in the Natural Hazards Edition."
-munich_re_nathan,landslide,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence."
-world_bank_gfdrr,heat_stress,none,"Not covered as a category distinct from ""extreme heat"" - no separate heat-stress index identified."
-world_bank_gfdrr,permafrost,none,Not covered: no permafrost-related dataset identified.
-world_bank_gfdrr,heat_wave,full,"Confirmed: ""extreme heat"" is one of the hazards with commonly-available probabilistic data in ThinkHazard! (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
-world_bank_gfdrr,wildfire,full,"Confirmed: ""wildfire"" is one of the hazards with commonly-available probabilistic data in ThinkHazard! (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
-world_bank_gfdrr,storm,partial,"ThinkHazard! covers ""cyclone"" with commonly-available probabilistic data (GFDRR, n.d.); terminology and hazard model are tropical-cyclone-oriented, so applicability to European extratropical windstorms (as relevant to Austria) was not separately confirmed."
-world_bank_gfdrr,water_stress,full,"Confirmed: ""water scarcity"" is explicitly covered via a dedicated Water Stress Index methodology (water availability per person per year) (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
-world_bank_gfdrr,flood,full,"Confirmed: probabilistic flood hazard data (river, urban, coastal) commonly available via ThinkHazard! (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
-world_bank_gfdrr,heavy_precip,none,Not covered as a distinct hazard category separate from flood.
-world_bank_gfdrr,drought,partial,"Not covered as a distinct event-based drought hazard; only indirectly inferable from the chronic ""water scarcity"" / Water Stress Index methodology."
-world_bank_gfdrr,glacial_lake,none,Not covered: no GLOF-related dataset identified.
-world_bank_gfdrr,soil_erosion,none,Not covered: no soil erosion dataset or index identified in the ThinkHazard!/Risk Data Library ecosystem.
-world_bank_gfdrr,landslide,full,"Confirmed via a dedicated Global Landslide Hazard Map (World Bank/GFDRR, commissioned from Arup): gridded global dataset of estimated annual frequency of significant landslides."
+munich_re_nathan,heat_wave,partial,Facility/object level. Partial for the same unconfirmed-naming reason as heat_stress.
+munich_re_nathan,wildfire,full,"Facility/object level, explicitly named in the Natural Hazards Edition hazard list; a dedicated higher-resolution 'Wildfire HD Edition' is also available separately."
+munich_re_nathan,storm,full,"Facility/object level, explicitly named ('Extratropical Storm', the Europe-relevant category) in the Natural Hazards Edition hazard list."
+munich_re_nathan,water_stress,partial,Facility/object level. Partial for the same unconfirmed-naming reason as heat_stress.
+munich_re_nathan,flood,full,"Facility/object level, explicitly named (River Flood, Flash Flood, Storm Surge) in the Natural Hazards Edition hazard list."
+munich_re_nathan,heavy_precip,partial,"Facility/object level. Partial because 'Flash Flood' is covered but classified and scored as a flood hazard, not a distinct heavy-precipitation indicator."
+munich_re_nathan,drought,partial,Facility/object level. Partial for the same unconfirmed-naming reason as heat_stress.
+munich_re_nathan,glacial_lake,none,
+munich_re_nathan,soil_erosion,none,
+munich_re_nathan,landslide,full,"Facility/object level, explicitly named in the Natural Hazards Edition hazard list."
+world_bank_gfdrr,heat_stress,none,
+world_bank_gfdrr,permafrost,none,
+world_bank_gfdrr,heat_wave,full,"District (ADM2) level via ThinkHazard!'s public API, not merely country level - confirmed as one of the hazards with commonly-available probabilistic data."
+world_bank_gfdrr,wildfire,full,District (ADM2) level via ThinkHazard!'s public API - confirmed as one of the hazards with commonly-available probabilistic data.
+world_bank_gfdrr,storm,partial,District (ADM2) level via ThinkHazard!'s 'cyclone' category. Partial because the terminology and hazard model are tropical-cyclone-oriented; applicability to European extratropical windstorms was not separately confirmed.
+world_bank_gfdrr,water_stress,full,"District (ADM2) level via ThinkHazard!'s public API, via a dedicated Water Stress Index (water availability per person per year)."
+world_bank_gfdrr,flood,full,"District (ADM2) level via ThinkHazard!'s public API, covering river, urban and coastal flood."
+world_bank_gfdrr,heavy_precip,none,
+world_bank_gfdrr,drought,partial,District (ADM2) level. Partial because drought is not covered as a distinct event-based hazard - only indirectly inferable from the chronic Water Stress Index.
+world_bank_gfdrr,glacial_lake,none,
+world_bank_gfdrr,soil_erosion,none,
+world_bank_gfdrr,landslide,full,"Continuous global grid - finer than the source's overall district-level granularity - via a dedicated Global Landslide Hazard Map (World Bank/GFDRR, commissioned from Arup)."
 kryomon_at,heat_stress,none,
-kryomon_at,permafrost,partial,"Station-based (borehole temperature monitoring at established alpine sites), not area-wide"
+kryomon_at,permafrost,partial,Station-based (borehole temperature monitoring at established alpine sites). Partial because this is not an area-wide spatial layer.
 kryomon_at,heat_wave,none,
 kryomon_at,wildfire,none,
 kryomon_at,storm,none,
@@ -172,10 +172,10 @@ geosphere_spartacus,landslide,none,
 geosphere_spartacus,soil_erosion,none,
 geosphere_spartacus,glacial_lake,none,
 geosphere_spartacus,storm,none,
-geosphere_spartacus,heavy_precip,full,"Daily precipitation (RR) at 1km grid since 1961, sufficient to derive a heavy-precipitation index directly (GeoSphere Austria, n.d.-a)."
-geosphere_spartacus,heat_wave,full,"Daily min/max/mean temperature fields (TN, TX, TM, TM24) at 1km grid since 1961, sufficient to derive a heat-wave index directly (GeoSphere Austria, n.d.-a)."
+geosphere_spartacus,heavy_precip,full,"1km grid, national, via daily precipitation (RR) fields since 1961, sufficient to derive a heavy-precipitation index directly."
+geosphere_spartacus,heat_wave,full,"1km grid, national, via daily min/max/mean temperature fields (TN, TX, TM, TM24) since 1961, sufficient to derive a heat-wave index directly."
 geosphere_spartacus,heat_stress,none,
-geosphere_spartacus,drought,partial,"Precipitation and temperature fields could support a basic dryness proxy, but the dedicated drought index (SPEI) is provided by the related WINFORE dataset, not SPARTACUS itself."
+geosphere_spartacus,drought,partial,"1km grid, national. Partial because precipitation/temperature fields could support only a basic dryness proxy - the dedicated drought index (SPEI) is provided by the related WINFORE dataset, not SPARTACUS itself."
 geosphere_spartacus,water_stress,none,
 geosphere_spartacus,wildfire,none,
 geosphere_spartacus,permafrost,none,
@@ -187,43 +187,43 @@ geosphere_winfore_spei,storm,none,
 geosphere_winfore_spei,heavy_precip,none,
 geosphere_winfore_spei,heat_wave,none,
 geosphere_winfore_spei,heat_stress,none,
-geosphere_winfore_spei,drought,full,"Dedicated SPEI (Standardized Precipitation Evapotranspiration Index) at 30/90/365-day aggregation, 1km grid, purpose-built drought index (GeoSphere Austria, n.d.-b)."
-geosphere_winfore_spei,water_stress,partial,"The climatic water balance (precipitation minus potential evapotranspiration) is drought/dryness-oriented, not a direct chronic water-stress (supply-vs-demand) indicator."
+geosphere_winfore_spei,drought,full,"1km grid, national, via a dedicated SPEI (Standardized Precipitation Evapotranspiration Index) at 30/90/365-day aggregation - a purpose-built drought index."
+geosphere_winfore_spei,water_stress,partial,"1km grid, national. Partial because the climatic water balance (precipitation minus potential evapotranspiration) is drought/dryness-oriented, not a direct chronic water-stress (supply-vs-demand) indicator."
 geosphere_winfore_spei,wildfire,none,
 geosphere_winfore_spei,permafrost,none,
-climate_x,flood,full,"Explicitly confirmed: ""coastal and riverine flooding"" named among modelled hazards (netzerocompare/comparison sources, n.d.)."
-climate_x,landslide,full,"Explicitly confirmed: ""landslides"" named among modelled hazards."
-climate_x,soil_erosion,none,"Only ""subsidence"" (a physically distinct process) is named, not soil erosion."
+climate_x,flood,full,"Asset/facility level, explicitly confirmed ('coastal and riverine flooding') among modelled hazards."
+climate_x,landslide,full,"Asset/facility level, explicitly confirmed ('landslides') among modelled hazards."
+climate_x,soil_erosion,none,
 climate_x,glacial_lake,none,
-climate_x,storm,full,"Explicitly confirmed: ""storms"", ""tropical cyclones"" and ""storm surge"" named among modelled hazards."
+climate_x,storm,full,"Asset/facility level, explicitly confirmed ('storms', 'tropical cyclones' and 'storm surge') among modelled hazards."
 climate_x,heavy_precip,none,
-climate_x,heat_wave,partial,"Only the chronic ""heat stress"" metric is confirmed by name; a distinct acute heat-wave product was not confirmed."
-climate_x,heat_stress,full,"Explicitly confirmed: ""heat stress"" named among modelled hazards."
+climate_x,heat_wave,partial,Asset/facility level. Partial because only the chronic 'heat stress' metric is confirmed by name; a distinct acute heat-wave product was not confirmed.
+climate_x,heat_stress,full,"Asset/facility level, explicitly confirmed ('heat stress') among modelled hazards."
 climate_x,drought,none,
 climate_x,water_stress,none,
-climate_x,wildfire,full,"Explicitly confirmed: ""wildfires"" named among modelled hazards."
+climate_x,wildfire,full,"Asset/facility level, explicitly confirmed ('wildfires') among modelled hazards."
 climate_x,permafrost,none,
-jupiter_intelligence,flood,full,"Explicitly confirmed: ""flood"" named among the 9 modelled perils (Jupiter Intelligence, n.d.)."
+jupiter_intelligence,flood,full,"Asset/facility level, explicitly confirmed ('flood') among the 9 modelled perils."
 jupiter_intelligence,landslide,none,
 jupiter_intelligence,soil_erosion,none,
 jupiter_intelligence,glacial_lake,none,
-jupiter_intelligence,storm,full,"Explicitly confirmed: ""tropical cyclones"" and ""wind"" named among the 9 modelled perils; tropical-cyclone framing may limit direct Austria-relevance, as with Moody's."
+jupiter_intelligence,storm,full,"Asset/facility level, explicitly confirmed ('tropical cyclones' and 'wind') among the 9 modelled perils; tropical-cyclone framing may limit direct Austria-relevance, as with Moody's."
 jupiter_intelligence,heavy_precip,none,
-jupiter_intelligence,heat_wave,full,"Explicitly confirmed: ""heat"" named among the 9 modelled perils."
-jupiter_intelligence,heat_stress,partial,"Only a general ""heat"" peril is confirmed by name; whether this distinguishes acute (heat wave) from chronic (heat stress) was not confirmed."
-jupiter_intelligence,drought,full,"Explicitly confirmed: ""drought"" named among the 9 modelled perils."
+jupiter_intelligence,heat_wave,full,"Asset/facility level, explicitly confirmed ('heat') among the 9 modelled perils."
+jupiter_intelligence,heat_stress,partial,Asset/facility level. Partial because only a general 'heat' peril is confirmed by name; whether this distinguishes acute (heat wave) from chronic (heat stress) was not confirmed.
+jupiter_intelligence,drought,full,"Asset/facility level, explicitly confirmed ('drought') among the 9 modelled perils."
 jupiter_intelligence,water_stress,none,
-jupiter_intelligence,wildfire,full,"Explicitly confirmed: ""wildfire"" named among the 9 modelled perils."
+jupiter_intelligence,wildfire,full,"Asset/facility level, explicitly confirmed ('wildfire') among the 9 modelled perils."
 jupiter_intelligence,permafrost,none,
-copernicus_climate_indicators,flood,full,"Standalone ""Hydrology-related climate impact indicators"" dataset (sis-hydrology-variables-derived-projections), produced by SMHI for C3S, 18 water quantity/quality Climate Impact Indicators including Flood Recurrence and River Discharge, directly selectable, 5km grid."
+copernicus_climate_indicators,flood,full,"5km grid, via the standalone SMHI hydrology dataset (18 Climate Impact Indicators, including Flood Recurrence and River Discharge, directly selectable)."
 copernicus_climate_indicators,landslide,none,
 copernicus_climate_indicators,soil_erosion,none,
 copernicus_climate_indicators,glacial_lake,none,
 copernicus_climate_indicators,storm,none,
 copernicus_climate_indicators,heavy_precip,none,
 copernicus_climate_indicators,heat_wave,none,
-copernicus_climate_indicators,heat_stress,full,"Standalone ""ERA5-HEAT"" dataset (derived-utci-historical), peer-reviewed (Di Napoli et al., 2021), hourly UTCI/mean radiant temperature grids at 0.25 degree resolution (~28km), 1940-present."
-copernicus_climate_indicators,drought,full,"Soil-moisture drought (Mean Soil Moisture) directly selectable within the standalone SMHI hydrology dataset, 5km grid. (Meteorological/SPI-3 drought remains raw-variable-only; see copernicus_cds.)"
-copernicus_climate_indicators,water_stress,full,"Aridity Actual directly selectable within the standalone SMHI hydrology dataset (sis-hydrology-variables-derived-projections), 5km grid."
-copernicus_climate_indicators,wildfire,full,"Standalone ""Fire danger indices historical data"" dataset (CEMS/EFFIS-based, ERA5-driven, three national fire-danger rating systems), directly downloadable, ~28km (ERA5-driven) grid."
+copernicus_climate_indicators,heat_stress,full,"0.25 degree grid (~28km), via the standalone, peer-reviewed ERA5-HEAT dataset (hourly UTCI/mean radiant temperature, 1940-present)."
+copernicus_climate_indicators,drought,full,"5km grid, via the soil-moisture component (Mean Soil Moisture) of the standalone SMHI hydrology dataset. The meteorological/SPI-3 component remains raw-variable-only (see copernicus_cds)."
+copernicus_climate_indicators,water_stress,full,"5km grid, via the Aridity Actual indicator of the standalone SMHI hydrology dataset."
+copernicus_climate_indicators,wildfire,none,
 copernicus_climate_indicators,permafrost,none,
