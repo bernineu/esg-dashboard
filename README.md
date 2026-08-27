@@ -65,7 +65,7 @@ esg-dashboard/
 ├── www/
 │   └── styles.css         # card-grid styling
 └── data/
-    ├── sources.csv         # source master table (16 rows)
+    ├── sources.csv         # source master table (20 rows)
     ├── hazard_coverage.csv # long: source_id x hazard_id x coverage (+ granularity_detail)
     ├── d01_mapping.csv     # long: source_id x D 01.01 data point
     ├── source_details.csv  # long: source_id x field x free text (incl. cited "Abstract")
@@ -86,19 +86,20 @@ Excel artefact (`ESG_Data_Source_Matrix_Structured.xlsx`, Appendix C),
 so the dashboard and the printed matrix stay consistent — see the "Note
 on data model" entry in that workbook's Legend sheet.
 
--   **`sources.csv`** — one row per source (16). Key columns used by the
+-   **`sources.csv`** — one row per source (20). Key columns used by the
     app: `source_id`, `source_name`, `operator`, `short_description`,
     `risk_type` (Physical/Transition/Both), `relevance_level`,
-    `source_type`, `technical_effort` (ordered factor: Low \< Medium \<
-    High), `api` (Yes/No), `portfolio_ready` (No \< Partly \< Yes),
+    `source_type`, `geographic_scope`, `granularity_level`,
+    `technical_effort` (ordered factor: Low \< Medium \< High),
+    `api` (Yes/No), `portfolio_ready` (No \< Partly \< Yes),
     `portfolio_ready_reason` (technical / granularity / ready — why a
-    source is or is not portfolio-ready), `key_limitation` (one-line
-    headline caveat, shown in the detail view), `url`, `last_checked`.
-    `research_status`, `access_status`, `cost_category`, `operator_type`
-    and the boolean `web_interface` were removed from the matrix over
-    successive revisions (workbook Legend, "Removed fields"): process
-    metadata, or redundant with `source_type` / the remaining
-    download/api/`web_interface_type` columns.
+    source is or is not portfolio-ready), `url`, `last_checked`.
+    Fields removed over successive revisions (workbook Legend, "Removed
+    fields"): `research_status`, `access_status`, `cost_category`,
+    `operator_type`, the boolean `web_interface` (process metadata, or
+    redundant with `source_type`); and `web_interface_type`,
+    `download_format`, `key_limitation` were **moved into
+    `source_details.csv`** as long-form fields.
 -   **`hazard_coverage.csv`** — one row per source × hazard combination,
     `coverage` ∈ {none, partial, full}, plus `granularity_detail` free
     text where covered. Drives the Tier 2 (hazard type) filter and the
@@ -107,12 +108,14 @@ on data model" entry in that workbook's Legend sheet.
 -   **`d01_mapping.csv`** — links each source to the specific D 01.01 /
     DPM data point(s) it is relevant for (primary/secondary), shown in
     the detail view.
--   **`source_details.csv`** — long-form rationale text (processing
-    effort, limitations, suitability, licensing notes, portfolio-ready
-    pipeline) plus the cited **Abstract** per source. The abstract is
-    shown as prose in the detail view; the rest sits in a collapsed
-    *Rationale & source notes* section, since the abstract already
-    synthesises it. Shown only when a row is selected.
+-   **`source_details.csv`** — one `field` / `text` row per note. The
+    cited **Abstract** is shown as prose, the headline **Limitations**
+    note as a callout and **Pricing details** (commercial sources only —
+    the "u.a. Kosten" data) as its own section; everything else
+    (suitability, download format, web interface type, data update
+    frequency, licensing notes, portfolio-ready pipeline, …) sits in a
+    collapsed *Rationale & source notes* section, since the abstract
+    already synthesises most of it. Shown only when a row is selected.
 -   **`citations.csv`** — one row per source × reference, `citation_role`
     (primary / methodology / legal\_basis / technical\_doc). `zotero_key`
     is otherwise resolved in the thesis Zotero library. Loaded by
@@ -151,9 +154,9 @@ on data model" entry in that workbook's Legend sheet.
     filters. API availability is shown in the detail view for traceability
     but is not a filter facet.
 -   **Search** (applied regardless of tier) — case-insensitive, token-based
-    free-text search over source name, operator, short description and key
-    limitation. Each whitespace-separated token must appear somewhere, in
-    any order ("munich re", "ecb central bank" both match); combines with
+    free-text search over source name, operator, short description and the
+    limitations note. Each whitespace-separated token must appear somewhere,
+    in any order ("munich re", "ecb central bank" both match); combines with
     all other filters above.
 -   **Filters hidden in the detail view** — opening a source's *Source
     detail* sub-tab hides the sidebar filters (they don't apply to a
@@ -186,15 +189,16 @@ on data model" entry in that workbook's Legend sheet.
 -   **Source detail tab** — clicking a card switches to a dedicated
     detail tab, laid out to state each fact once: hero header (description,
     operator, external link, last-checked date); a row of key-metadata
-    chips (relevance, source type, max. effort, API access, portfolio-ready
-    + reason, the last with its definition on hover); the **key
-    limitation** (a one-line headline caveat) as a highlighted callout;
-    the cited **abstract** as prose — the narrative assessment that ties
-    the structured fields together; D 01.01 mapping badges; hazard
-    coverage badges for all 12 hazards — covered first (green = full,
-    amber = partial), then the uncovered ones in red — with a one-line
-    coverage granularity; and a collapsed **Rationale & source notes**
-    section holding the raw rationale text the abstract is built from
+    chips (relevance, source type, geographic scope, granularity, max.
+    effort, API access, portfolio-ready + reason, the last with its
+    definition on hover); the headline **Limitations** note as a
+    highlighted callout; the cited **abstract** as prose — the narrative
+    assessment that ties the structured fields together; D 01.01 mapping
+    badges; hazard coverage badges for all 12 hazards — covered first
+    (green = full, amber = partial), then the uncovered ones in red —
+    with a one-line coverage granularity; a **Pricing** section for
+    commercial sources; and a collapsed **Rationale & source notes**
+    section holding the remaining notes the abstract is built from
     (open by default only if a source has no abstract). A selected source stays
     viewable here even if a later filter change would hide it from the
     Results grid.

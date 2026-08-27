@@ -27,7 +27,7 @@ filter_sources <- function(risk_value,
 
   # Free-text search: every whitespace-separated token must appear (case-
   # insensitively) somewhere in the source's name, operator, short
-  # description or key limitation. Token-based, so word order and
+  # description or limitation note. Token-based, so word order and
   # surrounding punctuation don't matter ("munich re", "re munich",
   # "central bank ecb" all match). Done with base subsetting on a pre-built
   # haystack to avoid colliding with the same-named columns inside dplyr
@@ -36,7 +36,7 @@ filter_sources <- function(risk_value,
   tokens <- tokens[nzchar(tokens)]
   if (length(tokens) > 0) {
     haystack <- tolower(paste(df$source_name, df$operator,
-                              df$short_description, df$key_limitation))
+                              df$short_description, df$limitation))
     keep <- Reduce(`&`, lapply(tokens, function(tk) grepl(tk, haystack, fixed = TRUE)))
     df <- df[keep, , drop = FALSE]
   }

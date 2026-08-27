@@ -37,9 +37,18 @@ render_detail_ui <- function(src, back_input_id = NULL) {
   # The cited abstract is the narrative synthesis of the structured fields
   # and the rationale notes, so it is shown as prose up top and the raw
   # notes are tucked into a collapsible section to avoid repeating it all.
-  abstract_txt <- sd %>% filter(field == "Abstract") %>% pull(text)
-  sd_rest      <- sd %>% filter(field != "Abstract")
-  has_abstract <- length(abstract_txt) > 0 && nzchar(abstract_txt[1])
+  # Abstract, the headline Limitations note and Pricing details are pulled
+  # out and shown in their own sections; everything else is the collapsed
+  # "Rationale & source notes".
+  pull_field <- function(f) {
+    v <- sd %>% filter(field == f) %>% pull(text)
+    if (length(v) > 0) trimws(v[1]) else ""
+  }
+  abstract_txt <- pull_field("Abstract")
+  key_lim      <- pull_field("Limitations")
+  pricing_txt  <- pull_field("Pricing details")
+  sd_rest      <- sd %>% filter(!field %in% c("Abstract", "Limitations", "Pricing details"))
+  has_abstract <- nzchar(abstract_txt)
 
   # portfolio_ready + its reason: shown once, as a chip whose value carries
   # the short reason and whose tooltip carries the full definition. The
@@ -53,11 +62,11 @@ render_detail_ui <- function(src, back_input_id = NULL) {
   pr_title <- if (nzchar(pr_reason) && !is.na(PORTFOLIO_REASON_DEFS[pr_reason]))
     PORTFOLIO_REASON_DEFS[[pr_reason]] else NULL
 
-  key_lim <- trimws(as.character(src$key_limitation %||% ""))
-
   metadata_items <- list(
     list(label = "Relevance",        value = as.character(src$relevance_level)),
     list(label = "Source type",      value = src$source_type),
+    list(label = "Geographic scope", value = src$geographic_scope),
+    list(label = "Granularity",      value = src$granularity_level),
     list(label = "Max. effort",      value = as.character(src$technical_effort)),
     list(label = "API access",       value = src$api),
     list(label = "Portfolio-ready",  value = pr_value, title = pr_title)
@@ -93,9 +102,9 @@ render_detail_ui <- function(src, back_input_id = NULL) {
       })
     ),
 
-    # ---- Key limitation (the one-line headline caveat for this source) ----
+    # ---- Limitations (the headline caveat for this source) ----
     if (nzchar(key_lim)) div(class = "border-start border-3 border-warning ps-3 mb-4",
-      .detail_h("Key limitation"),
+      .detail_h("Limitations"),
       p(class = "mb-0", key_lim)
     ),
 
@@ -103,7 +112,7 @@ render_detail_ui <- function(src, back_input_id = NULL) {
     if (has_abstract) tagList(
       .detail_h("Abstract"),
       div(class = "border-start border-3 border-primary ps-3 mb-4",
-        p(class = "mb-0", abstract_txt[1])
+        p(class = "mb-0", abstract_txt)
       )
     ),
 
@@ -146,6 +155,14 @@ render_detail_ui <- function(src, back_input_id = NULL) {
         else div(class = "mb-4")
       )
     },
+
+    # ---- Pricing (commercial sources only; public sources have no such note) ----
+    if (nzchar(pricing_txt)) tagList(
+      .detail_h("Pricing"),
+      div(class = "border rounded-3 p-3 bg-light mb-4",
+        div(class = "small", pricing_txt)
+      )
+    ),
 
     # ---- Rationale & source notes (collapsed: the abstract above already
     #      synthesises these; kept for the full text / traceability) ----

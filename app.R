@@ -18,9 +18,9 @@
 #
 # Navigation (thesis Section 2.5): landing page -> Tier 1 risk type in the
 # navbar -> Tier 2 hazard type (physical only) -> shared facet filters.
-# Data is kept 1:1 with the thesis Excel artefact (Appendix C); see the
-# workbook Legend sheet for the removed fields (research_status,
-# access_status, cost_category) and the added portfolio_ready_reason.
+# Data is kept 1:1 with the thesis Excel artefact (Appendix C); the
+# workbook Legend sheet tracks which fields were removed from sources.csv
+# or moved into source_details.csv over successive revisions.
 # ============================================================
 
 library(shiny)
@@ -46,6 +46,14 @@ d01_mapping  <- load_d01_mapping()
 details_df   <- load_source_details()
 citations_df <- load_citations()
 refs_df      <- load_references()
+
+# The headline "Limitations" note moved from sources.csv into
+# source_details.csv. Denormalise it back onto sources_df so the search
+# haystack and the detail-view callout can reach it without a join.
+sources_df <- sources_df %>% left_join(
+  details_df %>% filter(field == "Limitations") %>% select(source_id, limitation = text),
+  by = "source_id"
+)
 
 TOTAL_SOURCES <- nrow(sources_df)
 

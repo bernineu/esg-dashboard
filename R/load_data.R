@@ -15,11 +15,13 @@
 #                          abstract citations (BibTeX; zotero_key in
 #                          citations.csv is otherwise resolved in Zotero)
 #
-# research_status, access_status and cost_category were removed from
-# sources.csv (workbook Legend: "Removed fields"): process metadata,
-# redundant with the download/api/web_interface columns, and redundant
-# with source_type respectively. portfolio_ready_reason was added
-# (technical / granularity / ready - see PORTFOLIO_REASON_DEFS in app.R).
+# sources.csv has been trimmed over successive revisions (workbook Legend,
+# "Removed fields"): research_status / access_status / cost_category /
+# operator_type / web_interface dropped; web_interface_type /
+# download_format / key_limitation moved into source_details.csv as
+# long-form fields. portfolio_ready_reason was added. app.R denormalises
+# the "Limitations" detail row back onto sources_df for search + the
+# detail callout.
 # ============================================================
 
 library(dplyr)

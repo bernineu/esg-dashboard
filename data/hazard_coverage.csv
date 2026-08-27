@@ -71,18 +71,18 @@ ecb_physical_risk_indicators,drought,full,"Explicitly named in the ECB's own ind
 ecb_physical_risk_indicators,glacial_lake,none,Not covered: no GLOF-related indicator exists.
 ecb_physical_risk_indicators,soil_erosion,none,"Only ""subsidence"" is covered (ground sinking from soil compaction/extraction), a physically distinct process from soil erosion. No soil erosion indicator exists."
 ecb_physical_risk_indicators,landslide,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
-bundeslaender_open_data,heat_stress,none,
-bundeslaender_open_data,permafrost,none,
-bundeslaender_open_data,heat_wave,none,
-bundeslaender_open_data,wildfire,none,
-bundeslaender_open_data,storm,none,
-bundeslaender_open_data,water_stress,none,
-bundeslaender_open_data,flood,full,Parcel/cadastral level - official HQ30/HQ100/HQ300 flood hazard zone maps
-bundeslaender_open_data,heavy_precip,partial,"Grid, coverage and resolution vary by federal state (Starkregen-Gefahrenkarten not yet available everywhere)"
-bundeslaender_open_data,drought,none,
-bundeslaender_open_data,glacial_lake,none,
-bundeslaender_open_data,soil_erosion,none,
-bundeslaender_open_data,landslide,none,
+hq_flood_extent,heat_stress,none,
+hq_flood_extent,permafrost,none,
+hq_flood_extent,heat_wave,none,
+hq_flood_extent,wildfire,none,
+hq_flood_extent,storm,none,
+hq_flood_extent,water_stress,none,
+hq_flood_extent,flood,full,Parcel/cadastral level - official HQ30/HQ100/HQ300 flood hazard zone maps
+hq_flood_extent,heavy_precip,partial,"Grid, coverage and resolution vary by federal state (Starkregen-Gefahrenkarten not yet available everywhere)"
+hq_flood_extent,drought,none,
+hq_flood_extent,glacial_lake,none,
+hq_flood_extent,soil_erosion,none,
+hq_flood_extent,landslide,none,
 wlv_gefahrenzonenplan,heat_stress,none,
 wlv_gefahrenzonenplan,permafrost,none,
 wlv_gefahrenzonenplan,heat_wave,none,
@@ -167,3 +167,51 @@ kryomon_at,drought,none,
 kryomon_at,glacial_lake,none,
 kryomon_at,soil_erosion,none,
 kryomon_at,landslide,none,
+geosphere_spartacus,flood,none,
+geosphere_spartacus,landslide,none,
+geosphere_spartacus,soil_erosion,none,
+geosphere_spartacus,glacial_lake,none,
+geosphere_spartacus,storm,none,
+geosphere_spartacus,heavy_precip,full,"Daily precipitation (RR) at 1km grid since 1961, sufficient to derive a heavy-precipitation index directly (GeoSphere Austria, n.d.-a)."
+geosphere_spartacus,heat_wave,full,"Daily min/max/mean temperature fields (TN, TX, TM, TM24) at 1km grid since 1961, sufficient to derive a heat-wave index directly (GeoSphere Austria, n.d.-a)."
+geosphere_spartacus,heat_stress,none,
+geosphere_spartacus,drought,partial,"Precipitation and temperature fields could support a basic dryness proxy, but the dedicated drought index (SPEI) is provided by the related WINFORE dataset, not SPARTACUS itself."
+geosphere_spartacus,water_stress,none,
+geosphere_spartacus,wildfire,none,
+geosphere_spartacus,permafrost,none,
+geosphere_winfore_spei,flood,none,
+geosphere_winfore_spei,landslide,none,
+geosphere_winfore_spei,soil_erosion,none,
+geosphere_winfore_spei,glacial_lake,none,
+geosphere_winfore_spei,storm,none,
+geosphere_winfore_spei,heavy_precip,none,
+geosphere_winfore_spei,heat_wave,none,
+geosphere_winfore_spei,heat_stress,none,
+geosphere_winfore_spei,drought,full,"Dedicated SPEI (Standardized Precipitation Evapotranspiration Index) at 30/90/365-day aggregation, 1km grid, purpose-built drought index (GeoSphere Austria, n.d.-b)."
+geosphere_winfore_spei,water_stress,partial,"The climatic water balance (precipitation minus potential evapotranspiration) is drought/dryness-oriented, not a direct chronic water-stress (supply-vs-demand) indicator."
+geosphere_winfore_spei,wildfire,none,
+geosphere_winfore_spei,permafrost,none,
+climate_x,flood,full,"Explicitly confirmed: ""coastal and riverine flooding"" named among modelled hazards (netzerocompare/comparison sources, n.d.)."
+climate_x,landslide,full,"Explicitly confirmed: ""landslides"" named among modelled hazards."
+climate_x,soil_erosion,none,"Only ""subsidence"" (a physically distinct process) is named, not soil erosion."
+climate_x,glacial_lake,none,
+climate_x,storm,full,"Explicitly confirmed: ""storms"", ""tropical cyclones"" and ""storm surge"" named among modelled hazards."
+climate_x,heavy_precip,none,
+climate_x,heat_wave,partial,"Only the chronic ""heat stress"" metric is confirmed by name; a distinct acute heat-wave product was not confirmed."
+climate_x,heat_stress,full,"Explicitly confirmed: ""heat stress"" named among modelled hazards."
+climate_x,drought,none,
+climate_x,water_stress,none,
+climate_x,wildfire,full,"Explicitly confirmed: ""wildfires"" named among modelled hazards."
+climate_x,permafrost,none,
+jupiter_intelligence,flood,full,"Explicitly confirmed: ""flood"" named among the 9 modelled perils (Jupiter Intelligence, n.d.)."
+jupiter_intelligence,landslide,none,
+jupiter_intelligence,soil_erosion,none,
+jupiter_intelligence,glacial_lake,none,
+jupiter_intelligence,storm,full,"Explicitly confirmed: ""tropical cyclones"" and ""wind"" named among the 9 modelled perils; tropical-cyclone framing may limit direct Austria-relevance, as with Moody's."
+jupiter_intelligence,heavy_precip,none,
+jupiter_intelligence,heat_wave,full,"Explicitly confirmed: ""heat"" named among the 9 modelled perils."
+jupiter_intelligence,heat_stress,partial,"Only a general ""heat"" peril is confirmed by name; whether this distinguishes acute (heat wave) from chronic (heat stress) was not confirmed."
+jupiter_intelligence,drought,full,"Explicitly confirmed: ""drought"" named among the 9 modelled perils."
+jupiter_intelligence,water_stress,none,
+jupiter_intelligence,wildfire,full,"Explicitly confirmed: ""wildfire"" named among the 9 modelled perils."
+jupiter_intelligence,permafrost,none,
