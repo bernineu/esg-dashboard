@@ -7,7 +7,7 @@
 
 required_packages <- c(
   "shiny",   # web application framework
-  "bslib",   # Bootstrap 5 theme (bs_theme)
+  "bslib",   # Bootstrap 5 theme + navbar/sidebar layout (>= 0.5; navset_bar, sidebar, nav_panel)
   "dplyr",   # data manipulation
   "tidyr"    # data reshaping (used in load_data.R)
 )

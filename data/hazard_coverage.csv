@@ -1,157 +1,169 @@
-source_id,hazard_id,coverage
-eea_climate_adapt,heat_stress,partial
-eea_climate_adapt,permafrost,partial
-eea_climate_adapt,heat_wave,partial
-eea_climate_adapt,wildfire,partial
-eea_climate_adapt,storm,partial
-eea_climate_adapt,water_stress,partial
-eea_climate_adapt,flood,partial
-eea_climate_adapt,heavy_precip,partial
-eea_climate_adapt,drought,partial
-eea_climate_adapt,glacial_lake,none
-eea_climate_adapt,soil_erosion,partial
-eea_climate_adapt,landslide,partial
-jrc_risk_data_hub,heat_stress,partial
-jrc_risk_data_hub,permafrost,none
-jrc_risk_data_hub,heat_wave,partial
-jrc_risk_data_hub,wildfire,full
-jrc_risk_data_hub,storm,partial
-jrc_risk_data_hub,water_stress,partial
-jrc_risk_data_hub,flood,full
-jrc_risk_data_hub,heavy_precip,partial
-jrc_risk_data_hub,drought,partial
-jrc_risk_data_hub,glacial_lake,partial
-jrc_risk_data_hub,soil_erosion,full
-jrc_risk_data_hub,landslide,full
-effis_wildfire,heat_stress,none
-effis_wildfire,permafrost,none
-effis_wildfire,heat_wave,none
-effis_wildfire,wildfire,full
-effis_wildfire,storm,none
-effis_wildfire,water_stress,none
-effis_wildfire,flood,none
-effis_wildfire,heavy_precip,none
-effis_wildfire,drought,none
-effis_wildfire,glacial_lake,none
-effis_wildfire,soil_erosion,none
-effis_wildfire,landslide,none
-copernicus_cds,heat_stress,full
-copernicus_cds,permafrost,partial
-copernicus_cds,heat_wave,full
-copernicus_cds,wildfire,partial
-copernicus_cds,storm,partial
-copernicus_cds,water_stress,partial
-copernicus_cds,flood,partial
-copernicus_cds,heavy_precip,partial
-copernicus_cds,drought,partial
-copernicus_cds,glacial_lake,none
-copernicus_cds,soil_erosion,partial
-copernicus_cds,landslide,none
-eba_esg_dashboard,heat_stress,partial
-eba_esg_dashboard,permafrost,none
-eba_esg_dashboard,heat_wave,none
-eba_esg_dashboard,wildfire,none
-eba_esg_dashboard,storm,none
-eba_esg_dashboard,water_stress,none
-eba_esg_dashboard,flood,partial
-eba_esg_dashboard,heavy_precip,none
-eba_esg_dashboard,drought,none
-eba_esg_dashboard,glacial_lake,none
-eba_esg_dashboard,soil_erosion,none
-eba_esg_dashboard,landslide,none
-ecb_physical_risk_indicators,heat_stress,full
-ecb_physical_risk_indicators,permafrost,none
-ecb_physical_risk_indicators,heat_wave,partial
-ecb_physical_risk_indicators,wildfire,partial
-ecb_physical_risk_indicators,storm,full
-ecb_physical_risk_indicators,water_stress,full
-ecb_physical_risk_indicators,flood,full
-ecb_physical_risk_indicators,heavy_precip,none
-ecb_physical_risk_indicators,drought,partial
-ecb_physical_risk_indicators,glacial_lake,none
-ecb_physical_risk_indicators,soil_erosion,none
-ecb_physical_risk_indicators,landslide,none
-bundeslaender_open_data,heat_stress,none
-bundeslaender_open_data,permafrost,none
-bundeslaender_open_data,heat_wave,none
-bundeslaender_open_data,wildfire,none
-bundeslaender_open_data,storm,none
-bundeslaender_open_data,water_stress,none
-bundeslaender_open_data,flood,full
-bundeslaender_open_data,heavy_precip,partial
-bundeslaender_open_data,drought,none
-bundeslaender_open_data,glacial_lake,none
-bundeslaender_open_data,soil_erosion,partial
-bundeslaender_open_data,landslide,partial
-hora,heat_stress,none
-hora,permafrost,none
-hora,heat_wave,none
-hora,wildfire,none
-hora,storm,full
-hora,water_stress,none
-hora,flood,full
-hora,heavy_precip,full
-hora,drought,none
-hora,glacial_lake,none
-hora,soil_erosion,none
-hora,landslide,partial
-wri_aqueduct,heat_stress,none
-wri_aqueduct,permafrost,none
-wri_aqueduct,heat_wave,none
-wri_aqueduct,wildfire,none
-wri_aqueduct,storm,none
-wri_aqueduct,water_stress,full
-wri_aqueduct,flood,partial
-wri_aqueduct,heavy_precip,none
-wri_aqueduct,drought,partial
-wri_aqueduct,glacial_lake,none
-wri_aqueduct,soil_erosion,none
-wri_aqueduct,landslide,none
-moodys_physical_risk,heat_stress,full
-moodys_physical_risk,permafrost,none
-moodys_physical_risk,heat_wave,full
-moodys_physical_risk,wildfire,partial
-moodys_physical_risk,storm,full
-moodys_physical_risk,water_stress,full
-moodys_physical_risk,flood,full
-moodys_physical_risk,heavy_precip,none
-moodys_physical_risk,drought,full
-moodys_physical_risk,glacial_lake,none
-moodys_physical_risk,soil_erosion,none
-moodys_physical_risk,landslide,none
-munich_re_nathan,heat_stress,full
-munich_re_nathan,permafrost,none
-munich_re_nathan,heat_wave,full
-munich_re_nathan,wildfire,partial
-munich_re_nathan,storm,full
-munich_re_nathan,water_stress,full
-munich_re_nathan,flood,full
-munich_re_nathan,heavy_precip,full
-munich_re_nathan,drought,full
-munich_re_nathan,glacial_lake,partial
-munich_re_nathan,soil_erosion,partial
-munich_re_nathan,landslide,partial
-world_bank_gfdrr,heat_stress,partial
-world_bank_gfdrr,permafrost,none
-world_bank_gfdrr,heat_wave,partial
-world_bank_gfdrr,wildfire,partial
-world_bank_gfdrr,storm,partial
-world_bank_gfdrr,water_stress,partial
-world_bank_gfdrr,flood,partial
-world_bank_gfdrr,heavy_precip,none
-world_bank_gfdrr,drought,partial
-world_bank_gfdrr,glacial_lake,none
-world_bank_gfdrr,soil_erosion,partial
-world_bank_gfdrr,landslide,partial
-kryomon_at,heat_stress,none
-kryomon_at,permafrost,partial
-kryomon_at,heat_wave,none
-kryomon_at,wildfire,none
-kryomon_at,storm,none
-kryomon_at,water_stress,none
-kryomon_at,flood,none
-kryomon_at,heavy_precip,none
-kryomon_at,drought,none
-kryomon_at,glacial_lake,none
-kryomon_at,soil_erosion,none
-kryomon_at,landslide,none
+source_id,hazard_id,coverage,granularity_detail
+eea_climate_adapt,heat_stress,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,permafrost,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,heat_wave,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,wildfire,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,storm,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,water_stress,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,flood,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,heavy_precip,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,drought,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,glacial_lake,none,
+eea_climate_adapt,soil_erosion,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,landslide,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+jrc_risk_data_hub,heat_stress,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,permafrost,none,
+jrc_risk_data_hub,heat_wave,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,wildfire,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,storm,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,water_stress,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,flood,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,heavy_precip,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,drought,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,glacial_lake,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,soil_erosion,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,landslide,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+effis_wildfire,heat_stress,none,
+effis_wildfire,permafrost,none,
+effis_wildfire,heat_wave,none,
+effis_wildfire,wildfire,full,"Grid/raster (~1 km), daily fire danger index and burnt-area mapping"
+effis_wildfire,storm,none,
+effis_wildfire,water_stress,none,
+effis_wildfire,flood,none,
+effis_wildfire,heavy_precip,none,
+effis_wildfire,drought,none,
+effis_wildfire,glacial_lake,none,
+effis_wildfire,soil_erosion,none,
+effis_wildfire,landslide,none,
+copernicus_cds,heat_stress,full,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,permafrost,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,heat_wave,full,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,wildfire,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,storm,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,water_stress,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,flood,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,heavy_precip,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,drought,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,glacial_lake,none,
+copernicus_cds,soil_erosion,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
+copernicus_cds,landslide,none,
+eba_esg_dashboard,heat_stress,partial,"Bank/aggregate level - EU supervisory reporting statistics, not spatially resolved"
+eba_esg_dashboard,permafrost,none,
+eba_esg_dashboard,heat_wave,none,
+eba_esg_dashboard,wildfire,none,
+eba_esg_dashboard,storm,none,
+eba_esg_dashboard,water_stress,none,
+eba_esg_dashboard,flood,partial,"Bank/aggregate level - EU supervisory reporting statistics, not spatially resolved"
+eba_esg_dashboard,heavy_precip,none,
+eba_esg_dashboard,drought,none,
+eba_esg_dashboard,glacial_lake,none,
+eba_esg_dashboard,soil_erosion,none,
+eba_esg_dashboard,landslide,none,
+ecb_physical_risk_indicators,heat_stress,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
+ecb_physical_risk_indicators,permafrost,none,
+ecb_physical_risk_indicators,heat_wave,partial,"Institution/portfolio level aggregate indicators, not spatially resolved"
+ecb_physical_risk_indicators,wildfire,partial,"Institution/portfolio level aggregate indicators, not spatially resolved"
+ecb_physical_risk_indicators,storm,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
+ecb_physical_risk_indicators,water_stress,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
+ecb_physical_risk_indicators,flood,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
+ecb_physical_risk_indicators,heavy_precip,none,
+ecb_physical_risk_indicators,drought,partial,"Institution/portfolio level aggregate indicators, not spatially resolved"
+ecb_physical_risk_indicators,glacial_lake,none,
+ecb_physical_risk_indicators,soil_erosion,none,
+ecb_physical_risk_indicators,landslide,none,
+bundeslaender_open_data,heat_stress,none,
+bundeslaender_open_data,permafrost,none,
+bundeslaender_open_data,heat_wave,none,
+bundeslaender_open_data,wildfire,none,
+bundeslaender_open_data,storm,none,
+bundeslaender_open_data,water_stress,none,
+bundeslaender_open_data,flood,full,Parcel/cadastral level - official HQ30/HQ100/HQ300 flood hazard zone maps
+bundeslaender_open_data,heavy_precip,partial,"Grid, coverage and resolution vary by federal state (Starkregen-Gefahrenkarten not yet available everywhere)"
+bundeslaender_open_data,drought,none,
+bundeslaender_open_data,glacial_lake,none,
+bundeslaender_open_data,soil_erosion,none,
+bundeslaender_open_data,landslide,none,
+wlv_gefahrenzonenplan,heat_stress,none,
+wlv_gefahrenzonenplan,permafrost,none,
+wlv_gefahrenzonenplan,heat_wave,none,
+wlv_gefahrenzonenplan,wildfire,none,
+wlv_gefahrenzonenplan,storm,none,
+wlv_gefahrenzonenplan,water_stress,none,
+wlv_gefahrenzonenplan,flood,partial,"Partial - torrent-related flood only, parcel level where mapped, incomplete national coverage"
+wlv_gefahrenzonenplan,heavy_precip,none,
+wlv_gefahrenzonenplan,drought,none,
+wlv_gefahrenzonenplan,glacial_lake,partial,"Partial - only where torrent catchments are affected, not a dedicated glacial-lake product"
+wlv_gefahrenzonenplan,soil_erosion,full,Parcel/cadastral level - core product of the official Gefahrenzonenplan (red/yellow zones)
+wlv_gefahrenzonenplan,landslide,full,Parcel/cadastral level - core product of the official Gefahrenzonenplan (red/yellow zones)
+hora,heat_stress,none,
+hora,permafrost,none,
+hora,heat_wave,none,
+hora,wildfire,none,
+hora,storm,full,"Grid (~1 km), daily wind-speed maps, current-conditions rather than a long-term hazard zoning"
+hora,water_stress,none,
+hora,flood,full,Parcel/cadastral level - based on the official flood risk zoning (Gefahrenzonenplan Fliessgewaesser)
+hora,heavy_precip,full,"Grid, derived from the same hydrological modelling as the flood layer but less validated at parcel level"
+hora,drought,none,
+hora,glacial_lake,none,
+hora,soil_erosion,none,
+hora,landslide,partial,"Grid/indicative screening layer - newer, less mature than the flood layer, added via cooperation with GeoSphere Austria"
+wri_aqueduct,heat_stress,none,
+wri_aqueduct,permafrost,none,
+wri_aqueduct,heat_wave,none,
+wri_aqueduct,wildfire,none,
+wri_aqueduct,storm,none,
+wri_aqueduct,water_stress,full,"Sub-catchment (watershed) level, modelled water-risk indicators"
+wri_aqueduct,flood,partial,"Sub-catchment (watershed) level, modelled water-risk indicators"
+wri_aqueduct,heavy_precip,none,
+wri_aqueduct,drought,partial,"Sub-catchment (watershed) level, modelled water-risk indicators"
+wri_aqueduct,glacial_lake,none,
+wri_aqueduct,soil_erosion,none,
+wri_aqueduct,landslide,none,
+moodys_physical_risk,heat_stress,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,permafrost,none,
+moodys_physical_risk,heat_wave,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,wildfire,partial,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,storm,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,water_stress,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,flood,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,heavy_precip,none,
+moodys_physical_risk,drought,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,glacial_lake,none,
+moodys_physical_risk,soil_erosion,none,
+moodys_physical_risk,landslide,none,
+munich_re_nathan,heat_stress,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,permafrost,none,
+munich_re_nathan,heat_wave,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,wildfire,partial,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,storm,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,water_stress,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,flood,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,heavy_precip,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,drought,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,glacial_lake,partial,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,soil_erosion,partial,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,landslide,partial,"Facility/object level, proprietary modelled risk scores"
+world_bank_gfdrr,heat_stress,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,permafrost,none,
+world_bank_gfdrr,heat_wave,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,wildfire,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,storm,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,water_stress,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,flood,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,heavy_precip,none,
+world_bank_gfdrr,drought,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,glacial_lake,none,
+world_bank_gfdrr,soil_erosion,partial,"Global/country level, some subnational layers depending on dataset"
+world_bank_gfdrr,landslide,partial,"Global/country level, some subnational layers depending on dataset"
+kryomon_at,heat_stress,none,
+kryomon_at,permafrost,partial,"Station-based (borehole temperature monitoring at established alpine sites), not area-wide"
+kryomon_at,heat_wave,none,
+kryomon_at,wildfire,none,
+kryomon_at,storm,none,
+kryomon_at,water_stress,none,
+kryomon_at,flood,none,
+kryomon_at,heavy_precip,none,
+kryomon_at,drought,none,
+kryomon_at,glacial_lake,none,
+kryomon_at,soil_erosion,none,
+kryomon_at,landslide,none,

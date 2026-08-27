@@ -3,23 +3,29 @@
 #
 # Implements the navigation logic described in thesis Section 2.5:
 #   Landing page: introduction + Physical/Transition risk choice
-#   Tier 1: risk type (Physical / Transition) - top-level tabs in the dashboard
+#   Tier 1: risk type (Physical / Transition) - top navbar (bslib::navset_bar)
 #   Tier 2: hazard type (physical-risk branch only, per Section 2.4 Table X)
-#   Facets: source type, operator type, technical effort, legal usability, API
-#           (applied across whichever tier(s) the user has navigated through)
+#   Facets: search, source type, relevance level, max. effort
+#           (shared sidebar, applied across whichever tier the user is on)
 #
 # Results are shown as a clickable card grid (source, description, operator,
 # plus at-a-glance badges); clicking a card opens a detailed view in the
-# Source detail sub-tab. cost_category is intentionally not used anywhere in
-# the app - in this data set it is a 1:1 restatement of source_type
-# (Public = Free, Commercial = Paid), so source_type alone covers it without
-# a redundant facet/badge. The column stays in data/sources.csv untouched,
-# to keep the CSV 1:1 with the thesis Excel artefact (Appendix C).
+# Source detail sub-tab, which also carries the cited source abstract.
 #
-# Data layer: R/load_data.R reads the four normalized CSVs described in
+# The References page renders data/references.bib as a bibliography: the
+# supporting literature the source abstracts cite.
+#
+# research_status, access_status and cost_category were removed from
+# sources.csv (workbook Legend sheet): process metadata, redundant with the
+# download/api/web_interface columns, and redundant with source_type. The
+# app no longer references them. portfolio_ready_reason (technical /
+# granularity / ready) was added and is surfaced in the detail view.
+#
+# Data layer: R/load_data.R reads the normalized files described in
 # Appendix C (sources.csv, hazard_coverage.csv, d01_mapping.csv,
-# source_details.csv), keeping the dashboard's data 1:1 with the thesis
-# artefact rather than a separate, undocumented dataset.
+# source_details.csv, citations.csv, references.bib), keeping the
+# dashboard's data 1:1 with the thesis artefact rather than a separate,
+# undocumented dataset.
 # ============================================================
 
 library(shiny)
@@ -28,10 +34,12 @@ library(dplyr)
 
 source("R/load_data.R")
 
-sources_df  <- load_sources()
-hazard_cov  <- load_hazard_coverage()
-d01_mapping <- load_d01_mapping()
-details_df  <- load_source_details()
+sources_df   <- load_sources()
+hazard_cov   <- load_hazard_coverage()
+d01_mapping  <- load_d01_mapping()
+details_df   <- load_source_details()
+citations_df <- load_citations()
+refs_df      <- load_references()
 
 TOTAL_SOURCES <- nrow(sources_df)
 
@@ -54,6 +62,19 @@ RELEVANCE_COLORS <- c(
   "Methodological" = "#d1ecf1"
 )
 
+# portfolio_ready_reason (workbook Legend sheet). "ready" explains a Yes;
+# "technical" / "granularity" explain why a source is only Partly / No.
+PORTFOLIO_REASON_DEFS <- c(
+  "ready"       = "A one-time pipeline differentiates individual exposures at a meaningful granularity, with no manual work per exposure.",
+  "technical"   = "Held back by a technical access limit (no bulk/API access, or data only in an unstructured format such as PDF) - not by resolution.",
+  "granularity" = "Held back by the source's own resolution: even a fully automated pipeline returns the same value for many exposures (per region, watershed or country)."
+)
+PORTFOLIO_REASON_SHORT <- c(
+  "ready"       = "ready",
+  "technical"   = "technical access",
+  "granularity" = "granularity"
+)
+
 # ------------------------------------------------------------
 # Shared helpers (pure functions, reused for both the Physical
 # and Transition tabs so the filtering/rendering logic lives once)
@@ -64,29 +85,43 @@ RELEVANCE_COLORS <- c(
 # same name inside dplyr::filter()'s data-masking evaluation.
 filter_sources <- function(risk_value,
                             hazard_types         = character(0),
+                            sel_search           = "",
                             sel_source_type      = "All",
-                            sel_operator_type    = "All",
-                            sel_technical_effort = "All",
-                            sel_access_status    = "All",
-                            sel_has_api          = FALSE) {
+                            sel_relevance        = "All",
+                            sel_technical_effort = "All") {
   df <- sources_df %>% filter(risk_type == risk_value | risk_type == "Both")
 
-  # Tier 2: hazard filter (physical-risk branch only)
+  # Tier 2: hazard filter (physical-risk branch only). AND semantics -
+  # with several hazards ticked, only sources covering every one of them
+  # (at >= partial coverage) are kept.
   if (risk_value == "Physical" && length(hazard_types) > 0) {
     covering_ids <- sources_covering_hazards(
       hazard_cov, hazard_types, min_coverage = "partial")
     df <- df %>% filter(source_id %in% covering_ids)
   }
 
+  # Free-text search: every whitespace-separated token must appear (case-
+  # insensitively) somewhere in the source's name, operator, operator type
+  # or short description. Token-based, so word order and surrounding
+  # punctuation don't matter ("munich re", "re munich", "central bank ecb"
+  # all match). Done with base subsetting on a pre-built haystack to avoid
+  # colliding with the same-named columns inside dplyr data masking.
+  tokens <- strsplit(tolower(trimws(sel_search)), "\\s+")[[1]]
+  tokens <- tokens[nzchar(tokens)]
+  if (length(tokens) > 0) {
+    haystack <- tolower(paste(df$source_name, df$operator,
+                              df$operator_type, df$short_description))
+    keep <- Reduce(`&`, lapply(tokens, function(tk) grepl(tk, haystack, fixed = TRUE)))
+    df <- df[keep, , drop = FALSE]
+  }
+
   # Facets
-  if (sel_source_type      != "All") df <- df %>% filter(source_type      == sel_source_type)
-  if (sel_operator_type    != "All") df <- df %>% filter(operator_type    == sel_operator_type)
+  if (sel_source_type != "All") df <- df %>% filter(source_type     == sel_source_type)
+  if (sel_relevance   != "All") df <- df %>% filter(relevance_level == sel_relevance)
   if (sel_technical_effort != "All") {
     max_level <- factor(sel_technical_effort, levels = c("Low", "Medium", "High"), ordered = TRUE)
     df <- df %>% filter(technical_effort <= max_level)
   }
-  if (sel_access_status != "All") df <- df %>% filter(access_status == sel_access_status)
-  if (sel_has_api)                df <- df %>% filter(api == "Yes")
 
   df %>%
     select(source_id, source_name, short_description, operator, source_type,
@@ -125,7 +160,7 @@ badge_portfolio <- function(p) {
     "No"     = "badge bg-secondary",
     "badge bg-secondary"
   )
-  tags$span(class = cls, paste("Portfolio:", p))
+  tags$span(class = cls, paste("Portfolio ready:", p))
 }
 
 # Renders the results as a responsive, clickable card grid. Clicking a card
@@ -175,10 +210,20 @@ lookup_source <- function(sid) {
 
 # Renders the visually detailed source-detail pane for one source record
 # (a single-row data frame from lookup_source(), or NULL/0-row if none selected).
-render_detail_ui <- function(src) {
+# `back_input_id` is the id of a "Back to results" actionButton the server
+# wires to switch the sub-tab back to Results.
+render_detail_ui <- function(src, back_input_id = NULL) {
+  back_btn <- if (!is.null(back_input_id)) {
+    actionButton(back_input_id, "← Back to results",
+      class = "btn btn-outline-secondary btn-sm mb-3")
+  }
+
   if (is.null(src) || nrow(src) == 0) {
-    return(div(class = "text-muted fst-italic text-center p-5",
-      "No source selected. Click a card in the Results tab."))
+    return(tagList(
+      back_btn,
+      div(class = "text-muted fst-italic text-center p-5",
+        "No source selected. Click a card in the Results tab.")
+    ))
   }
 
   sid <- src$source_id
@@ -186,16 +231,37 @@ render_detail_ui <- function(src) {
   dm  <- d01_mapping %>% filter(source_id == sid)
   haz <- hazard_cov   %>% filter(source_id == sid)
 
+  # The cited abstract is the narrative synthesis of the structured fields
+  # and the rationale notes, so it is shown as prose up top and the raw
+  # notes are tucked into a collapsible section to avoid repeating it all.
+  abstract_txt <- sd %>% filter(field == "Abstract") %>% pull(text)
+  sd_rest      <- sd %>% filter(field != "Abstract")
+  has_abstract <- length(abstract_txt) > 0 && nzchar(abstract_txt[1])
+
+  # portfolio_ready + its reason: shown once, as a chip whose value carries
+  # the short reason and whose tooltip carries the full definition. The
+  # source-specific reasoning already lives in the abstract's closing lines.
+  pr_reason <- trimws(as.character(src$portfolio_ready_reason))
+  pr_value  <- as.character(src$portfolio_ready)
+  if (nzchar(pr_reason) && !is.na(PORTFOLIO_REASON_SHORT[pr_reason]) &&
+      pr_reason != "ready") {
+    pr_value <- paste0(pr_value, " (", PORTFOLIO_REASON_SHORT[pr_reason], ")")
+  }
+  pr_title <- if (nzchar(pr_reason) && !is.na(PORTFOLIO_REASON_DEFS[pr_reason]))
+    PORTFOLIO_REASON_DEFS[[pr_reason]] else NULL
+
   metadata_items <- list(
     list(label = "Operator type",    value = src$operator_type),
     list(label = "Relevance",        value = as.character(src$relevance_level)),
     list(label = "Source type",      value = src$source_type),
-    list(label = "Tech. effort",     value = as.character(src$technical_effort)),
-    list(label = "Legal access",     value = src$access_status),
-    list(label = "Portfolio-ready",  value = as.character(src$portfolio_ready))
+    list(label = "Max. effort",      value = as.character(src$technical_effort)),
+    list(label = "API access",       value = src$api),
+    list(label = "Portfolio-ready",  value = pr_value, title = pr_title)
   )
 
   tagList(
+
+    back_btn,
 
     # ---- Hero header ----
     div(class = "mb-4",
@@ -213,11 +279,21 @@ render_detail_ui <- function(src) {
     # ---- Key metadata chips ----
     div(class = "d-flex flex-wrap gap-2 mb-4",
       lapply(metadata_items, function(m) {
-        div(class = "border rounded-3 px-3 py-2 text-center bg-light", style = "min-width: 130px;",
+        div(class = "border rounded-3 px-3 py-2 text-center bg-light",
+          style = "min-width: 130px;", title = m$title,
           div(class = "text-muted text-uppercase", style = "font-size:.7rem; letter-spacing:.03em;", m$label),
           div(class = "fw-semibold", m$value)
         )
       })
+    ),
+
+    # ---- Cited source abstract (the narrative assessment) ----
+    if (has_abstract) tagList(
+      h6(class = "text-uppercase text-muted mb-2", style = "font-size:.75rem; letter-spacing:.03em;",
+         "Abstract"),
+      div(class = "border-start border-3 border-primary ps-3 mb-4",
+        p(class = "mb-0", abstract_txt[1])
+      )
     ),
 
     # ---- D 01.01 mapping ----
@@ -235,38 +311,52 @@ render_detail_ui <- function(src) {
     # ---- Hazard coverage badges (physical sources only; skip all-none coverage) ----
     if (nrow(haz) > 0) {
       covered <- haz %>% filter(coverage != "none")
-      if (nrow(covered) > 0) tagList(
-        h6(class = "text-uppercase text-muted mb-2", style = "font-size:.75rem; letter-spacing:.03em;",
-           "Hazard coverage"),
-        div(class = "d-flex flex-wrap gap-2 mb-4",
-          lapply(seq_len(nrow(covered)), function(i) {
-            label       <- HAZARD_LABELS[covered$hazard_id[i]]
-            badge_class <- switch(as.character(covered$coverage[i]),
-              "full"    = "badge bg-success",
-              "partial" = "badge bg-warning text-dark",
-              "badge bg-secondary"
+      if (nrow(covered) > 0) {
+        det <- unique(covered$granularity_detail[!is.na(covered$granularity_detail) &
+                                                 nzchar(covered$granularity_detail)])
+        tagList(
+          h6(class = "text-uppercase text-muted mb-2", style = "font-size:.75rem; letter-spacing:.03em;",
+             "Hazard coverage"),
+          div(class = "d-flex flex-wrap gap-2 mb-2",
+            lapply(seq_len(nrow(covered)), function(i) {
+              badge_class <- switch(as.character(covered$coverage[i]),
+                "full"    = "badge bg-success",
+                "partial" = "badge bg-warning text-dark",
+                "badge bg-secondary"
+              )
+              tags$span(class = badge_class,
+                paste0(HAZARD_LABELS[covered$hazard_id[i]], " (", covered$coverage[i], ")"))
+            })
+          ),
+          # Coverage granularity, shown once (it is a per-source attribute in
+          # practice - the same phrase repeats across a source's hazards).
+          if (length(det) > 0) p(class = "text-muted small fst-italic mb-4",
+            paste(det, collapse = " / "))
+          else div(class = "mb-4")
+        )
+      }
+    },
+
+    # ---- Rationale & source notes (collapsed: the abstract above already
+    #      synthesises these; kept for the full text / traceability) ----
+    if (nrow(sd_rest) > 0) {
+      tags$details(class = "mb-2", open = if (has_abstract) NULL else NA,
+        tags$summary(
+          class = "text-uppercase text-muted mb-0",
+          style = "font-size:.75rem; letter-spacing:.03em; cursor:pointer;",
+          sprintf("Rationale & source notes (%d)", nrow(sd_rest))
+        ),
+        div(class = "d-flex flex-column gap-2 mt-3",
+          lapply(seq_len(nrow(sd_rest)), function(i) {
+            div(class = "border rounded-3 p-3 bg-light",
+              div(class = "fw-semibold small text-secondary mb-1", sd_rest$field[i]),
+              div(class = "small", sd_rest$text[i])
             )
-            tags$span(class = badge_class,
-              paste0(label, " (", covered$coverage[i], ")"))
           })
         )
       )
-    },
-
-    # ---- Detail text fields ----
-    if (nrow(sd) > 0) tagList(
-      h6(class = "text-uppercase text-muted mb-2", style = "font-size:.75rem; letter-spacing:.03em;",
-         "Detail"),
-      div(class = "d-flex flex-column gap-2",
-        lapply(seq_len(nrow(sd)), function(i) {
-          div(class = "border rounded-3 p-3 bg-light",
-            div(class = "fw-semibold small text-secondary mb-1", sd$field[i]),
-            div(class = "small", sd$text[i])
-          )
-        })
-      )
-    ) else {
-      p(em("No additional detail text recorded for this source."))
+    } else if (!has_abstract) {
+      p(em("No detail text recorded for this source."))
     }
 
   )
@@ -314,13 +404,15 @@ landing_page_ui <- function() {
           tags$li("Choose ", tags$strong("Physical risk"), " or ",
                   tags$strong("Transition risk"), " below to open the dashboard."),
           tags$li("For physical risk, narrow further by ", tags$strong("hazard type"),
-                  " and the shared facet filters (source type, operator type, technical ",
-                  "effort, legal usability, API access) in the sidebar."),
+                  " and the shared facet filters (search, source type, relevance level, ",
+                  "max. effort) in the sidebar."),
           tags$li("Click any card in the ", tags$strong("Results"), " tab to open its ",
-                  tags$strong("Source detail"), " tab: D 01.01 mapping, hazard coverage, ",
-                  "and rationale text."),
-          tags$li("Both risk types stay one click away via the tabs at the top of the ",
-                  "dashboard - switch anytime.")
+                  tags$strong("Source detail"), " tab: cited abstract, D 01.01 mapping, ",
+                  "hazard coverage, and rationale text."),
+          tags$li("Both risk types stay one click away in the ", tags$strong("navbar"),
+                  " at the top of the dashboard - switch anytime. The navbar's ",
+                  tags$strong("References"), " link opens the bibliography for the ",
+                  "source abstracts.")
         )
       )
     ),
@@ -347,117 +439,175 @@ landing_page_ui <- function() {
   )
 }
 
-# Main dashboard UI (sidebar filters + risk-type tabs). `selected_tab` sets
-# which of the two top-level tabs opens first, based on the landing-page choice.
-dashboard_ui <- function(selected_tab) {
-  tagList(
-    titlePanel("ESG Data Source Matrix - Decision-Support Dashboard"),
+# Filter sidebar, shared across the risk-type nav panels (bslib::sidebar,
+# so the inputs are defined once). The whole filter block is hidden while a
+# "Source detail" sub-tab is open, or on any non-filterable nav panel.
+filter_sidebar <- function() {
+  # JS predicate: true while a source-detail sub-tab is open on either risk tab.
+  in_detail_view <- paste(
+    "(input.risk_tabs == 'Physical' && input.physical_subtabs == 'Source detail')",
+    "|| (input.risk_tabs == 'Transition' && input.transition_subtabs == 'Source detail')"
+  )
 
-    sidebarLayout(
-      sidebarPanel(
-        width = 3,
+  sidebar(
+    width = 320,
+    title = "Filters",
 
-        # ---- Tier 2: hazard type (physical-risk tab only) ----
-        conditionalPanel(
-          condition = "input.risk_tabs == 'Physical'",
-          h5("Hazard type"),
-          div(class = "mb-1",
-            actionLink("hazard_select_all", "Select all", class = "small"),
-            " | ",
-            actionLink("hazard_clear", "Clear", class = "small")
-          ),
-          checkboxGroupInput(
-            "hazard_types", NULL,
-            choices  = HAZARD_CHOICES,
-            selected = character(0)
-          ),
-          helpText("Leave empty to show all physical-risk sources.")
-        ),
+    # ---- Filters (hidden while a source detail view is open) ----
+    conditionalPanel(
+      condition = paste0("!(", in_detail_view, ")"),
 
-        # ---- Transition-risk note (replaces the missing Tier 2) ----
-        conditionalPanel(
-          condition = "input.risk_tabs == 'Transition'",
-          div(class = "alert alert-info p-2 mb-2",
-            tags$small(
-              "Transition risk sources cover NACE sector classification uniformly ",
-              "- no hazard-type filter applies."
-            )
-          )
-        ),
-
-        hr(),
-        h5("Facets"),
-
-        selectInput(
-          "source_type", "Source type",
-          choices  = c("All", sort(unique(sources_df$source_type))),
-          selected = "All"
-        ),
-        selectInput(
-          "operator_type", "Operator type",
-          choices  = c("All", sort(unique(sources_df$operator_type))),
-          selected = "All"
-        ),
-        selectInput(
-          "technical_effort", "Max. technical effort",
-          choices  = c("All", "Low", "Medium", "High"),
-          selected = "All"
-        ),
-        selectInput(
-          "access_status", "Legal usability",
-          choices  = c("All", sort(unique(sources_df$access_status))),
-          selected = "All"
-        ),
-        checkboxInput("has_api", "Has API access only", value = FALSE),
-
-        hr(),
-        actionButton("reset", "Reset all filters",
-          class = "btn-outline-secondary btn-sm w-100"),
-
-        hr(),
-        helpText("Prototype for Artefact 3 (Section 2.5). ",
-                 "Data: data/*.csv, generated from the same source as thesis Appendix C.")
+      # Free-text search (name, operator, description)
+      textInput(
+        "search_query", "Search sources",
+        placeholder = "Name, operator, operator type, or description..."
       ),
 
-      mainPanel(
-        width = 9,
+      hr(),
 
-        tabsetPanel(
-          id       = "risk_tabs",
-          selected = selected_tab,
+      # Tier 2: hazard type (physical-risk tab only)
+      conditionalPanel(
+        condition = "input.risk_tabs == 'Physical'",
+        h5("Hazard type"),
+        div(class = "mb-1",
+          actionLink("hazard_select_all", "Select all", class = "small"),
+          " | ",
+          actionLink("hazard_clear", "Clear", class = "small")
+        ),
+        checkboxGroupInput(
+          "hazard_types", NULL,
+          choices  = HAZARD_CHOICES,
+          selected = character(0)
+        ),
+        helpText("Leave empty to show all physical-risk sources. ",
+                 "Ticking several hazards shows only sources that cover ",
+                 tags$strong("all"), " of them.")
+      ),
 
-          tabPanel("Physical risk", value = "Physical",
-            br(),
-            result_header_ui("result_count_physical"),
-            tabsetPanel(
-              id = "physical_subtabs",
-              tabPanel("Results",
-                br(),
-                uiOutput("results_cards_physical")
-              ),
-              tabPanel("Source detail",
-                br(),
-                uiOutput("detail_view_physical")
-              )
-            )
-          ),
-
-          tabPanel("Transition risk", value = "Transition",
-            br(),
-            result_header_ui("result_count_transition"),
-            tabsetPanel(
-              id = "transition_subtabs",
-              tabPanel("Results",
-                br(),
-                uiOutput("results_cards_transition")
-              ),
-              tabPanel("Source detail",
-                br(),
-                uiOutput("detail_view_transition")
-              )
-            )
+      # Transition-risk note (replaces the missing Tier 2)
+      conditionalPanel(
+        condition = "input.risk_tabs == 'Transition'",
+        div(class = "alert alert-info p-2 mb-2",
+          tags$small(
+            "Transition risk sources cover NACE sector classification uniformly ",
+            "- no hazard-type filter applies."
           )
         )
+      ),
+
+      hr(),
+      h5("Facets"),
+
+      selectInput(
+        "source_type", "Source type",
+        choices  = c("All", sort(unique(sources_df$source_type))),
+        selected = "All"
+      ),
+      selectInput(
+        "relevance_level", "Relevance level",
+        choices  = c("All", intersect(names(RELEVANCE_DEFS),
+                                      unique(sources_df$relevance_level))),
+        selected = "All"
+      ),
+      selectInput(
+        "technical_effort", "Max. effort",
+        choices  = c("All", "Low", "Medium", "High"),
+        selected = "All"
+      ),
+
+      hr(),
+      actionButton("reset", "Reset all filters",
+        class = "btn-outline-secondary btn-sm w-100")
+    ),
+
+    # ---- Shown instead, while a source detail view is open ----
+    conditionalPanel(
+      condition = in_detail_view,
+      div(class = "alert alert-light border small mb-0",
+        "Viewing one source in detail. Use ",
+        tags$strong("← Back to results"),
+        " (top of the panel) to return to the filtered list."
+      )
+    ),
+
+    hr(),
+    helpText("Prototype for Artefact 3 (Section 2.5). ",
+             "Data: data/*.csv, generated from the same source as thesis Appendix C.")
+  )
+}
+
+# One risk-type nav panel: result-count header + Results / Source detail sub-tabs.
+risk_nav_panel <- function(title, value, subtabs_id, cards_output, detail_output,
+                           count_output) {
+  nav_panel(title, value = value,
+    br(),
+    result_header_ui(count_output),
+    tabsetPanel(
+      id = subtabs_id,
+      tabPanel("Results",       br(), uiOutput(cards_output)),
+      tabPanel("Source detail", br(), uiOutput(detail_output))
+    )
+  )
+}
+
+# Main dashboard UI: a top navbar (Physical risk / Transition risk, plus a
+# right-aligned References link) over a shared filter sidebar. `selected_tab`
+# sets which risk panel opens first, based on the landing-page choice.
+dashboard_ui <- function(selected_tab) {
+  navset_bar(
+    id       = "risk_tabs",
+    title    = "ESG Data Source Matrix",
+    selected = selected_tab,
+    fillable = FALSE,
+    sidebar  = filter_sidebar(),
+
+    risk_nav_panel("Physical risk", "Physical", "physical_subtabs",
+      "results_cards_physical", "detail_view_physical", "result_count_physical"),
+    risk_nav_panel("Transition risk", "Transition", "transition_subtabs",
+      "results_cards_transition", "detail_view_transition", "result_count_transition"),
+
+    nav_spacer(),
+    nav_item(actionLink("goto_references", "References"))
+  )
+}
+
+# ------------------------------------------------------------
+# References page
+# ------------------------------------------------------------
+
+# One <li> for a bibliography entry from references.bib.
+format_bib_entry <- function(r) {
+  head <- paste0(r$author, " (", r$year, "). ", r$title,
+                 if (grepl("[.!?]$", r$title)) "" else ".")
+  tail <- if (nzchar(r$urldate)) paste0(" Retrieved ", r$urldate, ",") else ""
+  extra_note <- sub("^\\([^)]*\\)\\.?\\s*", "", r$note)   # note text after the (Author, year)
+  tags$li(class = "mb-2",
+    head, tail, " from ",
+    tags$a(href = r$url, target = "_blank", rel = "noopener noreferrer", r$url),
+    if (nzchar(extra_note)) tags$span(class = "text-muted", paste0(" — ", extra_note))
+  )
+}
+
+references_page_ui <- function() {
+  tagList(
+    div(class = "d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2 mb-3",
+      h2(class = "mb-0", "References"),
+      actionLink("goto_dashboard", "← Back to dashboard", class = "btn btn-outline-secondary btn-sm")
+    ),
+    div(class = "row justify-content-center",
+      div(class = "col-lg-9",
+        p(class = "text-muted",
+          "Bibliography for the source abstracts: the operating institutions, ",
+          "INSPIRE metadata records and sector-classification documents the abstracts cite. ",
+          "Maintained in ", tags$code("data/references.bib"),
+          "; the mapping from each in-text citation to the claim it supports is in ",
+          tags$code("data/source_abstracts_cited.md"), "."),
+
+        if (nrow(refs_df) > 0)
+          tags$ul(class = "small",
+            lapply(seq_len(nrow(refs_df)), function(i) format_bib_entry(refs_df[i, ])))
+        else
+          p(em("references.bib not found."))
       )
     )
   )
@@ -466,8 +616,8 @@ dashboard_ui <- function(selected_tab) {
 # ------------------------------------------------------------
 # UI
 # ------------------------------------------------------------
-# The whole body is swapped between the landing page and the dashboard via
-# a single uiOutput, driven by a reactiveVal in the server (see main_ui below).
+# The whole body is swapped between the landing page, the dashboard and the
+# references page via a single uiOutput, driven by a reactiveVal (see main_ui).
 ui <- fluidPage(
   theme = bs_theme(version = 5, bootswatch = "flatly"),
   tags$head(tags$style(HTML("
@@ -503,12 +653,15 @@ server <- function(input, output, session) {
     current_page("dashboard")
   })
 
+  observeEvent(input$goto_references, current_page("references"))
+  observeEvent(input$goto_dashboard,  current_page("dashboard"))
+
   output$main_ui <- renderUI({
-    if (current_page() == "landing") {
-      landing_page_ui()
-    } else {
+    switch(current_page(),
+      "landing"    = landing_page_ui(),
+      "references" = references_page_ui(),
       dashboard_ui(selected_tab = chosen_risk())
-    }
+    )
   })
 
   # ---- Hazard Select all / Clear ----
@@ -527,11 +680,10 @@ server <- function(input, output, session) {
     updateTabsetPanel(session,        "physical_subtabs",   selected = "Results")
     updateTabsetPanel(session,        "transition_subtabs", selected = "Results")
     updateCheckboxGroupInput(session, "hazard_types",       selected = character(0))
+    updateTextInput(session,          "search_query",       value    = "")
     updateSelectInput(session,        "source_type",        selected = "All")
-    updateSelectInput(session,        "operator_type",      selected = "All")
+    updateSelectInput(session,        "relevance_level",    selected = "All")
     updateSelectInput(session,        "technical_effort",   selected = "All")
-    updateSelectInput(session,        "access_status",      selected = "All")
-    updateCheckboxInput(session,      "has_api",            value    = FALSE)
   })
 
   # ---- Physical risk tab ----
@@ -541,11 +693,10 @@ server <- function(input, output, session) {
     filter_sources(
       risk_value           = "Physical",
       hazard_types         = input$hazard_types,
+      sel_search           = input$search_query,
       sel_source_type      = input$source_type,
-      sel_operator_type    = input$operator_type,
-      sel_technical_effort = input$technical_effort,
-      sel_access_status    = input$access_status,
-      sel_has_api          = input$has_api
+      sel_relevance        = input$relevance_level,
+      sel_technical_effort = input$technical_effort
     )
   })
 
@@ -562,8 +713,12 @@ server <- function(input, output, session) {
     updateTabsetPanel(session, "physical_subtabs", selected = "Source detail")
   })
 
+  observeEvent(input$physical_back, {
+    updateTabsetPanel(session, "physical_subtabs", selected = "Results")
+  })
+
   output$detail_view_physical <- renderUI({
-    render_detail_ui(lookup_source(selected_physical_id()))
+    render_detail_ui(lookup_source(selected_physical_id()), "physical_back")
   })
 
   # ---- Transition risk tab ----
@@ -572,11 +727,10 @@ server <- function(input, output, session) {
   filtered_transition <- reactive({
     filter_sources(
       risk_value           = "Transition",
+      sel_search           = input$search_query,
       sel_source_type      = input$source_type,
-      sel_operator_type    = input$operator_type,
-      sel_technical_effort = input$technical_effort,
-      sel_access_status    = input$access_status,
-      sel_has_api          = input$has_api
+      sel_relevance        = input$relevance_level,
+      sel_technical_effort = input$technical_effort
     )
   })
 
@@ -593,8 +747,12 @@ server <- function(input, output, session) {
     updateTabsetPanel(session, "transition_subtabs", selected = "Source detail")
   })
 
+  observeEvent(input$transition_back, {
+    updateTabsetPanel(session, "transition_subtabs", selected = "Results")
+  })
+
   output$detail_view_transition <- renderUI({
-    render_detail_ui(lookup_source(selected_transition_id()))
+    render_detail_ui(lookup_source(selected_transition_id()), "transition_back")
   })
 }
 
