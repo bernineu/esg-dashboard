@@ -16,3 +16,17 @@
   overflow: hidden;
   min-height: 3.6em;
 }
+
+/* Landing-page risk-choice buttons (R/ui_pages.R). btn-outline-primary
+   fills with the primary colour on hover/focus/active; the sub-line under
+   the title must switch from muted grey to light so it stays readable. */
+.risk-choice-sub {
+  color: var(--bs-secondary-color, #6c757d);
+  transition: color .15s ease-in-out;
+}
+.risk-choice:hover .risk-choice-sub,
+.risk-choice:focus .risk-choice-sub,
+.risk-choice:active .risk-choice-sub,
+.risk-choice.active .risk-choice-sub {
+  color: rgba(255, 255, 255, .85);
+}

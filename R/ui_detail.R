@@ -34,20 +34,21 @@ render_detail_ui <- function(src, back_input_id = NULL) {
   dm  <- d01_mapping %>% filter(source_id == sid)
   haz <- hazard_cov   %>% filter(source_id == sid)
 
-  # The cited abstract is the narrative synthesis of the structured fields
-  # and the rationale notes, so it is shown as prose up top and the raw
-  # notes are tucked into a collapsible section to avoid repeating it all.
-  # Abstract, the headline Limitations note and Pricing details are pulled
-  # out and shown in their own sections; everything else is the collapsed
-  # "Rationale & source notes".
+  # Pull the reader-facing fields out into their own sections: the factual
+  # Abstract, the Suitability verdict, the headline Limitations note and
+  # Pricing (commercial sources). Everything else (formats, update
+  # frequency, licensing, pipeline steps, methodology notes) stays in the
+  # collapsed "Rationale & source notes".
   pull_field <- function(f) {
     v <- sd %>% filter(field == f) %>% pull(text)
     if (length(v) > 0) trimws(v[1]) else ""
   }
-  abstract_txt <- pull_field("Abstract")
-  key_lim      <- pull_field("Limitations")
-  pricing_txt  <- pull_field("Pricing details")
-  sd_rest      <- sd %>% filter(!field %in% c("Abstract", "Limitations", "Pricing details"))
+  abstract_txt    <- pull_field("Abstract")
+  suitability_txt <- pull_field("Suitability assessment")
+  key_lim         <- pull_field("Limitations")
+  pricing_txt     <- pull_field("Pricing details")
+  sd_rest <- sd %>% filter(!field %in% c(
+    "Abstract", "Suitability assessment", "Limitations", "Pricing details"))
   has_abstract <- nzchar(abstract_txt)
 
   # portfolio_ready + its reason: shown once, as a chip whose value carries
@@ -108,12 +109,18 @@ render_detail_ui <- function(src, back_input_id = NULL) {
       p(class = "mb-0", key_lim)
     ),
 
-    # ---- Cited source abstract (the narrative assessment) ----
+    # ---- Cited source abstract (factual description of the source) ----
     if (has_abstract) tagList(
       .detail_h("Abstract"),
       div(class = "border-start border-3 border-primary ps-3 mb-4",
         p(class = "mb-0", abstract_txt)
       )
+    ),
+
+    # ---- Suitability assessment (the "should an SNCI use this" verdict) ----
+    if (nzchar(suitability_txt)) tagList(
+      .detail_h("Suitability for an SNCI"),
+      p(class = "mb-4", suitability_txt)
     ),
 
     # ---- D 01.01 mapping ----
@@ -127,32 +134,41 @@ render_detail_ui <- function(src, back_input_id = NULL) {
       )
     ),
 
-    # ---- Hazard coverage (physical sources only). Every hazard is shown:
-    #      covered ones first (green = full, amber = partial), then the
-    #      ones this source does not cover, in red. ----
+    # ---- Hazard coverage (physical sources only). Covered hazards (full /
+    #      partial) go in a per-hazard table with the coverage detail; the
+    #      hazards this source does not cover follow as red badges. ----
     if (nrow(haz) > 0) {
-      haz <- haz %>% arrange(desc(coverage), match(hazard_id, names(HAZARD_LABELS)))
-      det <- unique(haz$granularity_detail[!is.na(haz$granularity_detail) &
-                                           nzchar(haz$granularity_detail)])
+      ord    <- function(d) d %>% arrange(desc(coverage), match(hazard_id, names(HAZARD_LABELS)))
+      cov    <- ord(haz %>% filter(coverage != "none"))
+      notcov <- ord(haz %>% filter(coverage == "none"))
+      cov_badge <- function(cv) tags$span(
+        class = if (cv == "full") "badge bg-success" else "badge bg-warning text-dark", cv)
+
       tagList(
         .detail_h("Hazard coverage"),
-        div(class = "d-flex flex-wrap gap-2 mb-2",
-          lapply(seq_len(nrow(haz)), function(i) {
-            badge_class <- switch(as.character(haz$coverage[i]),
-              "full"    = "badge bg-success",
-              "partial" = "badge bg-warning text-dark",
-              "none"    = "badge bg-danger",
-              "badge bg-secondary"
-            )
-            tags$span(class = badge_class,
-              paste0(HAZARD_LABELS[haz$hazard_id[i]], " (", haz$coverage[i], ")"))
-          })
+        if (nrow(cov) > 0) div(class = "table-responsive mb-2",
+          tags$table(class = "table table-sm align-middle small mb-0",
+            tags$thead(tags$tr(
+              tags$th(scope = "col", "Hazard"),
+              tags$th(scope = "col", "Coverage"),
+              tags$th(scope = "col", "Detail")
+            )),
+            tags$tbody(lapply(seq_len(nrow(cov)), function(i) {
+              d <- cov$granularity_detail[i]
+              tags$tr(
+                tags$td(class = "text-nowrap fw-semibold", HAZARD_LABELS[cov$hazard_id[i]]),
+                tags$td(cov_badge(as.character(cov$coverage[i]))),
+                tags$td(class = "text-muted",
+                  if (!is.na(d) && nzchar(d)) d else "—")
+              )
+            }))
+          )
         ),
-        # Coverage granularity, shown once (it is a per-source attribute in
-        # practice - the same phrase repeats across a source's hazards).
-        if (length(det) > 0) p(class = "text-muted small fst-italic mb-4",
-          paste(det, collapse = " / "))
-        else div(class = "mb-4")
+        if (nrow(notcov) > 0) p(class = "small mb-4",
+          tags$span(class = "text-muted me-1", "Not covered:"),
+          lapply(seq_len(nrow(notcov)), function(i)
+            tags$span(class = "badge bg-danger me-1", HAZARD_LABELS[notcov$hazard_id[i]]))
+        ) else div(class = "mb-4")
       )
     },
 
@@ -164,14 +180,15 @@ render_detail_ui <- function(src, back_input_id = NULL) {
       )
     ),
 
-    # ---- Rationale & source notes (collapsed: the abstract above already
-    #      synthesises these; kept for the full text / traceability) ----
+    # ---- Technical & source notes (collapsed: reference detail behind the
+    #      sections above - formats, update cadence, licensing, pipeline,
+    #      methodology notes) ----
     if (nrow(sd_rest) > 0) {
       tags$details(class = "mb-2", open = if (has_abstract) NULL else NA,
         tags$summary(
           class = "text-uppercase text-muted mb-0",
           style = "font-size:.75rem; letter-spacing:.03em; cursor:pointer;",
-          sprintf("Rationale & source notes (%d)", nrow(sd_rest))
+          sprintf("Technical & source notes (%d)", nrow(sd_rest))
         ),
         div(class = "d-flex flex-column gap-2 mt-3",
           lapply(seq_len(nrow(sd_rest)), function(i) {

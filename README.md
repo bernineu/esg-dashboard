@@ -101,21 +101,22 @@ on data model" entry in that workbook's Legend sheet.
     `download_format`, `key_limitation` were **moved into
     `source_details.csv`** as long-form fields.
 -   **`hazard_coverage.csv`** — one row per source × hazard combination,
-    `coverage` ∈ {none, partial, full}, plus `granularity_detail` free
-    text where covered. Drives the Tier 2 (hazard type) filter and the
-    hazard coverage badges in the detail view (uncovered hazards shown
-    in red).
+    `coverage` ∈ {none, partial, full}, plus a per-hazard
+    `granularity_detail` verification note where covered. Drives the Tier
+    2 (hazard type) filter and, in the detail view, a per-hazard table of
+    the full/partial hazards (with the detail note) followed by the
+    uncovered hazards as red badges.
 -   **`d01_mapping.csv`** — links each source to the specific D 01.01 /
     DPM data point(s) it is relevant for (primary/secondary), shown in
     the detail view.
--   **`source_details.csv`** — one `field` / `text` row per note. The
-    cited **Abstract** is shown as prose, the headline **Limitations**
-    note as a callout and **Pricing details** (commercial sources only —
-    the "u.a. Kosten" data) as its own section; everything else
-    (suitability, download format, web interface type, data update
-    frequency, licensing notes, portfolio-ready pipeline, …) sits in a
-    collapsed *Rationale & source notes* section, since the abstract
-    already synthesises most of it. Shown only when a row is selected.
+-   **`source_details.csv`** — one `field` / `text` row per note. Shown
+    as their own sections: the factual cited **Abstract**, the
+    **Suitability for an SNCI** verdict, the headline **Limitations** note
+    (as a callout) and **Pricing** (commercial sources only). The rest
+    (download format, web interface type, data update frequency, licensing
+    notes, portfolio-ready pipeline, methodology notes, …) sits in a
+    collapsed *Technical & source notes* section. Shown only when a row is
+    selected.
 -   **`citations.csv`** — one row per source × reference, `citation_role`
     (primary / methodology / legal\_basis / technical\_doc). `zotero_key`
     is otherwise resolved in the thesis Zotero library. Loaded by
@@ -192,16 +193,14 @@ on data model" entry in that workbook's Legend sheet.
     chips (relevance, source type, geographic scope, granularity, max.
     effort, API access, portfolio-ready + reason, the last with its
     definition on hover); the headline **Limitations** note as a
-    highlighted callout; the cited **abstract** as prose — the narrative
-    assessment that ties the structured fields together; D 01.01 mapping
-    badges; hazard coverage badges for all 12 hazards — covered first
-    (green = full, amber = partial), then the uncovered ones in red —
-    with a one-line coverage granularity; a **Pricing** section for
-    commercial sources; and a collapsed **Rationale & source notes**
-    section holding the remaining notes the abstract is built from
-    (open by default only if a source has no abstract). A selected source stays
-    viewable here even if a later filter change would hide it from the
-    Results grid.
+    highlighted callout; the factual cited **abstract**; the
+    **Suitability for an SNCI** verdict (where recorded); D 01.01 mapping
+    badges; a **hazard coverage** table of the full/partial hazards with
+    their per-hazard detail note, then the uncovered hazards as red
+    badges; a **Pricing** section for commercial sources; and a collapsed
+    **Technical & source notes** section for the reference detail. A
+    selected source stays viewable here even if a later filter change
+    would hide it from the Results grid.
 
 ## Known limitations
 

@@ -47,19 +47,19 @@ landing_page_ui <- function() {
         actionButton("goto_physical",
           tagList(
             div(class = "fs-5 fw-bold", "Physical risk"),
-            div(class = "small fw-normal text-muted",
+            div(class = "small fw-normal risk-choice-sub",
                 "Climate hazards: heat, flood, drought, storm, ...")
           ),
-          class = "btn btn-outline-primary p-4", style = "min-width: 280px;")
+          class = "btn btn-outline-primary p-4 risk-choice", style = "min-width: 280px;")
       ),
       div(class = "col-auto",
         actionButton("goto_transition",
           tagList(
             div(class = "fs-5 fw-bold", "Transition risk"),
-            div(class = "small fw-normal text-muted",
+            div(class = "small fw-normal risk-choice-sub",
                 "NACE sector classification sources")
           ),
-          class = "btn btn-outline-primary p-4", style = "min-width: 280px;")
+          class = "btn btn-outline-primary p-4 risk-choice", style = "min-width: 280px;")
       )
     )
   )
