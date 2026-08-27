@@ -158,6 +158,11 @@ HAZARD_LABELS <- c(
   landslide     = "Landslide"
 )
 
+# HAZARD_LABELS remapped to shiny's c(label = value) convention, so
+# checkboxGroupInput shows "Heat stress" while input$hazard_types stores
+# the hazard id ("heat_stress").
+HAZARD_CHOICES <- setNames(names(HAZARD_LABELS), HAZARD_LABELS)
+
 # Returns the source_ids that cover ALL of the selected hazard_ids at
 # >= min_coverage (AND semantics: a source qualifies only if every selected
 # hazard is covered). Used by Tier 2 filtering (physical-risk branch).

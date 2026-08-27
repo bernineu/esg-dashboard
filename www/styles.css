@@ -1,0 +1,18 @@
+/* Clickable source cards in the results grid (see R/ui_cards.R). */
+.source-card {
+  cursor: pointer;
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+.source-card:hover {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .08);
+  transform: translateY(-1px);
+}
+
+/* Clamp the card description to three lines so every card is the same height. */
+.source-card-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 3.6em;
+}

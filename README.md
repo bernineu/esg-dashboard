@@ -49,12 +49,21 @@ should work.
 ```         
 esg-dashboard/
 ├── esg-dashboard.Rproj    # RStudio project file — open this first
-├── app.R                  # Shiny app (UI + server)
+├── app.R                  # entry point: loads data, wires ui + server
 ├── requirements.R         # installs all required packages
 ├── README.md              # this file
-├── R/
-│   └── load_data.R        # data loading, cleaning, hazard-label lookup,
-│                          # sources_covering_hazards() helper
+├── R/                     # app modules, sourced by app.R in order
+│   ├── _disable_autoload.R # turns off Shiny's own R/ auto-sourcing
+│   ├── load_data.R        # CSV loaders, references.bib parser, hazard
+│   │                      # labels, sources_covering_hazards()
+│   ├── config.R           # relevance / portfolio-readiness lookup tables
+│   ├── filter_sources.R   # the results query + single-source lookup
+│   ├── ui_cards.R         # results grid: badges, card grid, count header
+│   ├── ui_detail.R        # the Source-detail pane
+│   ├── ui_pages.R         # landing / dashboard / references builders, app_ui()
+│   └── server_risk_panel.R # wire_risk_panel(): plumbing for one risk panel
+├── www/
+│   └── styles.css         # card-grid styling
 └── data/
     ├── sources.csv         # source master table (16 rows)
     ├── hazard_coverage.csv # long: source_id x hazard_id x coverage (+ granularity_detail)
@@ -64,6 +73,11 @@ esg-dashboard/
     ├── references.bib      # supporting-literature bibliography (BibTeX)
     └── source_abstracts_cited.md  # abstracts with inline citations (reference doc)
 ```
+
+`app.R` sources every `R/*.R` file (except `_disable_autoload.R`) at
+startup, so opening the app with the RStudio **Run App** button or
+`shiny::runApp()` picks all of them up. Each module has a header comment
+describing its slice.
 
 ## Data model
 
