@@ -43,9 +43,9 @@
 @misc{JRC_Copernicus_EFFIS,
   author       = {{Joint Research Centre and Copernicus Emergency Management Service}},
   title        = {{European Forest Fire Information System (EFFIS)}},
-  howpublished = {\url{https://drmkc.jrc.ec.europa.eu/risk-data-hub\#/atlas/metadata/wildfire_effis}},
-  urldate      = {2026-08-22},
-  note         = {(JRC/Copernicus EMS, n.d.)}
+  howpublished = {\url{https://forest-fire.emergency.copernicus.eu/}},
+  urldate      = {2026-08-27},
+  note         = {(JRC/Copernicus EMS, n.d.). EFFIS became a component of the Copernicus Emergency Management Service in 2015; effis.jrc.ec.europa.eu now redirects here. Distinct from the CEMS Fire Danger historical dataset hosted on the CDS (see copernicus_climate_indicators): EFFIS additionally provides the observed European Fire Database (~2 million fire records), not just the meteorological fire-danger reconstruction.}
 }
 
 @misc{ECMWF_CDS,
@@ -380,4 +380,33 @@
   howpublished = {\url{https://www.mitigasolutions.com/compare/best-climate-risk-platforms-compared}},
   urldate      = {2026-08-27},
   note         = {(Mitiga Solutions, n.d.). Confirms Jupiter Intelligence's enterprise-style, case-by-case pricing model, not publicly disclosed.}
+}
+
+@misc{EEA_C3S_ECDEInputData,
+  author       = {{The Climate Data Factory and B-Open, for C3S/ECMWF}},
+  title        = {Input Data Underpinning the {European Climate Data Explorer}: Description of the Datasets and Variables},
+  howpublished = {\url{https://confluence.ecmwf.int/spaces/CKB/pages/453680707/}},
+  urldate      = {2026-08-27},
+  year         = {2024},
+  note         = {(EEA/C3S, n.d.). Contract ref. C3S3\_430a; issued May 2024, updated Jul 2025. Lists each ECDE indicator's underlying dataset and native spatial resolution (Table 1 and Section 2.3), ranging from 5km (hydrology) to 0.1-0.25 degrees (most indices) to NUTS3 (snow indicators).}
+}
+
+@article{DiNapoli2021ERA5HEAT,
+  author  = {Di Napoli, Claudia and Barnard, Christopher and Prudhomme, Christel and Cloke, Hannah L. and Pappenberger, Florian},
+  title   = {{ERA5-HEAT}: A Global Gridded Historical Dataset of Human Thermal Comfort Indices from Climate Reanalysis},
+  journal = {Geoscience Data Journal},
+  volume  = {8},
+  number  = {1},
+  pages   = {2--10},
+  year    = {2021},
+  doi     = {10.1002/gdj3.102},
+  note    = {(Di Napoli et al., 2021). Peer-reviewed description of the ERA5-HEAT/UTCI dataset: hourly UTCI/MRT grids at 0.25 degree resolution, 1979-present at publication (later extended to 1940).}
+}
+
+@misc{SMHI_C3S_HydrologyIndicators,
+  author       = {{Swedish Meteorological and Hydrological Institute, for the Copernicus Climate Change Service}},
+  title        = {Hydrology-Related Climate Impact Indicators from 1970 to 2100 Derived from Bias Adjusted European Climate Projections},
+  howpublished = {\url{https://cds.climate.copernicus.eu/datasets/sis-hydrology-variables-derived-projections}},
+  urldate      = {2026-08-27},
+  note         = {(SMHI/C3S, n.d.). 18 water quantity/quality Climate Impact Indicators (incl. Flood Recurrence, River Discharge, Aridity Actual, Mean Soil Moisture) at 5km grid, produced by SMHI using the E-HYPE hydrological model.}
 }

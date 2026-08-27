@@ -6,9 +6,10 @@
 # ============================================================
 
 # `prefix` ("physical" / "transition") must match the output/input ids
-# built by risk_nav_panel() in ui_pages.R. `hazard_input_id` is the
-# checkbox-group id for the Tier 2 hazard filter, or NULL where it does
-# not apply (Transition).
+# built by risk_nav_panel() in ui_pages.R (<prefix>_card_click / _back /
+# _prev / _next / result_count_<prefix> / results_cards_<prefix> /
+# detail_view_<prefix>). `hazard_input_id` is the checkbox-group id for the
+# Tier 2 hazard filter, or NULL where it does not apply (Transition).
 wire_risk_panel <- function(input, output, session, risk_value, prefix,
                             hazard_input_id = NULL) {
   selected_id <- reactiveVal(NULL)
@@ -43,7 +44,19 @@ wire_risk_panel <- function(input, output, session, risk_value, prefix,
     updateTabsetPanel(session, subtabs, selected = "Results")
   })
 
+  # Prev / Next step through the current filtered result order, so the
+  # detail view can be browsed one source at a time without going back.
+  step_source <- function(delta) {
+    ids <- filtered()$source_id
+    pos <- match(selected_id(), ids)
+    if (!is.na(pos) && (pos + delta) >= 1 && (pos + delta) <= length(ids)) {
+      selected_id(ids[pos + delta])
+    }
+  }
+  observeEvent(input[[paste0(prefix, "_prev")]], step_source(-1))
+  observeEvent(input[[paste0(prefix, "_next")]], step_source(1))
+
   output[[paste0("detail_view_", prefix)]] <- renderUI(
-    render_detail_ui(lookup_source(selected_id()), paste0(prefix, "_back"))
+    render_detail_ui(lookup_source(selected_id()), prefix, filtered()$source_id)
   )
 }

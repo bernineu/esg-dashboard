@@ -1,8 +1,9 @@
 # ============================================================
 # ui_detail.R
-# The Source-detail pane. Laid out to state each fact once:
-#   metadata chips -> cited abstract (the narrative assessment) ->
-#   D 01.01 mapping -> hazard coverage -> collapsed rationale notes.
+# The Source-detail pane. Top nav row (Back / Prev / Next through the
+# filtered results) -> hero -> metadata chips -> Limitations -> Abstract
+# -> Suitability -> D 01.01 -> hazard coverage -> Pricing -> collapsed
+# technical notes. Laid out to state each fact once.
 # ============================================================
 
 # Small section heading used throughout the pane.
@@ -11,19 +12,48 @@
      style = "font-size:.75rem; letter-spacing:.03em;", txt)
 }
 
-# Renders the detail pane for one source record (a single-row data frame
-# from lookup_source(), or NULL/0-row if none selected). `back_input_id`
-# is the id of a "Back to results" actionButton the server wires to switch
-# the sub-tab back to Results.
-render_detail_ui <- function(src, back_input_id = NULL) {
-  back_btn <- if (!is.null(back_input_id)) {
-    actionButton(back_input_id, "← Back to results",
-      class = "btn btn-outline-secondary btn-sm mb-3")
+# Top navigation row: "Back to results" plus Prev / position / Next
+# controls that step through `siblings` (the current filtered result order).
+# `prefix` ("physical" / "transition") builds the input ids the server in
+# server_risk_panel.R listens on: <prefix>_back / _prev / _next.
+.detail_nav <- function(prefix, current_id = NULL, siblings = character(0)) {
+  if (is.null(prefix)) return(NULL)
+  back <- actionButton(paste0(prefix, "_back"), "← Back to results",
+    class = "btn btn-outline-secondary btn-sm")
+
+  pos <- if (length(siblings) > 0 && !is.null(current_id)) match(current_id, siblings) else NA
+  stepper <- if (!is.na(pos)) {
+    n    <- length(siblings)
+    prev <- actionButton(paste0(prefix, "_prev"), "← Prev",
+      class = "btn btn-outline-secondary btn-sm")
+    nxt  <- actionButton(paste0(prefix, "_next"), "Next →",
+      class = "btn btn-outline-secondary btn-sm")
+    if (pos <= 1) prev <- tagAppendAttributes(prev, disabled = NA)
+    if (pos >= n) nxt  <- tagAppendAttributes(nxt,  disabled = NA)
+    div(class = "btn-group btn-group-sm", role = "group", `aria-label` = "Source navigation",
+      prev,
+      tags$span(class = "btn btn-outline-secondary btn-sm disabled",
+        sprintf("%d / %d", pos, n)),
+      nxt
+    )
   }
+
+  div(class = "d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3",
+    back, stepper)
+}
+
+# Renders the detail pane for one source record (a single-row data frame
+# from lookup_source(), or NULL/0-row if none selected). `prefix` wires the
+# navigation row; `siblings` is the source_id order of the current filtered
+# results, used for the Prev/Next stepper.
+render_detail_ui <- function(src, prefix = NULL, siblings = character(0)) {
+  nav_row <- .detail_nav(prefix,
+    current_id = if (!is.null(src) && nrow(src) > 0) src$source_id else NULL,
+    siblings   = siblings)
 
   if (is.null(src) || nrow(src) == 0) {
     return(tagList(
-      back_btn,
+      nav_row,
       div(class = "text-muted fst-italic text-center p-5",
         "No source selected. Click a card in the Results tab.")
     ))
@@ -75,7 +105,7 @@ render_detail_ui <- function(src, back_input_id = NULL) {
 
   tagList(
 
-    back_btn,
+    nav_row,
 
     # ---- Hero header ----
     div(class = "mb-4",

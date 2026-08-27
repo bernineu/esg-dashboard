@@ -65,7 +65,7 @@ esg-dashboard/
 ├── www/
 │   └── styles.css         # card-grid styling
 └── data/
-    ├── sources.csv         # source master table (20 rows)
+    ├── sources.csv         # source master table (21 rows)
     ├── hazard_coverage.csv # long: source_id x hazard_id x coverage (+ granularity_detail)
     ├── d01_mapping.csv     # long: source_id x D 01.01 data point
     ├── source_details.csv  # long: source_id x field x free text (incl. cited "Abstract")
@@ -86,7 +86,7 @@ Excel artefact (`ESG_Data_Source_Matrix_Structured.xlsx`, Appendix C),
 so the dashboard and the printed matrix stay consistent — see the "Note
 on data model" entry in that workbook's Legend sheet.
 
--   **`sources.csv`** — one row per source (20). Key columns used by the
+-   **`sources.csv`** — one row per source (21). Key columns used by the
     app: `source_id`, `source_name`, `operator`, `short_description`,
     `risk_type` (Physical/Transition/Both), `relevance_level`,
     `source_type`, `geographic_scope`, `granularity_level`,
@@ -164,6 +164,10 @@ on data model" entry in that workbook's Legend sheet.
     single source) and shows a hint; a **← Back to results** button at
     the top of the detail pane (and the *Results* sub-tab) return to the
     filtered list.
+-   **Prev / Next in the detail view** — a stepper next to *Back to
+    results* walks through the current filtered results one source at a
+    time (with an *n / total* position indicator), so a shortlist can be
+    reviewed without returning to the grid between each.
 -   **References** — reached from the navbar link; a full-width page
     rendering `references.bib` as an alphabetical bibliography of the
     literature the source abstracts cite. A **← Back to dashboard** link
