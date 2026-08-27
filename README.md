@@ -141,29 +141,32 @@ on data model" entry in that workbook's Legend sheet.
     **top navbar** (`bslib::navset_bar`). Each panel keeps its own
     Results / Source detail sub-tabs and row selection, so switching
     between Physical and Transition doesn't lose your place in either.
-    The navbar also carries a right-aligned **References** link.
+    The navbar also carries the free-text **search** field and a
+    right-aligned **References** link.
 -   **Tier 2** (Physical branch only) — Hazard type: multi-select
     checkboxes over the 12 hazard types from Table X (Section 2.4),
     shown in the shared sidebar only while the Physical risk panel is active.
     **AND semantics**: ticking several hazards narrows to sources that
     cover *every* selected hazard (at ≥ partial coverage), not any of
-    them. No Tier 2 exists for the Transition branch, since NACE
-    classification sources apply uniformly across subsectors.
+    them. No Tier 2 exists for the Transition branch (NACE classification
+    sources apply uniformly across subsectors) — a one-line sidebar note
+    says so.
 -   **Facets** (applied regardless of tier) — source type, relevance
     level (exact match), and maximum technical effort (a ceiling: "Low"
     also returns nothing above Low). Combine freely with the other
     filters. API availability is shown in the detail view for traceability
     but is not a filter facet.
--   **Search** (applied regardless of tier) — case-insensitive, token-based
-    free-text search over source name, operator, short description and the
-    limitations note. Each whitespace-separated token must appear somewhere,
-    in any order ("munich re", "ecb central bank" both match); combines with
-    all other filters above.
+-   **Search** — in the **navbar** (not the sidebar), so it stays put
+    across both risk panels and even in the detail view. Case-insensitive,
+    token-based over source name, operator, short description and the
+    limitations note; each whitespace-separated token must appear
+    somewhere, in any order ("munich re", "ecb central bank" both match).
+    Combines with all filters.
 -   **Filters hidden in the detail view** — opening a source's *Source
-    detail* sub-tab hides the sidebar filters (they don't apply to a
+    detail* sub-tab hides the sidebar facets (they don't apply to a
     single source) and shows a hint; a **← Back to results** button at
     the top of the detail pane (and the *Results* sub-tab) return to the
-    filtered list.
+    filtered list. The navbar search stays available.
 -   **Prev / Next in the detail view** — a stepper next to *Back to
     results* walks through the current filtered results one source at a
     time (with an *n / total* position indicator), so a shortlist can be

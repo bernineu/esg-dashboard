@@ -49,3 +49,17 @@
 .tooltip-inner {
   text-align: left;
 }
+
+/* Search field in the navbar (R/ui_pages.R, navbar_search()). Keep it
+   compact so it doesn't stretch the navbar taller than the nav links. */
+.navbar-search {
+  display: flex;
+  align-items: center;
+}
+.navbar-search .shiny-input-container {
+  max-width: 100%;
+}
+.navbar-search .form-control {
+  padding: .25rem .5rem;
+  font-size: .875rem;
+}

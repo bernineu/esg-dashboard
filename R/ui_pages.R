@@ -2,9 +2,9 @@
 # ui_pages.R
 # The three top-level views the server swaps between via output$main_ui:
 #   landing_page_ui()  - intro + Physical/Transition choice (shown on open)
-#   dashboard_ui()     - navbar (risk types + References) over a shared
-#                        filter sidebar; built from filter_sidebar() and
-#                        risk_nav_panel()
+#   dashboard_ui()     - navbar (risk types + search + References) over a
+#                        shared filter sidebar; built from filter_sidebar(),
+#                        navbar_search() and risk_nav_panel()
 #   references_page_ui() - references.bib as an alphabetical bibliography
 # plus app_ui(), the outer page shell.
 # ============================================================
@@ -29,9 +29,10 @@ landing_page_ui <- function() {
         tags$ol(
           tags$li("Choose ", tags$strong("Physical risk"), " or ",
                   tags$strong("Transition risk"), " below to open the dashboard."),
-          tags$li("For physical risk, narrow further by ", tags$strong("hazard type"),
-                  " and the shared facet filters (search, source type, relevance level, ",
-                  "max. effort) in the sidebar."),
+          tags$li("Narrow the results with the ", tags$strong("search"),
+                  " box in the navbar and the facet filters in the sidebar ",
+                  "(hazard type for physical risk; source type, relevance level, ",
+                  "max. effort). Each filter's ", tags$strong("ⓘ"), " explains it."),
           tags$li("Click any card in the ", tags$strong("Results"), " tab to open its ",
                   tags$strong("Source detail"), " tab: cited abstract, D 01.01 mapping, ",
                   "hazard coverage, and rationale text."),
@@ -125,16 +126,10 @@ filter_sidebar <- function() {
     width = 320,
     title = "Filters",
 
-    # ---- Filters (hidden while a source detail view is open) ----
+    # ---- Filters (hidden while a source detail view is open; the free-text
+    #      search lives in the navbar, see dashboard_ui()) ----
     conditionalPanel(
       condition = paste0("!(", in_detail_view, ")"),
-
-      textInput(
-        "search_query", .facet_label("Search sources", FACET_TIPS$search),
-        placeholder = "Name, operator, description, or limitation..."
-      ),
-
-      hr(),
 
       # Tier 2: hazard type (physical-risk tab only)
       conditionalPanel(
@@ -155,15 +150,12 @@ filter_sidebar <- function() {
                  tags$strong("all"), " of them.")
       ),
 
-      # Transition-risk note (replaces the missing Tier 2)
+      # Transition risk has no Tier 2 - a quiet note in the footer-helpText
+      # style, not a coloured callout (the facets below are the point).
       conditionalPanel(
         condition = "input.risk_tabs == 'Transition'",
-        div(class = "alert alert-info p-2 mb-2",
-          tags$small(
-            "Transition risk sources cover NACE sector classification uniformly ",
-            "- no hazard-type filter applies."
-          )
-        )
+        helpText("No hazard-type filter here — transition-risk sources cover ",
+                 "NACE sector classification uniformly.")
       ),
 
       hr(),
@@ -226,9 +218,22 @@ risk_nav_panel <- function(title, value, subtabs_id, cards_output, detail_output
 
 # ---- Dashboard shell ------------------------------------------------
 
-# A top navbar (Physical risk / Transition risk, plus a right-aligned
-# References link) over the shared filter sidebar. `selected_tab` sets
-# which risk panel opens first, based on the landing-page choice.
+# Free-text search field for the navbar. Applies across both risk panels
+# (server reads input$search_query) and stays available even in the
+# detail view, unlike the sidebar facets.
+navbar_search <- function() {
+  fld <- textInput("search_query", label = NULL, width = "15rem",
+                   placeholder = "Search sources…")
+  fld <- tagAppendAttributes(fld, class = "mb-0")
+  fld <- htmltools::tagQuery(fld)$find("input")$
+    addAttrs(title = FACET_TIPS$search, `aria-label` = "Search sources")$
+    allTags()
+  nav_item(div(class = "navbar-search", fld))
+}
+
+# A top navbar (Physical risk / Transition risk, a search field and a
+# right-aligned References link) over the shared filter sidebar.
+# `selected_tab` sets which risk panel opens first.
 dashboard_ui <- function(selected_tab) {
   navset_bar(
     id       = "risk_tabs",
@@ -243,6 +248,7 @@ dashboard_ui <- function(selected_tab) {
       "results_cards_transition", "detail_view_transition", "result_count_transition"),
 
     nav_spacer(),
+    navbar_search(),
     nav_item(actionLink("goto_references", "References"))
   )
 }
