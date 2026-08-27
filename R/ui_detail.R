@@ -53,8 +53,9 @@ render_detail_ui <- function(src, back_input_id = NULL) {
   pr_title <- if (nzchar(pr_reason) && !is.na(PORTFOLIO_REASON_DEFS[pr_reason]))
     PORTFOLIO_REASON_DEFS[[pr_reason]] else NULL
 
+  key_lim <- trimws(as.character(src$key_limitation %||% ""))
+
   metadata_items <- list(
-    list(label = "Operator type",    value = src$operator_type),
     list(label = "Relevance",        value = as.character(src$relevance_level)),
     list(label = "Source type",      value = src$source_type),
     list(label = "Max. effort",      value = as.character(src$technical_effort)),
@@ -69,7 +70,9 @@ render_detail_ui <- function(src, back_input_id = NULL) {
     # ---- Hero header ----
     div(class = "mb-4",
       h3(class = "mb-1", src$source_name),
-      p(class = "text-muted mb-2", src$short_description),
+      p(class = "text-muted mb-1", src$short_description),
+      p(class = "small mb-2 text-muted",
+        tags$strong(class = "text-body", "Operator: "), src$operator),
       div(class = "d-flex align-items-center flex-wrap gap-3",
         tags$a(class = "btn btn-sm btn-outline-primary",
           href = paste0("https://", src$url), target = "_blank", rel = "noopener noreferrer",
@@ -88,6 +91,12 @@ render_detail_ui <- function(src, back_input_id = NULL) {
           div(class = "fw-semibold", m$value)
         )
       })
+    ),
+
+    # ---- Key limitation (the one-line headline caveat for this source) ----
+    if (nzchar(key_lim)) div(class = "border-start border-3 border-warning ps-3 mb-4",
+      .detail_h("Key limitation"),
+      p(class = "mb-0", key_lim)
     ),
 
     # ---- Cited source abstract (the narrative assessment) ----

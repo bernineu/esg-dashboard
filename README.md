@@ -87,16 +87,18 @@ so the dashboard and the printed matrix stay consistent — see the "Note
 on data model" entry in that workbook's Legend sheet.
 
 -   **`sources.csv`** — one row per source (16). Key columns used by the
-    app: `source_id`, `source_name`, `risk_type` (Physical/Transition/Both),
-    `relevance_level`, `source_type`, `operator_type`,
-    `technical_effort` (ordered factor: Low \< Medium \< High),
-    `api` (Yes/No), `portfolio_ready` (No \< Partly \< Yes),
+    app: `source_id`, `source_name`, `operator`, `short_description`,
+    `risk_type` (Physical/Transition/Both), `relevance_level`,
+    `source_type`, `technical_effort` (ordered factor: Low \< Medium \<
+    High), `api` (Yes/No), `portfolio_ready` (No \< Partly \< Yes),
     `portfolio_ready_reason` (technical / granularity / ready — why a
-    source is or is not portfolio-ready), `url`, `last_checked`.
-    `research_status`, `access_status` and `cost_category` were removed
-    from the matrix (workbook Legend, "Removed fields"): process
-    metadata, redundant with the download/api/web_interface columns, and
-    redundant with `source_type` respectively.
+    source is or is not portfolio-ready), `key_limitation` (one-line
+    headline caveat, shown in the detail view), `url`, `last_checked`.
+    `research_status`, `access_status`, `cost_category`, `operator_type`
+    and the boolean `web_interface` were removed from the matrix over
+    successive revisions (workbook Legend, "Removed fields"): process
+    metadata, or redundant with `source_type` / the remaining
+    download/api/`web_interface_type` columns.
 -   **`hazard_coverage.csv`** — one row per source × hazard combination,
     `coverage` ∈ {none, partial, full}, plus `granularity_detail` free
     text where covered. Drives the Tier 2 (hazard type) filter, the
@@ -145,11 +147,11 @@ on data model" entry in that workbook's Legend sheet.
 -   **Facets** (applied regardless of tier) — source type, relevance
     level (exact match), and maximum technical effort (a ceiling: "Low"
     also returns nothing above Low). Combine freely with the other
-    filters. Operator type and API availability are shown in the detail
-    view for traceability but are not filter facets.
+    filters. API availability is shown in the detail view for traceability
+    but is not a filter facet.
 -   **Search** (applied regardless of tier) — case-insensitive, token-based
-    free-text search over source name, operator, operator type and short
-    description. Each whitespace-separated token must appear somewhere, in
+    free-text search over source name, operator, short description and key
+    limitation. Each whitespace-separated token must appear somewhere, in
     any order ("munich re", "ecb central bank" both match); combines with
     all other filters above.
 -   **Filters hidden in the detail view** — opening a source's *Source
@@ -181,16 +183,17 @@ on data model" entry in that workbook's Legend sheet.
 -   **Reset all filters** — single button to restore all filters to
     their defaults.
 -   **Source detail tab** — clicking a card switches to a dedicated
-    detail tab, laid out to state each fact once: hero header
-    (description, external link, last-checked date); a row of key-metadata
-    chips (operator type, relevance, source type, max. effort, API access,
-    portfolio-ready + reason, the last with its definition on hover); the
-    cited **abstract** as prose — the narrative assessment that ties the
-    structured fields together; D 01.01 mapping badges; hazard coverage
-    badges (green = full, amber = partial) with a one-line coverage
-    granularity; and a collapsed **Rationale & source notes** section
-    holding the raw rationale text the abstract is built from (open by
-    default only if a source has no abstract). A selected source stays
+    detail tab, laid out to state each fact once: hero header (description,
+    operator, external link, last-checked date); a row of key-metadata
+    chips (relevance, source type, max. effort, API access, portfolio-ready
+    + reason, the last with its definition on hover); the **key
+    limitation** (a one-line headline caveat) as a highlighted callout;
+    the cited **abstract** as prose — the narrative assessment that ties
+    the structured fields together; D 01.01 mapping badges; hazard
+    coverage badges (green = full, amber = partial) with a one-line
+    coverage granularity; and a collapsed **Rationale & source notes**
+    section holding the raw rationale text the abstract is built from
+    (open by default only if a source has no abstract). A selected source stays
     viewable here even if a later filter change would hide it from the
     Results grid.
 

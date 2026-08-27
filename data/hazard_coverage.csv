@@ -1,28 +1,28 @@
 source_id,hazard_id,coverage,granularity_detail
-eea_climate_adapt,heat_stress,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,permafrost,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,heat_wave,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,wildfire,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,storm,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,water_stress,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,flood,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,heavy_precip,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,drought,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
+eea_climate_adapt,heat_stress,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard. Indirect proxy indicator only, not a dedicated named hazard category in the EEA index set."
+eea_climate_adapt,permafrost,none,
+eea_climate_adapt,heat_wave,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard."
+eea_climate_adapt,wildfire,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard."
+eea_climate_adapt,storm,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard."
+eea_climate_adapt,water_stress,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard. Indirect proxy indicator only, not a dedicated named hazard category in the EEA index set."
+eea_climate_adapt,flood,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard."
+eea_climate_adapt,heavy_precip,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard."
+eea_climate_adapt,drought,partial,"EU-wide report table resolves only to three macro-regions (Northern/Central/Southern Europe, per IPCC AR6 reference regions) - Austria falls entirely within ""Central Europe"" with no further within-country differentiation at that level. The underlying interactive European Climate Data Explorer (fed by Copernicus C3S data) allows finer sub-regional zoom for 15 of the 32 underlying indices, but which specific indices support this was not verified per hazard."
 eea_climate_adapt,glacial_lake,none,
-eea_climate_adapt,soil_erosion,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-eea_climate_adapt,landslide,partial,"Regional (NUTS 1/2), indicative/qualitative screening layer, not a precise hazard zoning"
-jrc_risk_data_hub,heat_stress,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+eea_climate_adapt,soil_erosion,none,
+eea_climate_adapt,landslide,none,
+jrc_risk_data_hub,heat_stress,none,"Not covered: no distinct heat-stress index or category exists in either module (Heat wave loss data is a different, event-based metric)."
 jrc_risk_data_hub,permafrost,none,
-jrc_risk_data_hub,heat_wave,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,wildfire,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,storm,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,water_stress,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,flood,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,heavy_precip,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,drought,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,glacial_lake,partial,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,soil_erosion,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
-jrc_risk_data_hub,landslide,full,"Regional (NUTS 2/3), modelled hazard/loss layers with EU-wide consistent methodology"
+jrc_risk_data_hub,heat_wave,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Heat wave, abbreviation HW.)"
+jrc_risk_data_hub,wildfire,full,"Modelled hazard/risk layer confirmed in the Risk Analysis module (NUTS2/3), suitable for forward-looking exposure classification. Source data: EFFIS-derived Wildland-Urban Interface layer."
+jrc_risk_data_hub,storm,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Windstorm, abbreviation WS.)"
+jrc_risk_data_hub,water_stress,none,Not covered: no water-stress category exists in either the Risk Analysis or Loss Data catalogues.
+jrc_risk_data_hub,flood,full,"Modelled hazard/risk layer confirmed in the Risk Analysis module (NUTS2/3), suitable for forward-looking exposure classification."
+jrc_risk_data_hub,heavy_precip,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Flash Flood, abbreviation FLSH.)"
+jrc_risk_data_hub,drought,partial,"Only historical loss/damage records exist in the Loss Data module (EM-DAT/media/Wikipedia-sourced event counts); no modelled hazard layer exists in the Risk Analysis module, so this cannot support forward-looking exposure classification on its own. (Drought, abbreviation DR.)"
+jrc_risk_data_hub,glacial_lake,none,Not covered: no GLOF-related hazard appears in either the Risk Analysis or Loss Data catalogues.
+jrc_risk_data_hub,soil_erosion,none,"Not covered: the Risk Analysis module lists ""Subsidence"" (ground sinking from soil compaction/extraction), a physically distinct hazard from soil erosion (topsoil loss via wind/water). No soil erosion layer exists."
+jrc_risk_data_hub,landslide,full,"Modelled hazard/risk layer confirmed in the Risk Analysis module (NUTS2/3), suitable for forward-looking exposure classification. Source data: ELSUS_v2 susceptibility layer + GPCC precipitation, 200m/5km resolution."
 effis_wildfire,heat_stress,none,
 effis_wildfire,permafrost,none,
 effis_wildfire,heat_wave,none,
@@ -35,18 +35,18 @@ effis_wildfire,drought,none,
 effis_wildfire,glacial_lake,none,
 effis_wildfire,soil_erosion,none,
 effis_wildfire,landslide,none,
-copernicus_cds,heat_stress,full,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,permafrost,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,heat_wave,full,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,wildfire,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,storm,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,water_stress,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,flood,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,heavy_precip,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,drought,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,glacial_lake,none,
-copernicus_cds,soil_erosion,partial,"Grid/raster (~0.1-0.25 degree), climate reanalysis and projection data, not hazard-zoned"
-copernicus_cds,landslide,none,
+copernicus_cds,heat_stress,partial,"Only an indirect proxy (Universal Thermal Climate Index, UTCI) available via the shared sis-ecde-climate-indicators dataset - the same proxy limitation noted for Climate-ADAPT, since both draw on the same underlying EEA/C3S index set."
+copernicus_cds,permafrost,partial,"Raw ERA5 soil-temperature-at-depth variables could serve as model input for permafrost analysis, but no ready-made permafrost index or product exists."
+copernicus_cds,heat_wave,full,"Dedicated ""extreme heat"" indices (tropical nights, hot days, heatwave days) available via the shared sis-ecde-climate-indicators dataset, directly downloadable."
+copernicus_cds,wildfire,full,"Dedicated ""Fire danger indices historical data"" dataset (CEMS/EFFIS-based, ERA5-driven, three national fire-danger rating systems) directly downloadable from the CDS - a purpose-built, ready-made dataset, not merely a derivable raw variable."
+copernicus_cds,storm,partial,"Derived ""severe wind storm"" index available via the shared sis-ecde-climate-indicators dataset, plus raw 10m wind-speed ERA5 variables. Not a hazard-zoned map."
+copernicus_cds,water_stress,partial,"No dedicated water-stress index; only indirectly covered via aridity/soil-moisture proxies, same limitation as Climate-ADAPT."
+copernicus_cds,flood,partial,"Derived ""river flood index using runoff"" available via the shared sis-ecde-climate-indicators dataset (same index set as Climate-ADAPT), plus raw runoff/precipitation ERA5 variables for custom modelling. Not a hazard-zoned map."
+copernicus_cds,heavy_precip,partial,"Derived heavy-precipitation indices available via the shared sis-ecde-climate-indicators dataset, plus raw precipitation ERA5 variables. Not a hazard-zoned map."
+copernicus_cds,drought,partial,"Derived drought indices (meteorological and soil-moisture based) available via the shared sis-ecde-climate-indicators dataset, plus raw soil-moisture ERA5 variables. Not a hazard-zoned map."
+copernicus_cds,glacial_lake,none,No GLOF-relevant dataset or index identified on the CDS.
+copernicus_cds,soil_erosion,partial,"No ready-made erosion index exists; would require independent erosion modelling (e.g. RUSLE-type) from raw precipitation intensity, soil moisture and wind-speed variables."
+copernicus_cds,landslide,none,No landslide-relevant dataset or index identified on the CDS.
 eba_esg_dashboard,heat_stress,partial,"Bank/aggregate level - EU supervisory reporting statistics, not spatially resolved"
 eba_esg_dashboard,permafrost,none,
 eba_esg_dashboard,heat_wave,none,
@@ -59,18 +59,18 @@ eba_esg_dashboard,drought,none,
 eba_esg_dashboard,glacial_lake,none,
 eba_esg_dashboard,soil_erosion,none,
 eba_esg_dashboard,landslide,none,
-ecb_physical_risk_indicators,heat_stress,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
-ecb_physical_risk_indicators,permafrost,none,
-ecb_physical_risk_indicators,heat_wave,partial,"Institution/portfolio level aggregate indicators, not spatially resolved"
-ecb_physical_risk_indicators,wildfire,partial,"Institution/portfolio level aggregate indicators, not spatially resolved"
-ecb_physical_risk_indicators,storm,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
-ecb_physical_risk_indicators,water_stress,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
-ecb_physical_risk_indicators,flood,full,"Institution/portfolio level aggregate indicators, not spatially resolved"
-ecb_physical_risk_indicators,heavy_precip,none,
-ecb_physical_risk_indicators,drought,partial,"Institution/portfolio level aggregate indicators, not spatially resolved"
-ecb_physical_risk_indicators,glacial_lake,none,
-ecb_physical_risk_indicators,soil_erosion,none,
-ecb_physical_risk_indicators,landslide,none,
+ecb_physical_risk_indicators,heat_stress,partial,"Documentation inconsistency: not named among the 9 hazards on the ECB's primary indicator methodology page, but other ECB communications (e.g. outreach seminar materials) describe ""heat and water stress"" as a chronic physical risk category. Rated partial pending clarification, not full."
+ecb_physical_risk_indicators,permafrost,none,Not covered: no permafrost-related indicator exists.
+ecb_physical_risk_indicators,heat_wave,partial,"Documentation inconsistency: not named among the 9 hazards on the ECB's primary indicator methodology page, but other ECB communications (e.g. outreach seminar materials) describe ""heat and water stress"" as a chronic physical risk category. Rated partial pending clarification, not full."
+ecb_physical_risk_indicators,wildfire,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
+ecb_physical_risk_indicators,storm,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."" (""Windstorms"".)"
+ecb_physical_risk_indicators,water_stress,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
+ecb_physical_risk_indicators,flood,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."" (Coastal and river flooding both covered.)"
+ecb_physical_risk_indicators,heavy_precip,partial,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."" (""Rainfall variation"" - covered, but as a chronic statistical indicator, not an event-based heavy-precipitation hazard map.)"
+ecb_physical_risk_indicators,drought,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
+ecb_physical_risk_indicators,glacial_lake,none,Not covered: no GLOF-related indicator exists.
+ecb_physical_risk_indicators,soil_erosion,none,"Only ""subsidence"" is covered (ground sinking from soil compaction/extraction), a physically distinct process from soil erosion. No soil erosion indicator exists."
+ecb_physical_risk_indicators,landslide,full,"Explicitly named in the ECB's own indicator methodology page (ECB, n.d.): ""coastal flooding, river flooding, wildfires, landslides, subsidence, windstorms, water stress, droughts and rainfall variation."""
 bundeslaender_open_data,heat_stress,none,
 bundeslaender_open_data,permafrost,none,
 bundeslaender_open_data,heat_wave,none,
@@ -112,49 +112,49 @@ wri_aqueduct,permafrost,none,
 wri_aqueduct,heat_wave,none,
 wri_aqueduct,wildfire,none,
 wri_aqueduct,storm,none,
-wri_aqueduct,water_stress,full,"Sub-catchment (watershed) level, modelled water-risk indicators"
-wri_aqueduct,flood,partial,"Sub-catchment (watershed) level, modelled water-risk indicators"
+wri_aqueduct,water_stress,full,"Confirmed: dedicated ""baseline water stress"" (bws), ""baseline water depletion"" (bwd), ""interannual variability"" (iav), ""seasonal variability"" (sev) and ""groundwater table decline"" (gtd) indicators (WRI, n.d.)."
+wri_aqueduct,flood,full,"Confirmed: dedicated ""riverine flood risk"" (rfr) and ""coastal flood risk"" (cfr) indicators, explicitly named in WRI's own 13-indicator framework (WRI, n.d.), not merely inferred from water-stress data."
 wri_aqueduct,heavy_precip,none,
-wri_aqueduct,drought,partial,"Sub-catchment (watershed) level, modelled water-risk indicators"
+wri_aqueduct,drought,full,"Confirmed: dedicated ""drought risk"" (drr) indicator, explicitly named in WRI's own 13-indicator framework (WRI, n.d.)."
 wri_aqueduct,glacial_lake,none,
 wri_aqueduct,soil_erosion,none,
 wri_aqueduct,landslide,none,
 moodys_physical_risk,heat_stress,full,"Facility/object level, proprietary modelled risk scores"
 moodys_physical_risk,permafrost,none,
-moodys_physical_risk,heat_wave,full,"Facility/object level, proprietary modelled risk scores"
-moodys_physical_risk,wildfire,partial,"Facility/object level, proprietary modelled risk scores"
-moodys_physical_risk,storm,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,heat_wave,none,"Not covered as a distinct category: Moody's consistently names only ""heat stress"" (a chronic/institution-level indicator), not a separate acute heat-wave event product."
+moodys_physical_risk,wildfire,full,"Confirmed: ""wildfires"" is consistently named across Moody's own marketing and methodology materials as one of six covered hazards."
+moodys_physical_risk,storm,none,"Not applicable for Austria: Moody's own marketing/methodology materials name ""hurricanes and typhoons"" specifically, not extratropical windstorms - a tropical-cyclone-specific hazard with no relevance to a landlocked Central European country."
 moodys_physical_risk,water_stress,full,"Facility/object level, proprietary modelled risk scores"
 moodys_physical_risk,flood,full,"Facility/object level, proprietary modelled risk scores"
 moodys_physical_risk,heavy_precip,none,
-moodys_physical_risk,drought,full,"Facility/object level, proprietary modelled risk scores"
+moodys_physical_risk,drought,none,"Not covered: drought does not appear in any of Moody's own published hazard lists (floods, heat stress, hurricanes and typhoons, sea-level rise, water stress, wildfires)."
 moodys_physical_risk,glacial_lake,none,
 moodys_physical_risk,soil_erosion,none,
 moodys_physical_risk,landslide,none,
-munich_re_nathan,heat_stress,full,"Facility/object level, proprietary modelled risk scores"
+munich_re_nathan,heat_stress,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
 munich_re_nathan,permafrost,none,
-munich_re_nathan,heat_wave,full,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,wildfire,partial,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,storm,full,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,water_stress,full,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,flood,full,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,heavy_precip,full,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,drought,full,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,glacial_lake,partial,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,soil_erosion,partial,"Facility/object level, proprietary modelled risk scores"
-munich_re_nathan,landslide,partial,"Facility/object level, proprietary modelled risk scores"
-world_bank_gfdrr,heat_stress,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,permafrost,none,
-world_bank_gfdrr,heat_wave,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,wildfire,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,storm,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,water_stress,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,flood,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,heavy_precip,none,
-world_bank_gfdrr,drought,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,glacial_lake,none,
-world_bank_gfdrr,soil_erosion,partial,"Global/country level, some subnational layers depending on dataset"
-world_bank_gfdrr,landslide,partial,"Global/country level, some subnational layers depending on dataset"
+munich_re_nathan,heat_wave,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
+munich_re_nathan,wildfire,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence. A dedicated higher-resolution ""Wildfire HD Edition"" is also available separately."
+munich_re_nathan,storm,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence. (""Extratropical Storm"" is the Europe-relevant category, unlike tropical-cyclone-only competitor products.)"
+munich_re_nathan,water_stress,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
+munich_re_nathan,flood,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence. (River Flood, Flash Flood, Storm Surge.)"
+munich_re_nathan,heavy_precip,partial,"Not separately named; ""Flash Flood"" (a related, precipitation-driven hazard) is explicitly covered, but it is classified and scored as a flood hazard, not a distinct heavy-precipitation indicator."
+munich_re_nathan,drought,partial,"Not confirmed by name: Munich Re's separate ""Climate Change Edition"" advertises coverage of ""13 climate hazards"" (acute and chronic) but does not name them individually in the marketing/methodology materials reviewed. Downgraded from full to partial pending confirmation of the specific indicator."
+munich_re_nathan,glacial_lake,none,Not covered: no GLOF-related hazard appears in the 15-hazard Natural Hazards Edition list.
+munich_re_nathan,soil_erosion,none,"Only ""Subsidence"" is listed (ground sinking from soil compaction/extraction), a physically distinct process from soil erosion. No soil erosion hazard exists in the Natural Hazards Edition."
+munich_re_nathan,landslide,full,"Explicitly named in Munich Re's ""Natural Hazards Edition"" hazard list (Munich Re, n.d.): River Flood, Flash Flood, Storm Surge, Tropical Cyclone, Extratropical Storm, Hail, Tornado, Lightning, Earthquake, Volcano, Tsunami, Wildfire, Avalanche, Landslide, Subsidence."
+world_bank_gfdrr,heat_stress,none,"Not covered as a category distinct from ""extreme heat"" - no separate heat-stress index identified."
+world_bank_gfdrr,permafrost,none,Not covered: no permafrost-related dataset identified.
+world_bank_gfdrr,heat_wave,full,"Confirmed: ""extreme heat"" is one of the hazards with commonly-available probabilistic data in ThinkHazard! (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
+world_bank_gfdrr,wildfire,full,"Confirmed: ""wildfire"" is one of the hazards with commonly-available probabilistic data in ThinkHazard! (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
+world_bank_gfdrr,storm,partial,"ThinkHazard! covers ""cyclone"" with commonly-available probabilistic data (GFDRR, n.d.); terminology and hazard model are tropical-cyclone-oriented, so applicability to European extratropical windstorms (as relevant to Austria) was not separately confirmed."
+world_bank_gfdrr,water_stress,full,"Confirmed: ""water scarcity"" is explicitly covered via a dedicated Water Stress Index methodology (water availability per person per year) (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
+world_bank_gfdrr,flood,full,"Confirmed: probabilistic flood hazard data (river, urban, coastal) commonly available via ThinkHazard! (GFDRR, n.d.). Resolves to district (ADM2) level via ThinkHazard!'s public API (GFDRR, n.d.-b), not merely country level."
+world_bank_gfdrr,heavy_precip,none,Not covered as a distinct hazard category separate from flood.
+world_bank_gfdrr,drought,partial,"Not covered as a distinct event-based drought hazard; only indirectly inferable from the chronic ""water scarcity"" / Water Stress Index methodology."
+world_bank_gfdrr,glacial_lake,none,Not covered: no GLOF-related dataset identified.
+world_bank_gfdrr,soil_erosion,none,Not covered: no soil erosion dataset or index identified in the ThinkHazard!/Risk Data Library ecosystem.
+world_bank_gfdrr,landslide,full,"Confirmed via a dedicated Global Landslide Hazard Map (World Bank/GFDRR, commissioned from Arup): gridded global dataset of estimated annual frequency of significant landslides."
 kryomon_at,heat_stress,none,
 kryomon_at,permafrost,partial,"Station-based (borehole temperature monitoring at established alpine sites), not area-wide"
 kryomon_at,heat_wave,none,

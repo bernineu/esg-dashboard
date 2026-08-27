@@ -87,7 +87,7 @@ filter_sidebar <- function() {
 
       textInput(
         "search_query", "Search sources",
-        placeholder = "Name, operator, operator type, or description..."
+        placeholder = "Name, operator, description, or limitation..."
       ),
 
       hr(),
@@ -209,11 +209,13 @@ dashboard_ui <- function(selected_tab) {
 format_bib_entry <- function(r) {
   head <- paste0(r$author, " (", r$year, "). ", r$title,
                  if (grepl("[.!?]$", r$title)) "" else ".")
-  tail <- if (nzchar(r$urldate)) paste0(" Retrieved ", r$urldate, ",") else ""
   extra_note <- sub("^\\([^)]*\\)\\.?\\s*", "", r$note)   # note text after the (Author, year)
+  link <- if (nzchar(r$url)) tagList(
+    if (nzchar(r$urldate)) paste0(" Retrieved ", r$urldate, ", from ") else " ",
+    tags$a(href = r$url, target = "_blank", rel = "noopener noreferrer", r$url)
+  )
   tags$li(class = "mb-2",
-    head, tail, " from ",
-    tags$a(href = r$url, target = "_blank", rel = "noopener noreferrer", r$url),
+    head, link,
     if (nzchar(extra_note)) tags$span(class = "text-muted", paste0(" — ", extra_note))
   )
 }
