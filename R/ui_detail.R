@@ -134,40 +134,50 @@ render_detail_ui <- function(src, back_input_id = NULL) {
       )
     ),
 
-    # ---- Hazard coverage (physical sources only). Covered hazards (full /
-    #      partial) go in a per-hazard table with the coverage detail; the
-    #      hazards this source does not cover follow as red badges. ----
+    # ---- Hazard coverage (physical sources only). All 12 hazards as
+    #      colour-coded badges (green = full, amber = partial, red = not
+    #      covered); the per-hazard coverage detail for the covered ones
+    #      sits in a collapsible table. ----
     if (nrow(haz) > 0) {
-      ord    <- function(d) d %>% arrange(desc(coverage), match(hazard_id, names(HAZARD_LABELS)))
-      cov    <- ord(haz %>% filter(coverage != "none"))
-      notcov <- ord(haz %>% filter(coverage == "none"))
-      cov_badge <- function(cv) tags$span(
-        class = if (cv == "full") "badge bg-success" else "badge bg-warning text-dark", cv)
+      haz_o <- haz %>% arrange(desc(coverage), match(hazard_id, names(HAZARD_LABELS)))
+      cov   <- haz_o %>% filter(coverage != "none")
+      hz_class <- function(cv) switch(as.character(cv),
+        "full"    = "badge bg-success",
+        "partial" = "badge bg-warning text-dark",
+        "none"    = "badge bg-danger",
+        "badge bg-secondary"
+      )
 
       tagList(
         .detail_h("Hazard coverage"),
-        if (nrow(cov) > 0) div(class = "table-responsive mb-2",
-          tags$table(class = "table table-sm align-middle small mb-0",
-            tags$thead(tags$tr(
-              tags$th(scope = "col", "Hazard"),
-              tags$th(scope = "col", "Coverage"),
-              tags$th(scope = "col", "Detail")
-            )),
-            tags$tbody(lapply(seq_len(nrow(cov)), function(i) {
-              d <- cov$granularity_detail[i]
-              tags$tr(
-                tags$td(class = "text-nowrap fw-semibold", HAZARD_LABELS[cov$hazard_id[i]]),
-                tags$td(cov_badge(as.character(cov$coverage[i]))),
-                tags$td(class = "text-muted",
-                  if (!is.na(d) && nzchar(d)) d else "—")
-              )
-            }))
-          )
+        div(class = "d-flex flex-wrap gap-2 mb-2",
+          lapply(seq_len(nrow(haz_o)), function(i)
+            tags$span(class = hz_class(haz_o$coverage[i]),
+              paste0(HAZARD_LABELS[haz_o$hazard_id[i]], " (", haz_o$coverage[i], ")")))
         ),
-        if (nrow(notcov) > 0) p(class = "small mb-4",
-          tags$span(class = "text-muted me-1", "Not covered:"),
-          lapply(seq_len(nrow(notcov)), function(i)
-            tags$span(class = "badge bg-danger me-1", HAZARD_LABELS[notcov$hazard_id[i]]))
+        if (nrow(cov) > 0) tags$details(class = "mb-4",
+          tags$summary(
+            class = "text-uppercase text-muted mb-0",
+            style = "font-size:.75rem; letter-spacing:.03em; cursor:pointer;",
+            sprintf("Coverage detail (%d)", nrow(cov))
+          ),
+          div(class = "table-responsive mt-3",
+            tags$table(class = "table table-sm align-middle small mb-0",
+              tags$thead(tags$tr(
+                tags$th(scope = "col", "Hazard"),
+                tags$th(scope = "col", "Coverage"),
+                tags$th(scope = "col", "Detail")
+              )),
+              tags$tbody(lapply(seq_len(nrow(cov)), function(i) {
+                d <- cov$granularity_detail[i]
+                tags$tr(
+                  tags$td(class = "text-nowrap fw-semibold", HAZARD_LABELS[cov$hazard_id[i]]),
+                  tags$td(tags$span(class = hz_class(cov$coverage[i]), as.character(cov$coverage[i]))),
+                  tags$td(class = "text-muted", if (!is.na(d) && nzchar(d)) d else "—")
+                )
+              }))
+            )
+          )
         ) else div(class = "mb-4")
       )
     },

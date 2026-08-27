@@ -103,9 +103,9 @@ on data model" entry in that workbook's Legend sheet.
 -   **`hazard_coverage.csv`** — one row per source × hazard combination,
     `coverage` ∈ {none, partial, full}, plus a per-hazard
     `granularity_detail` verification note where covered. Drives the Tier
-    2 (hazard type) filter and, in the detail view, a per-hazard table of
-    the full/partial hazards (with the detail note) followed by the
-    uncovered hazards as red badges.
+    2 (hazard type) filter and, in the detail view, the colour-coded
+    hazard badges (green = full, amber = partial, red = not covered) plus
+    a collapsible per-hazard *Coverage detail* table for the covered ones.
 -   **`d01_mapping.csv`** — links each source to the specific D 01.01 /
     DPM data point(s) it is relevant for (primary/secondary), shown in
     the detail view.
@@ -195,10 +195,11 @@ on data model" entry in that workbook's Legend sheet.
     definition on hover); the headline **Limitations** note as a
     highlighted callout; the factual cited **abstract**; the
     **Suitability for an SNCI** verdict (where recorded); D 01.01 mapping
-    badges; a **hazard coverage** table of the full/partial hazards with
-    their per-hazard detail note, then the uncovered hazards as red
-    badges; a **Pricing** section for commercial sources; and a collapsed
-    **Technical & source notes** section for the reference detail. A
+    badges; **hazard coverage** as colour-coded badges (green = full,
+    amber = partial, red = not covered) with a collapsible per-hazard
+    detail table; a **Pricing** section for commercial sources; and a
+    collapsed **Technical & source notes** section for the reference
+    detail. A
     selected source stays viewable here even if a later filter change
     would hide it from the Results grid.
 
