@@ -180,9 +180,11 @@ on data model" entry in that workbook's Legend sheet.
     before entering the dashboard.
 -   **Result count** — shows how many sources match the current filters
     out of the total.
--   **Relevance legend** — collapsible definitions for all four
-    relevance levels (Primary, Supplementary, Context only,
-    Methodological).
+-   **Facet help** — each filter label carries a small **ⓘ** with a short
+    explanation taken from the Data Source Matrix legend (relevance
+    levels, technical-effort scale, public vs. commercial, what the
+    search covers). Native browser tooltip, upgraded to a Bootstrap
+    tooltip where available.
 -   **Card-based results** — each matching source is a clickable card
     showing its name, short description, operator, and four at-a-glance
     badges: relevance (color-coded), source type (Public/Commercial),

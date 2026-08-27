@@ -30,3 +30,22 @@
 .risk-choice.active .risk-choice-sub {
   color: rgba(255, 255, 255, .85);
 }
+
+/* "ⓘ" next to the facet-filter labels (R/ui_pages.R, .facet_label). */
+.facet-info {
+  font-size: .8rem;
+  line-height: 1;
+  vertical-align: baseline;
+}
+.facet-info:hover,
+.facet-info:focus {
+  color: var(--bs-primary);
+  outline: none;
+}
+/* Give the (Bootstrap) tooltip room for the longer facet explanations. */
+.tooltip {
+  --bs-tooltip-max-width: 320px;
+}
+.tooltip-inner {
+  text-align: left;
+}

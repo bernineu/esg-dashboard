@@ -4,9 +4,10 @@
 # and colours used for relevance / portfolio-readiness live in one place.
 # ============================================================
 
-# Relevance-level definitions, shown in the collapsible legend above the
-# results grid. The order here is also the order the "Relevance level"
-# facet lists them in.
+# Relevance-level definitions (Data Source Matrix legend). The names(),
+# in this order, drive the order of the "Relevance level" facet; the
+# definitions are echoed in that facet's ⓘ tooltip (see FACET_TIPS in
+# R/ui_pages.R).
 RELEVANCE_DEFS <- c(
   "Primary"        = "Direct input for populating D 01.01 data points.",
   "Supplementary"  = "Useful supporting data; not sufficient alone.",

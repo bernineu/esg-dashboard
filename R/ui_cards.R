@@ -1,7 +1,7 @@
 # ============================================================
 # ui_cards.R
 # The results grid: at-a-glance badge helpers, the clickable card grid,
-# and the count + relevance-legend header shown above it.
+# and the result-count line shown above it.
 # ============================================================
 
 # ---- Badge helpers (shared by the card grid) ----
@@ -76,25 +76,11 @@ render_card_grid <- function(df, click_input_id, selected_id = NULL) {
   )
 }
 
-# Result-count + collapsible relevance-legend row, shown above each grid.
+# Result-count line, shown above each grid. (The relevance levels are
+# explained via the "ⓘ" on the Relevance-level facet - see R/ui_pages.R.)
 result_header_ui <- function(count_output_id) {
-  div(class = "d-flex justify-content-between align-items-start mb-2",
-    tagAppendAttributes(
-      textOutput(count_output_id, inline = TRUE),
-      class = "fw-bold"
-    ),
-    tags$details(
-      tags$summary(
-        class = "text-muted small",
-        style = "cursor:pointer; user-select:none",
-        "Relevance levels explained"
-      ),
-      tags$dl(
-        class = "small mt-1 mb-0",
-        lapply(names(RELEVANCE_DEFS), function(k) {
-          tagList(tags$dt(k), tags$dd(class = "ms-3", RELEVANCE_DEFS[[k]]))
-        })
-      )
-    )
+  tagAppendAttributes(
+    textOutput(count_output_id, inline = TRUE),
+    class = "fw-bold d-block mb-2"
   )
 }

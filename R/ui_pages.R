@@ -67,6 +67,50 @@ landing_page_ui <- function() {
 
 # ---- Dashboard: filter sidebar ---------------------------------------
 
+# Short explanations for the facet filters, taken from the Data Source
+# Matrix / workbook Legend sheet. Surfaced as a small "ⓘ" next to each
+# label (native browser tooltip, upgraded to a Bootstrap tooltip by the
+# init script in app_ui() where Bootstrap's JS is available).
+FACET_TIPS <- list(
+  search    = paste(
+    "Case-insensitive. Matches the source name, operator, short description",
+    "and its limitations note; the words can appear in any order."),
+  hazard    = paste(
+    "Tier 2 filter (Section 2.4): the 12 physical hazard types. A source is",
+    "kept only if it covers every ticked hazard at partial or full coverage."),
+  source_type = paste(
+    "Public = free / open data (institutional or open-government).",
+    "Commercial = paid, requires a licence agreement."),
+  relevance = paste(
+    "How the source relates to the D 01.01 data point (Data Source Matrix",
+    "legend). Primary: directly usable as an operational data source.",
+    "Supplementary: complements a primary source, not sufficient alone.",
+    "Context only / Methodological: screening, benchmarking or methodology",
+    "only, not a usable data source."),
+  effort    = paste(
+    "Effort to turn the source's own raw data into an exposure classification",
+    "- format conversion, geocoding, spatial overlay (Data Source Matrix",
+    "legend). Low: one well-structured layer or API. Medium: several layers",
+    "or a complex structure needing interpretation. High: substantial extra",
+    "processing, or no bulk access. The filter keeps sources at the chosen",
+    "level or below.")
+)
+
+.facet_label <- function(text, tip) {
+  tagList(
+    text, " ",
+    tags$span(
+      class = "facet-info text-muted", style = "cursor: help;",
+      tabindex = "0", title = tip,
+      `data-bs-toggle` = "tooltip", `data-bs-placement` = "right",
+      # the icon sits inside a <label for=...>; don't let a click on it
+      # open/toggle the associated input.
+      onclick = "event.preventDefault(); event.stopPropagation();",
+      "ⓘ"
+    )
+  )
+}
+
 # Shared across the risk-type nav panels (bslib::sidebar, so the inputs
 # are defined once). The whole filter block is hidden while a "Source
 # detail" sub-tab is open, replaced by a short hint.
@@ -86,7 +130,7 @@ filter_sidebar <- function() {
       condition = paste0("!(", in_detail_view, ")"),
 
       textInput(
-        "search_query", "Search sources",
+        "search_query", .facet_label("Search sources", FACET_TIPS$search),
         placeholder = "Name, operator, description, or limitation..."
       ),
 
@@ -95,7 +139,7 @@ filter_sidebar <- function() {
       # Tier 2: hazard type (physical-risk tab only)
       conditionalPanel(
         condition = "input.risk_tabs == 'Physical'",
-        h5("Hazard type"),
+        h5(.facet_label("Hazard type", FACET_TIPS$hazard)),
         div(class = "mb-1",
           actionLink("hazard_select_all", "Select all", class = "small"),
           " | ",
@@ -126,18 +170,18 @@ filter_sidebar <- function() {
       h5("Facets"),
 
       selectInput(
-        "source_type", "Source type",
+        "source_type", .facet_label("Source type", FACET_TIPS$source_type),
         choices  = c("All", sort(unique(sources_df$source_type))),
         selected = "All"
       ),
       selectInput(
-        "relevance_level", "Relevance level",
+        "relevance_level", .facet_label("Relevance level", FACET_TIPS$relevance),
         choices  = c("All", intersect(names(RELEVANCE_DEFS),
                                       unique(sources_df$relevance_level))),
         selected = "All"
       ),
       selectInput(
-        "technical_effort", "Max. effort",
+        "technical_effort", .facet_label("Max. effort", FACET_TIPS$effort),
         choices  = c("All", "Low", "Medium", "High"),
         selected = "All"
       ),
@@ -253,7 +297,24 @@ references_page_ui <- function() {
 app_ui <- function() {
   fluidPage(
     theme = bs_theme(version = 5, bootswatch = "flatly"),
-    tags$head(includeCSS("www/styles.css")),
+    tags$head(
+      includeCSS("www/styles.css"),
+      # Upgrade the facet "ⓘ" title tooltips to Bootstrap tooltips where
+      # Bootstrap's JS is present; re-run after each renderUI of #main_ui.
+      # The native `title` attribute is the fallback if this no-ops.
+      tags$script(HTML("
+        $(function () {
+          function initTooltips() {
+            if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) return;
+            document.querySelectorAll('[data-bs-toggle=\"tooltip\"]').forEach(function (el) {
+              if (!bootstrap.Tooltip.getInstance(el)) new bootstrap.Tooltip(el);
+            });
+          }
+          $(document).on('shiny:value', function () { setTimeout(initTooltips, 0); });
+          setTimeout(initTooltips, 400);
+        });
+      "))
+    ),
     uiOutput("main_ui")
   )
 }
