@@ -109,14 +109,13 @@ on data model" entry in that workbook's Legend sheet.
 -   **`d01_mapping.csv`** — links each source to the specific D 01.01 /
     DPM data point(s) it is relevant for (primary/secondary), shown in
     the detail view.
--   **`source_details.csv`** — one `field` / `text` row per note. Shown
-    as their own sections: the factual cited **Abstract**, the
-    **Suitability for an SNCI** verdict, the headline **Limitations** note
-    (as a callout) and **Pricing** (commercial sources only). The rest
-    (download format, web interface type, data update frequency, licensing
-    notes, portfolio-ready pipeline, methodology notes, …) sits in a
-    collapsed *Technical & source notes* section. Shown only when a row is
-    selected.
+-   **`source_details.csv`** — one `field` / `text` row per note. Three
+    get their own section in the detail view: the factual cited
+    **Abstract**, the **Suitability for an SNCI** verdict and the headline
+    **Limitations** note. Everything else (pricing, download format, web
+    interface type, data update frequency, licensing notes, portfolio-ready
+    pipeline, methodology notes, …) sits in the collapsed **Details**
+    section. Shown only when a row is selected.
 -   **`citations.csv`** — one row per source × reference, `citation_role`
     (primary / methodology / legal\_basis / technical\_doc). `zotero_key`
     is otherwise resolved in the thesis Zotero library. Loaded by
@@ -197,18 +196,18 @@ on data model" entry in that workbook's Legend sheet.
 -   **Reset all filters** — single button to restore all filters to
     their defaults.
 -   **Source detail tab** — clicking a card switches to a dedicated
-    detail tab, laid out to state each fact once: hero header (description,
-    operator, external link, last-checked date); a row of key-metadata
-    chips (relevance, source type, geographic scope, granularity, max.
-    effort, API access, portfolio-ready + reason, the last with its
-    definition on hover); the headline **Limitations** note as a
-    highlighted callout; the factual cited **abstract**; the
-    **Suitability for an SNCI** verdict (where recorded); D 01.01 mapping
-    badges; **hazard coverage** as colour-coded badges (green = full,
-    amber = partial, red = not covered) with a collapsible per-hazard
-    detail table; a **Pricing** section for commercial sources; and a
-    collapsed **Technical & source notes** section for the reference
-    detail. A
+    detail tab. Each block carries a coloured left rule so the sections
+    read apart: hero header (description, operator, external link,
+    last-checked date); a row of key-metadata chips (relevance, source
+    type, geographic scope, granularity, max. effort, API access,
+    portfolio-ready + reason, the last with its definition on hover);
+    then, in order, the factual cited **Abstract**, the **Suitability for
+    an SNCI** verdict (where recorded) and the headline **Limitations**
+    note; D 01.01 mapping badges; **hazard coverage** as colour-coded
+    badges (green = full, amber = partial, red = not covered) with a
+    collapsible per-hazard detail table; and a collapsed **Details**
+    section holding everything else (pricing, formats, update cadence,
+    licensing, pipeline, methodology notes). A
     selected source stays viewable here even if a later filter change
     would hide it from the Results grid.
 
