@@ -101,8 +101,9 @@ on data model" entry in that workbook's Legend sheet.
     download/api/`web_interface_type` columns.
 -   **`hazard_coverage.csv`** — one row per source × hazard combination,
     `coverage` ∈ {none, partial, full}, plus `granularity_detail` free
-    text where covered. Drives the Tier 2 (hazard type) filter, the
-    hazard coverage badges and their tooltips in the detail view.
+    text where covered. Drives the Tier 2 (hazard type) filter and the
+    hazard coverage badges in the detail view (uncovered hazards shown
+    in red).
 -   **`d01_mapping.csv`** — links each source to the specific D 01.01 /
     DPM data point(s) it is relevant for (primary/secondary), shown in
     the detail view.
@@ -190,7 +191,8 @@ on data model" entry in that workbook's Legend sheet.
     limitation** (a one-line headline caveat) as a highlighted callout;
     the cited **abstract** as prose — the narrative assessment that ties
     the structured fields together; D 01.01 mapping badges; hazard
-    coverage badges (green = full, amber = partial) with a one-line
+    coverage badges for all 12 hazards — covered first (green = full,
+    amber = partial), then the uncovered ones in red — with a one-line
     coverage granularity; and a collapsed **Rationale & source notes**
     section holding the raw rationale text the abstract is built from
     (open by default only if a source has no abstract). A selected source stays

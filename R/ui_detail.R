@@ -118,32 +118,33 @@ render_detail_ui <- function(src, back_input_id = NULL) {
       )
     ),
 
-    # ---- Hazard coverage badges (physical sources only; skip all-none coverage) ----
+    # ---- Hazard coverage (physical sources only). Every hazard is shown:
+    #      covered ones first (green = full, amber = partial), then the
+    #      ones this source does not cover, in red. ----
     if (nrow(haz) > 0) {
-      covered <- haz %>% filter(coverage != "none")
-      if (nrow(covered) > 0) {
-        det <- unique(covered$granularity_detail[!is.na(covered$granularity_detail) &
-                                                 nzchar(covered$granularity_detail)])
-        tagList(
-          .detail_h("Hazard coverage"),
-          div(class = "d-flex flex-wrap gap-2 mb-2",
-            lapply(seq_len(nrow(covered)), function(i) {
-              badge_class <- switch(as.character(covered$coverage[i]),
-                "full"    = "badge bg-success",
-                "partial" = "badge bg-warning text-dark",
-                "badge bg-secondary"
-              )
-              tags$span(class = badge_class,
-                paste0(HAZARD_LABELS[covered$hazard_id[i]], " (", covered$coverage[i], ")"))
-            })
-          ),
-          # Coverage granularity, shown once (it is a per-source attribute in
-          # practice - the same phrase repeats across a source's hazards).
-          if (length(det) > 0) p(class = "text-muted small fst-italic mb-4",
-            paste(det, collapse = " / "))
-          else div(class = "mb-4")
-        )
-      }
+      haz <- haz %>% arrange(desc(coverage), match(hazard_id, names(HAZARD_LABELS)))
+      det <- unique(haz$granularity_detail[!is.na(haz$granularity_detail) &
+                                           nzchar(haz$granularity_detail)])
+      tagList(
+        .detail_h("Hazard coverage"),
+        div(class = "d-flex flex-wrap gap-2 mb-2",
+          lapply(seq_len(nrow(haz)), function(i) {
+            badge_class <- switch(as.character(haz$coverage[i]),
+              "full"    = "badge bg-success",
+              "partial" = "badge bg-warning text-dark",
+              "none"    = "badge bg-danger",
+              "badge bg-secondary"
+            )
+            tags$span(class = badge_class,
+              paste0(HAZARD_LABELS[haz$hazard_id[i]], " (", haz$coverage[i], ")"))
+          })
+        ),
+        # Coverage granularity, shown once (it is a per-source attribute in
+        # practice - the same phrase repeats across a source's hazards).
+        if (length(det) > 0) p(class = "text-muted small fst-italic mb-4",
+          paste(det, collapse = " / "))
+        else div(class = "mb-4")
+      )
     },
 
     # ---- Rationale & source notes (collapsed: the abstract above already
