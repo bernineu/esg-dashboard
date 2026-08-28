@@ -20,6 +20,7 @@ wire_risk_panel <- function(input, output, session, risk_value, prefix,
       risk_value           = risk_value,
       hazard_types         = if (is.null(hazard_input_id)) character(0)
                              else input[[hazard_input_id]],
+      hazard_full_only     = isTRUE(input$hazard_full_only),
       sel_search           = input$search_query,
       sel_source_type      = input$source_type,
       sel_relevance        = input$relevance_level,

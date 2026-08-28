@@ -1,5 +1,5 @@
 # ============================================================
-# ESG Data Source Matrix - R Shiny Prototype (Artefact 3)
+# ESG Data Procurement for SNCIs - R Shiny Prototype (Artefact 3)
 #
 # Entry point. The app is split into focused files under R/ (sourced
 # below); this file only loads the data and wires the UI to the server.
@@ -44,16 +44,11 @@ sources_df   <- load_sources()
 hazard_cov   <- load_hazard_coverage()
 d01_mapping  <- load_d01_mapping()
 details_df   <- load_source_details()
-citations_df <- load_citations()
 refs_df      <- load_references()
 
-# The headline "Limitations" note moved from sources.csv into
-# source_details.csv. Denormalise it back onto sources_df so the search
-# haystack and the detail-view callout can reach it without a join.
-sources_df <- sources_df %>% left_join(
-  details_df %>% filter(field == "limitations") %>% select(source_id, limitation = text),
-  by = "source_id"
-)
+# Tier 2 checkbox choices, narrowed to hazards with an assessed source
+# (see active_hazard_choices() in R/load_data.R).
+HAZARD_CHOICES_ACTIVE <- active_hazard_choices(hazard_cov)
 
 TOTAL_SOURCES <- nrow(sources_df)
 
@@ -86,7 +81,7 @@ server <- function(input, output, session) {
 
   # ---- Hazard "Select all" / "Clear" ----
   observeEvent(input$hazard_select_all,
-    updateCheckboxGroupInput(session, "hazard_types", selected = names(HAZARD_LABELS)))
+    updateCheckboxGroupInput(session, "hazard_types", selected = unname(HAZARD_CHOICES_ACTIVE)))
   observeEvent(input$hazard_clear,
     updateCheckboxGroupInput(session, "hazard_types", selected = character(0)))
 
@@ -96,6 +91,7 @@ server <- function(input, output, session) {
     updateTabsetPanel(session, "physical_subtabs",   selected = "Results")
     updateTabsetPanel(session, "transition_subtabs", selected = "Results")
     updateCheckboxGroupInput(session, "hazard_types",    selected = character(0))
+    updateCheckboxInput(session, "hazard_full_only", value = FALSE)
     updateTextInput(session,   "search_query",    value    = "")
     updateSelectInput(session, "source_type",     selected = "All")
     updateSelectInput(session, "relevance_level", selected = "All")

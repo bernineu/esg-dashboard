@@ -59,18 +59,6 @@ eba_esg_dashboard,drought,none,
 eba_esg_dashboard,glacial_lake,none,
 eba_esg_dashboard,soil_erosion,none,
 eba_esg_dashboard,landslide,none,
-ecb_physical_risk_indicators,heat_stress,partial,"Institution/portfolio (euro-area aggregate) level. Partial because of a documentation inconsistency: not named among the ECB's 9 core hazards on its primary methodology page, though other ECB communications describe 'heat and water stress' as a chronic category."
-ecb_physical_risk_indicators,permafrost,none,
-ecb_physical_risk_indicators,heat_wave,partial,Institution/portfolio (euro-area aggregate) level. Partial for the same documentation-inconsistency reason as heat_stress.
-ecb_physical_risk_indicators,wildfire,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
-ecb_physical_risk_indicators,storm,full,"Institution/portfolio (euro-area aggregate) level, explicitly named ('windstorms') among the ECB's 9 core hazards."
-ecb_physical_risk_indicators,water_stress,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
-ecb_physical_risk_indicators,flood,full,"Institution/portfolio (euro-area aggregate) level, explicitly named (coastal and river flooding) among the ECB's 9 core hazards."
-ecb_physical_risk_indicators,heavy_precip,partial,"Institution/portfolio (euro-area aggregate) level, named as 'rainfall variation' among the ECB's 9 core hazards. Partial because this is a chronic statistical indicator, not an event-based heavy-precipitation hazard map."
-ecb_physical_risk_indicators,drought,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
-ecb_physical_risk_indicators,glacial_lake,none,
-ecb_physical_risk_indicators,soil_erosion,none,
-ecb_physical_risk_indicators,landslide,full,"Institution/portfolio (euro-area aggregate) level, explicitly named among the ECB's 9 core hazards."
 hq_flood_extent,heat_stress,none,
 hq_flood_extent,permafrost,none,
 hq_flood_extent,heat_wave,none,
@@ -92,7 +80,7 @@ wlv_gefahrenzonenplan,water_stress,none,
 wlv_gefahrenzonenplan,flood,partial,"Parcel/cadastral level where mapped. Partial because this covers torrent-related flood only, with incomplete national coverage."
 wlv_gefahrenzonenplan,heavy_precip,none,
 wlv_gefahrenzonenplan,drought,none,
-wlv_gefahrenzonenplan,glacial_lake,partial,Parcel/cadastral level where mapped. Partial because coverage is limited to cases where torrent catchments are affected - not a dedicated glacial-lake product.
+wlv_gefahrenzonenplan,glacial_lake,none,
 wlv_gefahrenzonenplan,soil_erosion,full,"Parcel/cadastral level, the core product of the official Gefahrenzonenplan (red/yellow zones)."
 wlv_gefahrenzonenplan,landslide,full,"Parcel/cadastral level, the core product of the official Gefahrenzonenplan (red/yellow zones)."
 hora,heat_stress,none,
@@ -155,18 +143,6 @@ world_bank_gfdrr,drought,partial,District (ADM2) level. Partial because drought 
 world_bank_gfdrr,glacial_lake,none,
 world_bank_gfdrr,soil_erosion,none,
 world_bank_gfdrr,landslide,full,"Continuous global grid - finer than the source's overall district-level granularity - via a dedicated Global Landslide Hazard Map (World Bank/GFDRR, commissioned from Arup)."
-kryomon_at,heat_stress,none,
-kryomon_at,permafrost,partial,Station-based (borehole temperature monitoring at established alpine sites). Partial because this is not an area-wide spatial layer.
-kryomon_at,heat_wave,none,
-kryomon_at,wildfire,none,
-kryomon_at,storm,none,
-kryomon_at,water_stress,none,
-kryomon_at,flood,none,
-kryomon_at,heavy_precip,none,
-kryomon_at,drought,none,
-kryomon_at,glacial_lake,none,
-kryomon_at,soil_erosion,none,
-kryomon_at,landslide,none,
 geosphere_spartacus,flood,none,
 geosphere_spartacus,landslide,none,
 geosphere_spartacus,soil_erosion,none,

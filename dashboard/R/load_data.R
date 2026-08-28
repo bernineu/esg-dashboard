@@ -10,24 +10,35 @@
 #   d01_mapping.csv      - long format: source_id x D 01.01 data point
 #   source_details.csv   - long format: source_id x field x free text
 #                          (includes the cited "Abstract" per source)
-#   citations.csv        - long format: source_id x citation_role x zotero_key
 #   references.bib       - supporting-literature bibliography backing the
-#                          abstract citations (BibTeX; zotero_key in
-#                          citations.csv is otherwise resolved in Zotero)
+#                          abstract citations (BibTeX)
 #
 # sources.csv has been trimmed over successive revisions (workbook Legend,
 # "Removed fields"): research_status / access_status / cost_category /
 # operator_type / web_interface dropped; web_interface_type /
 # download_format / key_limitation moved into source_details.csv as
-# long-form fields. portfolio_ready_reason was added. app.R denormalises
-# the "Limitations" detail row back onto sources_df for search + the
-# detail callout.
+# long-form fields. portfolio_ready_reason was added. citations.csv
+# (source_id x citation_role x zotero_key) was dropped - it was loaded
+# but never surfaced anywhere, and every row's zotero_key was empty.
 # ============================================================
 
 library(dplyr)
 library(tidyr)
 
-DATA_DIR <- "data"
+# dashboard/ is normally a sibling of the top-level data/ folder (data/ is
+# shared with results-analysis/, which reads it the same way - see
+# results-analysis/R/load_analysis_data.R). Shiny sets the working
+# directory to the app's own folder (dashboard/) for the app's lifetime,
+# both via RStudio's "Run App" and shiny::runApp("dashboard"), so "../data"
+# is correct there.
+#
+# A Shinylive export (build_shinylive.R) is the one exception: shinylive
+# bundles only the exported app directory into the browser's virtual
+# filesystem, so anything outside it (like a sibling "../data") does not
+# exist at runtime even though the relative path is otherwise identical.
+# build_shinylive.R stages a temporary copy of dashboard/ with data/
+# copied in as a child folder instead, so this falls back to "data" there.
+DATA_DIR <- if (dir.exists(file.path("..", "data"))) file.path("..", "data") else "data"
 
 # NULL/empty-coalescing helper (used by the references.bib parser)
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || (length(a) == 1 && is.na(a))) b else a
@@ -64,12 +75,6 @@ load_d01_mapping <- function(path = file.path(DATA_DIR, "d01_mapping.csv")) {
 
 load_source_details <- function(path = file.path(DATA_DIR, "source_details.csv")) {
   read.csv(path, stringsAsFactors = FALSE, encoding = "UTF-8")
-}
-
-load_citations <- function(path = file.path(DATA_DIR, "citations.csv")) {
-  df <- read.csv(path, stringsAsFactors = FALSE, encoding = "UTF-8")
-  df$zotero_key <- trimws(ifelse(is.na(df$zotero_key), "", df$zotero_key))
-  df
 }
 
 # ------------------------------------------------------------
@@ -164,6 +169,19 @@ HAZARD_LABELS <- c(
 # checkboxGroupInput shows "Heat stress" while input$hazard_types stores
 # the hazard id ("heat_stress").
 HAZARD_CHOICES <- setNames(names(HAZARD_LABELS), HAZARD_LABELS)
+
+# HAZARD_CHOICES narrowed to hazards with at least one source at partial
+# or full coverage. A hazard with zero covering sources (e.g. glacial lake
+# outburst flood) is a dead filter option - ticking it can only return an
+# empty result - so it's left off the Tier 2 checkbox list. This is
+# data-driven, not hardcoded: the hazard reappears automatically once
+# hazard_coverage.csv records a source covering it. The full 12-hazard
+# classification (HAZARD_LABELS) is untouched - only the filter UI is
+# narrowed, so the hazard-coverage matrix/heatmap still shows the gap.
+active_hazard_choices <- function(hazard_cov) {
+  covered <- unique(hazard_cov$hazard_id[hazard_cov$coverage != "none"])
+  HAZARD_CHOICES[HAZARD_CHOICES %in% covered]
+}
 
 # Returns the source_ids that cover ALL of the selected hazard_ids at
 # >= min_coverage (AND semantics: a source qualifies only if every selected

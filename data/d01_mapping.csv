@@ -1,29 +1,19 @@
 source_id,template,dpm_table,data_point
-eea_climate_adapt,D 01.01,K_41.01.a-b,0050
-jrc_risk_data_hub,D 01.01,K_41.01.a-b,0050
-jrc_risk_data_hub,D 01.01,K_41.01.a-b,0090-0130
-effis_wildfire,D 01.01,K_41.01.a-b,0050
-copernicus_cds,D 01.01,K_41.01.a-b,0050
-copernicus_cds,D 01.01,K_41.01.a-b,0090-0130
-eba_esg_dashboard,D 01.01,K_41.01.a-b,Benchmarking
-ecb_physical_risk_indicators,D 01.01,K_41.01.a-b,0050
-ecb_physical_risk_indicators,D 01.01,K_41.01.a-b,0090-0130
-hq_flood_extent,D 01.01,K_41.01.a-b,0050
-wlv_gefahrenzonenplan,D 01.01,K_41.01.a-b,0050
-hora,D 01.01,K_41.01.a-b,0050
-wri_aqueduct,D 01.01,K_41.01.a-b,0050
-moodys_physical_risk,D 01.01,K_41.01.a-b,0050
-moodys_physical_risk,D 01.01,K_41.01.a-b,0090-0130
-munich_re_nathan,D 01.01,K_41.01.a-b,0050
-munich_re_nathan,D 01.01,K_41.01.a-b,0090-0130
-world_bank_gfdrr,D 01.01,K_41.01.a-b,Context/validation
-kryomon_at,D 01.01,K_41.01.a-b,0050
+eea_climate_adapt,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+jrc_risk_data_hub,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+effis_wildfire,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+copernicus_cds,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+hq_flood_extent,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+wlv_gefahrenzonenplan,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+hora,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+wri_aqueduct,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+moodys_physical_risk,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+munich_re_nathan,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+world_bank_gfdrr,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
 hvd_fbnr_oenace,D 01.01,K_41.01.a,NACE subsectors
 wirtschafts_compass,D 01.01,K_41.01.a,NACE subsectors
-geosphere_spartacus,D 01.01,K_41.01.a-b,0050
-geosphere_winfore_spei,D 01.01,K_41.01.a-b,0050
-climate_x,D 01.01,K_41.01.a-b,0050
-climate_x,D 01.01,K_41.01.a-b,0090-0130
-jupiter_intelligence,D 01.01,K_41.01.a-b,0050
-jupiter_intelligence,D 01.01,K_41.01.a-b,0090-0130
-copernicus_climate_indicators,D 01.01,K_41.01.a-b,0050
+geosphere_spartacus,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+geosphere_winfore_spei,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+climate_x,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+jupiter_intelligence,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)
+copernicus_climate_indicators,D 01.01,K_41.01.a-b,0050 (exposures subject to physical risks)

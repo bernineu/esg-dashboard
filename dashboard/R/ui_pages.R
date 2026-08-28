@@ -17,7 +17,7 @@
 landing_page_ui <- function() {
   tagList(
     div(class = "text-center mt-5 mb-4",
-      h1("ESG Data Source Matrix"),
+      h1("ESG Data Procurement for SNCIs"),
       h5(class = "text-muted fw-normal",
         "Decision-support dashboard for identifying external ESG data sources ",
         "for Template D 01.01 (Austrian SNCIs)"),
@@ -74,11 +74,21 @@ landing_page_ui <- function() {
 # init script in app_ui() where Bootstrap's JS is available).
 FACET_TIPS <- list(
   search    = paste(
-    "Case-insensitive. Matches the source name, operator, short description",
-    "and its limitations note; the words can appear in any order."),
+    "Case-insensitive. Matches the source name, operator or short",
+    "description; the words can appear in any order."),
   hazard    = paste(
-    "Tier 2 filter (Section 2.4): the 12 physical hazard types. A source is",
-    "kept only if it covers every ticked hazard at partial or full coverage."),
+    "Tier 2 filter (Section 2.4): the physical hazard types with at least",
+    "one assessed source. A source is kept only if it covers every ticked",
+    "hazard at partial or full coverage (or at full coverage only, if",
+    "\"Only full coverage\" is ticked below). Hazards with no covering",
+    "source (e.g. glacial lake outburst flood) aren't listed here - see",
+    "the hazard-coverage matrix (Appendix C) for the full 12-hazard",
+    "classification, gaps included."),
+  hazard_full_only = paste(
+    "Off (default): a ticked hazard counts as covered at partial or full",
+    "coverage (Data Source Matrix legend). On: only sources with full",
+    "coverage of every ticked hazard are kept - a stricter bar, so with",
+    "several hazards ticked this can return very few or no sources."),
   source_type = paste(
     "Public = free / open data (institutional or open-government).",
     "Commercial = paid, requires a licence agreement."),
@@ -86,8 +96,8 @@ FACET_TIPS <- list(
     "How the source relates to the D 01.01 data point (Data Source Matrix",
     "legend). Primary: directly usable as an operational data source.",
     "Supplementary: complements a primary source, not sufficient alone.",
-    "Context only / Methodological: screening, benchmarking or methodology",
-    "only, not a usable data source."),
+    "Context only: screening or benchmarking use, not a usable data",
+    "source."),
   effort    = paste(
     "Effort to turn the source's own raw data into an exposure classification",
     "- format conversion, geocoding, spatial overlay (Data Source Matrix",
@@ -142,8 +152,13 @@ filter_sidebar <- function() {
         ),
         checkboxGroupInput(
           "hazard_types", NULL,
-          choices  = HAZARD_CHOICES,
+          choices  = HAZARD_CHOICES_ACTIVE,
           selected = character(0)
+        ),
+        checkboxInput(
+          "hazard_full_only",
+          .facet_label("Only full coverage", FACET_TIPS$hazard_full_only),
+          value = FALSE
         ),
         helpText("Leave empty to show all physical-risk sources. ",
                  "Ticking several hazards shows only sources that cover ",
@@ -237,7 +252,7 @@ navbar_search <- function() {
 dashboard_ui <- function(selected_tab) {
   navset_bar(
     id       = "risk_tabs",
-    title    = "ESG Data Source Matrix",
+    title    = "ESG Data Procurement for SNCIs",
     selected = selected_tab,
     fillable = FALSE,
     sidebar  = filter_sidebar(),

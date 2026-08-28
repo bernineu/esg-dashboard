@@ -11,16 +11,14 @@
 RELEVANCE_DEFS <- c(
   "Primary"        = "Direct input for populating D 01.01 data points.",
   "Supplementary"  = "Useful supporting data; not sufficient alone.",
-  "Context only"   = "Background / benchmarking; not suitable for individual exposure classification.",
-  "Methodological" = "Provides a replicable methodology rather than ready-made data."
+  "Context only"   = "Background / benchmarking; not suitable for individual exposure classification."
 )
 
 # Background colour per relevance level for the card / detail badge.
 RELEVANCE_COLORS <- c(
   "Primary"        = "#d4edda",
   "Supplementary"  = "#fff3cd",
-  "Context only"   = "#f8f9fa",
-  "Methodological" = "#d1ecf1"
+  "Context only"   = "#f8f9fa"
 )
 
 # portfolio_ready_reason (workbook Legend sheet). "ready" explains a Yes;
