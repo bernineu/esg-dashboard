@@ -21,18 +21,30 @@ RELEVANCE_COLORS <- c(
   "Context only"   = "#f8f9fa"
 )
 
-# portfolio_ready_reason (workbook Legend sheet). "ready" explains a Yes;
-# "technical" / "granularity" explain why a source is only Partly / No.
-# DEFS is the full definition (chip tooltip); SHORT is the chip suffix.
-PORTFOLIO_REASON_DEFS <- c(
-  "ready"       = "A one-time pipeline differentiates individual exposures at a meaningful granularity, with no manual work per exposure.",
-  "technical"   = "Held back by a technical access limit (no bulk/API access, or data only in an unstructured format such as PDF) - not by resolution.",
-  "granularity" = "Held back by the source's own resolution: even a fully automated pipeline returns the same value for many exposures (per region, watershed or country)."
+# output_type / integration_step / access_mode (workbook Legend sheet,
+# replacing the old portfolio_ready + portfolio_ready_reason pair). Fixed
+# level order drives both facet choice order and detail-chip order; DEFS
+# gives each value's ⓘ / chip-title definition.
+OUTPUT_TYPE_LEVELS <- c("ready-made", "indicator", "raw variable")
+OUTPUT_TYPE_DEFS <- c(
+  "ready-made"   = "A value computed for the individual object or a delineated hazard zone.",
+  "indicator"    = "A value computed for a generic spatial unit (e.g. grid cell, region) and inherited by every object within it.",
+  "raw variable" = "An underlying variable from which a hazard statement must still be derived."
 )
-PORTFOLIO_REASON_SHORT <- c(
-  "ready"       = "ready",
-  "technical"   = "technical access",
-  "granularity" = "granularity"
+
+INTEGRATION_STEP_LEVELS <- c("point query", "download and join", "multi-product", "none")
+INTEGRATION_STEP_DEFS <- c(
+  "point query"        = "A single query per exposure (coordinate or address) returns the value directly.",
+  "download and join"  = "One dataset is downloaded once and joined to every exposure by location.",
+  "multi-product"      = "Several datasets or processing steps must be combined before a value results.",
+  "none"               = "No machine-queryable value reaches an individual exposure."
+)
+
+ACCESS_MODE_LEVELS <- c("bulk", "single lookup", "none")
+ACCESS_MODE_DEFS <- c(
+  "bulk"          = "Can be queried or downloaded for a whole portfolio at once.",
+  "single lookup" = "Only one object can be queried at a time - no bulk or portfolio-wide access.",
+  "none"          = "Returns no object-level value at all."
 )
 
 # source_details.csv's `field` column holds snake_case codes; this is the
@@ -46,11 +58,10 @@ FIELD_LABELS <- c(
   suitability_snci           = "Suitability for an SNCI",
   limitations                = "Limitations",
   pricing                    = "Pricing details",
-  download_format            = "Download format",
-  web_interface_type         = "Web interface type",
+  data_format                = "Data format",
+  interface_type             = "Interface type",
   data_update_frequency      = "Data update frequency",
   licensing                  = "Licensing notes",
   data_quality               = "Data quality notes",
-  portfolio_pipeline         = "Portfolio-ready pipeline",
-  technical_effort_rationale = "Technical effort rationale"
+  portfolio_pipeline         = "Portfolio-ready pipeline"
 )

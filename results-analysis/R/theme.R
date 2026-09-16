@@ -9,12 +9,17 @@
 # Colour roles:
 # - Categorical (risk_type, source_type, relevance_level): fixed hue
 #   order, never cycled - blue/orange/aqua/yellow.
-# - Status (coverage, portfolio_ready): green/amber/red, reused
-#   consistently with the main dashboard's badge colours (green = full /
-#   ready, amber = partial, red = not covered / not ready) - a state, not
-#   a generic series, so the status palette is the right encoding.
+# - Status (coverage): green/amber/red, reused consistently with the main
+#   dashboard's badge colours (green = full, amber = partial, red = not
+#   covered) - a state, not a generic series, so the status palette is
+#   the right encoding.
 # - Sequential (single-series magnitude, e.g. counts per data point):
 #   one blue hue, light -> dark.
+# - Effort (technical effort matrix): reuses the ESG_STATUS fills at full
+#   saturation, same as the hazard-coverage tiles, for one consistent
+#   brightness across every chart. Text colour per tile follows the same
+#   light/dark split as the dashboard's Bootstrap badges (bg-success /
+#   bg-danger get white text, bg-warning gets dark text).
 # ============================================================
 
 library(ggplot2)
@@ -33,6 +38,14 @@ ESG_CAT <- c(blue = "#2a78d6", orange = "#eb6834", aqua = "#1baf7a", yellow = "#
 ESG_STATUS <- c(good = "#0ca30c", warning = "#fab219", critical = "#d03b3b")
 
 ESG_SEQ_BLUE <- "#2a78d6"
+
+# Technical-effort tints (Figure 3, technical effort matrix): light tints
+# of the same green/amber/red ESG_STATUS hues used everywhere else in the
+# app (hazard heatmap, dashboard badges) - Low/Medium/High reuse the
+# good/warning/critical mapping instead of an unrelated palette, each with
+# a matching darker text colour so the rating stays legible in greyscale.
+EFFORT_FILL <- c(Low = unname(ESG_STATUS["good"]), Medium = unname(ESG_STATUS["warning"]), High = unname(ESG_STATUS["critical"]))
+EFFORT_TEXT <- c(Low = "#ffffff", Medium = "#3a2a00", High = "#ffffff")
 
 RISK_TYPE_COLORS <- c(Physical = unname(ESG_CAT["blue"]), Transition = unname(ESG_CAT["orange"]), Both = unname(ESG_CAT["aqua"]))
 

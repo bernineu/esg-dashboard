@@ -7,14 +7,22 @@
 # Laid out to state each fact once.
 # ============================================================
 
-# Small section heading used throughout the pane.
+#' Small uppercase section heading used throughout the detail pane.
+#'
+#' @param txt The heading text.
+#' @return An htmltools `h6` tag.
 .detail_h <- function(txt) {
   h6(class = "text-uppercase text-muted mb-2",
      style = "font-size:.75rem; letter-spacing:.03em;", txt)
 }
 
-# A titled section with a 3px coloured left rule. `accent` is a Bootstrap
-# theme colour (primary / info / warning / secondary / ...).
+#' A titled detail-pane section with a coloured left rule.
+#'
+#' @param title Section heading (rendered via .detail_h()).
+#' @param ... The section's body content (htmltools tags).
+#' @param accent A Bootstrap theme colour name (primary / info / warning /
+#'   secondary / ...) for the 3px left rule.
+#' @return An htmltools `div` wrapping the heading and body.
 .detail_section <- function(title, ..., accent = "secondary") {
   div(class = sprintf("border-start border-3 border-%s ps-3 mb-4", accent),
     .detail_h(title),
@@ -22,10 +30,22 @@
   )
 }
 
-# Top navigation row: "Back to results" plus Prev / position / Next
-# controls that step through `siblings` (the current filtered result order).
-# `prefix` ("physical" / "transition") builds the input ids the server in
-# server_risk_panel.R listens on: <prefix>_back / _prev / _next.
+#' Top navigation row of the detail pane: Back plus Prev/position/Next.
+#'
+#' The Prev/Next controls step through `siblings` (the current filtered
+#' result order); each button is disabled at the corresponding end of the
+#' list rather than removed, so its position stays fixed.
+#'
+#' @param prefix "physical" or "transition" - builds the input ids the
+#'   server in server_risk_panel.R listens on: <prefix>_back / _prev /
+#'   _next. NULL suppresses the whole row (e.g. no source ever opened).
+#' @param current_id The source_id currently shown in the detail pane, or
+#'   NULL.
+#' @param siblings The source_id order of the current filtered results,
+#'   used to find `current_id`'s position and neighbours.
+#' @return An htmltools `div` with the Back button and, once a valid
+#'   position is found, the Prev / "n / total" / Next stepper; NULL if
+#'   `prefix` is NULL.
 .detail_nav <- function(prefix, current_id = NULL, siblings = character(0)) {
   if (is.null(prefix)) return(NULL)
   back <- actionButton(paste0(prefix, "_back"), "← Back to results",
@@ -52,10 +72,23 @@
     back, stepper)
 }
 
-# Renders the detail pane for one source record (a single-row data frame
-# from lookup_source(), or NULL/0-row if none selected). `prefix` wires the
-# navigation row; `siblings` is the source_id order of the current filtered
-# results, used for the Prev/Next stepper.
+#' Render the full Source-detail pane for one source.
+#'
+#' Lays out (in order) the nav row, hero header, metadata chips, the cited
+#' Abstract, the Suitability-for-an-SNCI verdict, the headline Limitations
+#' note, the D 01.01 mapping badges, colour-coded hazard-coverage badges
+#' with a collapsible per-hazard table, and a collapsed "Details" section
+#' for every remaining source_details.csv field (thesis Section 3.3.5 /
+#' Figure 6).
+#'
+#' @param src A one-row data frame from lookup_source() (the full
+#'   sources_df record), or NULL/0-row if nothing is selected.
+#' @param prefix "physical" or "transition", passed through to
+#'   .detail_nav(); NULL suppresses the navigation row.
+#' @param siblings The source_id order of the current filtered results,
+#'   passed through to .detail_nav() for the Prev/Next stepper.
+#' @return An htmltools `tagList` for the whole pane - a "No source
+#'   selected" placeholder (plus the nav row) if `src` is NULL/0-row.
 render_detail_ui <- function(src, prefix = NULL, siblings = character(0)) {
   nav_row <- .detail_nav(prefix,
     current_id = if (!is.null(src) && nrow(src) > 0) src$source_id else NULL,
@@ -90,26 +123,22 @@ render_detail_ui <- function(src, prefix = NULL, siblings = character(0)) {
   sd_rest <- sd %>% filter(!field %in% c("abstract", "suitability_snci", "limitations"))
   has_abstract <- nzchar(abstract_txt)
 
-  # portfolio_ready + its reason: shown once, as a chip whose value carries
-  # the short reason and whose tooltip carries the full definition. The
-  # source-specific reasoning already lives in the abstract's closing lines.
-  pr_reason <- trimws(as.character(src$portfolio_ready_reason))
-  pr_value  <- as.character(src$portfolio_ready)
-  if (nzchar(pr_reason) && !is.na(PORTFOLIO_REASON_SHORT[pr_reason]) &&
-      pr_reason != "ready") {
-    pr_value <- paste0(pr_value, " (", PORTFOLIO_REASON_SHORT[pr_reason], ")")
-  }
-  pr_title <- if (nzchar(pr_reason) && !is.na(PORTFOLIO_REASON_DEFS[pr_reason]))
-    PORTFOLIO_REASON_DEFS[[pr_reason]] else NULL
+  # output_type / integration_step / access_mode: each shown once, as a
+  # chip whose tooltip carries the full legend definition (R/config.R).
+  ot_val <- as.character(src$output_type)
+  is_val <- as.character(src$integration_step)
+  am_val <- as.character(src$access_mode)
 
   metadata_items <- list(
     list(label = "Relevance",        value = as.character(src$relevance_level)),
     list(label = "Source type",      value = src$source_type),
     list(label = "Geographic scope", value = src$geographic_scope),
     list(label = "Granularity",      value = src$granularity_level),
-    list(label = "Max. effort",      value = as.character(src$technical_effort)),
-    list(label = "API access",       value = src$api),
-    list(label = "Portfolio-ready",  value = pr_value, title = pr_title)
+    list(label = "Output type",      value = ot_val, title = OUTPUT_TYPE_DEFS[[ot_val]]),
+    list(label = "Integration step", value = is_val, title = INTEGRATION_STEP_DEFS[[is_val]]),
+    list(label = "Technical effort", value = as.character(src$technical_effort)),
+    list(label = "Access mode",      value = am_val, title = ACCESS_MODE_DEFS[[am_val]]),
+    list(label = "API access",       value = src$api)
   )
 
   tagList(
@@ -199,14 +228,20 @@ render_detail_ui <- function(src, prefix = NULL, siblings = character(0)) {
               tags$thead(tags$tr(
                 tags$th(scope = "col", "Hazard"),
                 tags$th(scope = "col", "Coverage"),
-                tags$th(scope = "col", "Detail")
+                tags$th(scope = "col", "Granularity"),
+                tags$th(scope = "col", "Indicator"),
+                tags$th(scope = "col", "Rationale")
               )),
               tags$tbody(lapply(seq_len(nrow(cov)), function(i) {
-                d <- cov$granularity_detail[i]
+                gran <- cov$hazard_granularity[i]
+                ind  <- cov$hazard_indicator[i]
+                note <- cov$coverage_rationale[i]
                 tags$tr(
                   tags$td(class = "text-nowrap fw-semibold", HAZARD_LABELS[cov$hazard_id[i]]),
                   tags$td(tags$span(class = hz_class(cov$coverage[i]), as.character(cov$coverage[i]))),
-                  tags$td(class = "text-muted", if (!is.na(d) && nzchar(d)) d else "—")
+                  tags$td(class = "text-muted", if (!is.na(gran) && nzchar(gran)) gran else "—"),
+                  tags$td(class = "text-muted", if (!is.na(ind) && nzchar(ind)) ind else "—"),
+                  tags$td(class = "text-muted", if (!is.na(note) && nzchar(note)) note else "—")
                 )
               }))
             )

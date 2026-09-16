@@ -11,9 +11,15 @@
 
 # ---- Landing page ------------------------------------------------------
 
-# Introduction + the Physical/Transition risk choice. Shown once when the
-# app opens; the dashboard navbar keeps both risk types one click away
-# afterwards, so returning here is not required to switch.
+#' The landing page: introduction plus the Physical/Transition risk choice.
+#'
+#' Shown once when the app opens; the dashboard navbar keeps both risk
+#' types one click away afterwards, so returning here is not required to
+#' switch (thesis Section 3.3.5).
+#'
+#' @return An htmltools `tagList` for the whole landing page, including the
+#'   `goto_physical` / `goto_transition` action buttons the server in
+#'   app.R listens on.
 landing_page_ui <- function() {
   tagList(
     div(class = "text-center mt-5 mb-4",
@@ -100,13 +106,31 @@ FACET_TIPS <- list(
     "source."),
   effort    = paste(
     "Effort to turn the source's own raw data into an exposure classification",
-    "- format conversion, geocoding, spatial overlay (Data Source Matrix",
-    "legend). Low: one well-structured layer or API. Medium: several layers",
-    "or a complex structure needing interpretation. High: substantial extra",
-    "processing, or no bulk access. The filter keeps sources at the chosen",
-    "level or below.")
+    "(Data Source Matrix legend). Derived from output type and integration",
+    "step, not set directly: Low, Medium or High. The filter keeps sources",
+    "at the chosen level or below."),
+  output_type = paste(
+    "What the source delivers (Data Source Matrix legend). Ready-made: a",
+    "value computed for the individual object or a delineated hazard zone.",
+    "Indicator: a value computed for a generic spatial unit and inherited",
+    "by every object within it. Raw variable: an underlying variable from",
+    "which a hazard statement must still be derived."),
+  integration_step = paste(
+    "How a value reaches an individual exposure (Data Source Matrix",
+    "legend). Point query: one query per exposure returns the value",
+    "directly. Download and join: one dataset is downloaded once and",
+    "joined to every exposure. Multi-product: several datasets or steps",
+    "must be combined. None: no machine-queryable value reaches an",
+    "individual exposure.")
 )
 
+#' A filter label with a small "ⓘ" tooltip trigger next to it.
+#'
+#' @param text The visible label text.
+#' @param tip The tooltip's explanatory text (native `title` attribute,
+#'   upgraded to a Bootstrap tooltip by the init script in app_ui() where
+#'   Bootstrap's JS is available).
+#' @return An htmltools `tagList`: the label text plus the "ⓘ" span.
 .facet_label <- function(text, tip) {
   tagList(
     text, " ",
@@ -122,9 +146,16 @@ FACET_TIPS <- list(
   )
 }
 
-# Shared across the risk-type nav panels (bslib::sidebar, so the inputs
-# are defined once). The whole filter block is hidden while a "Source
-# detail" sub-tab is open, replaced by a short hint.
+#' The shared filter sidebar (Tier 2 hazard filter + facets).
+#'
+#' Built once and shared across both risk-type nav panels
+#' (`bslib::sidebar`), so the filter inputs are defined a single time. The
+#' whole filter block is hidden via a `conditionalPanel` while a "Source
+#' detail" sub-tab is open on either risk panel, replaced by a short hint
+#' (thesis Section 3.3.2).
+#'
+#' @return A `bslib::sidebar()` object for use as `dashboard_ui()`'s
+#'   `sidebar` argument.
 filter_sidebar <- function() {
   # JS predicate: true while a source-detail sub-tab is open on either risk tab.
   in_detail_view <- paste(
@@ -192,6 +223,16 @@ filter_sidebar <- function() {
         choices  = c("All", "Low", "Medium", "High"),
         selected = "All"
       ),
+      selectInput(
+        "output_type", .facet_label("Output type", FACET_TIPS$output_type),
+        choices  = c("All", intersect(OUTPUT_TYPE_LEVELS, unique(sources_df$output_type))),
+        selected = "All"
+      ),
+      selectInput(
+        "integration_step", .facet_label("Integration step", FACET_TIPS$integration_step),
+        choices  = c("All", intersect(INTEGRATION_STEP_LEVELS, unique(sources_df$integration_step))),
+        selected = "All"
+      ),
 
       hr(),
       actionButton("reset", "Reset all filters",
@@ -216,8 +257,27 @@ filter_sidebar <- function() {
 
 # ---- Dashboard: one risk-type nav panel -----------------------------
 
-# Result-count header + Results / Source detail sub-tabs. The id strings
-# passed here are the contract with wire_risk_panel() in the server.
+#' One risk-type navbar panel: result-count header + Results/Source-detail
+#' sub-tabs.
+#'
+#' The id strings passed here are the contract with wire_risk_panel() in
+#' R/server_risk_panel.R - they must match exactly for the server to find
+#' the right outputs/inputs for this panel.
+#'
+#' @param title The navbar tab's visible label ("Physical risk" /
+#'   "Transition risk").
+#' @param value The tab's internal value ("Physical" / "Transition"),
+#'   matched against `input$risk_tabs`.
+#' @param subtabs_id The `tabsetPanel` id for this panel's Results/Source
+#'   detail sub-tabs (e.g. "physical_subtabs").
+#' @param cards_output The `uiOutput` id for the results card grid (e.g.
+#'   "results_cards_physical").
+#' @param detail_output The `uiOutput` id for the source-detail pane (e.g.
+#'   "detail_view_physical").
+#' @param count_output The `textOutput` id for the result-count line (e.g.
+#'   "result_count_physical").
+#' @return A `bslib::nav_panel()` for use inside `dashboard_ui()`'s
+#'   `navset_bar()`.
 risk_nav_panel <- function(title, value, subtabs_id, cards_output, detail_output,
                            count_output) {
   nav_panel(title, value = value,
@@ -233,9 +293,13 @@ risk_nav_panel <- function(title, value, subtabs_id, cards_output, detail_output
 
 # ---- Dashboard shell ------------------------------------------------
 
-# Free-text search field for the navbar. Applies across both risk panels
-# (server reads input$search_query) and stays available even in the
-# detail view, unlike the sidebar facets.
+#' The free-text search field shown in the navbar.
+#'
+#' Applies across both risk panels (the server reads `input$search_query`
+#' in filter_sources()) and stays available even in the detail view,
+#' unlike the sidebar facets (thesis Section 3.3.2, requirement R4).
+#'
+#' @return A `bslib::nav_item()` wrapping the search `textInput`.
 navbar_search <- function() {
   fld <- textInput("search_query", label = NULL, width = "15rem",
                    placeholder = "Search sources…")
@@ -246,9 +310,15 @@ navbar_search <- function() {
   nav_item(div(class = "navbar-search", fld))
 }
 
-# A top navbar (Physical risk / Transition risk, a search field and a
-# right-aligned References link) over the shared filter sidebar.
-# `selected_tab` sets which risk panel opens first.
+#' The dashboard shell: top navbar over the shared filter sidebar.
+#'
+#' Assembles the navbar (Physical risk / Transition risk tabs, the
+#' free-text search field and a right-aligned References link) with
+#' filter_sidebar() as its sidebar and one risk_nav_panel() per risk type.
+#'
+#' @param selected_tab Which risk panel opens first ("Physical" or
+#'   "Transition") - set from the landing page's choice.
+#' @return A `bslib::navset_bar()` object (id "risk_tabs").
 dashboard_ui <- function(selected_tab) {
   navset_bar(
     id       = "risk_tabs",
@@ -270,7 +340,12 @@ dashboard_ui <- function(selected_tab) {
 
 # ---- References page ----------------------------------------------
 
-# One <li> for a bibliography entry from references.bib.
+#' Format one bibliography entry from references.bib as a list item.
+#'
+#' @param r A single row of the data frame returned by load_references()
+#'   (one @entry: author, year, title, url, urldate, note, ...).
+#' @return An htmltools `tags$li`: "Author (year). Title." plus, where
+#'   present, a clickable retrieval link and any trailing note text.
 format_bib_entry <- function(r) {
   head <- paste0(r$author, " (", r$year, "). ", r$title,
                  if (grepl("[.!?]$", r$title)) "" else ".")
@@ -285,6 +360,14 @@ format_bib_entry <- function(r) {
   )
 }
 
+#' The References page: references.bib rendered as an alphabetical
+#' bibliography.
+#'
+#' Reached from the navbar's "References" link; a "← Back to dashboard"
+#' link returns to the last risk panel (thesis Section 3.3.5).
+#'
+#' @return An htmltools `tagList` for the whole page, built from
+#'   `refs_df` (loaded once at startup by load_references()).
 references_page_ui <- function() {
   tagList(
     div(class = "d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2 mb-3",
@@ -312,9 +395,13 @@ references_page_ui <- function() {
 
 # ---- Outer page shell --------------------------------------------
 
-# The whole body is swapped between the landing page, the dashboard and
-# the references page via the single uiOutput("main_ui"), driven by a
-# reactiveVal in the server.
+#' The outer page shell: theme, global CSS/JS, and the single UI slot.
+#'
+#' The whole body is swapped between the landing page, the dashboard and
+#' the references page via the single `uiOutput("main_ui")`, driven by a
+#' `reactiveVal` in app.R's server function.
+#'
+#' @return A `shiny::fluidPage()` object - the app's top-level `ui` value.
 app_ui <- function() {
   fluidPage(
     theme = bs_theme(version = 5, bootswatch = "flatly"),

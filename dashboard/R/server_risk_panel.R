@@ -5,11 +5,26 @@
 # hazard-type filter applies, so both are wired by this one helper.
 # ============================================================
 
-# `prefix` ("physical" / "transition") must match the output/input ids
-# built by risk_nav_panel() in ui_pages.R (<prefix>_card_click / _back /
-# _prev / _next / result_count_<prefix> / results_cards_<prefix> /
-# detail_view_<prefix>). `hazard_input_id` is the checkbox-group id for the
-# Tier 2 hazard filter, or NULL where it does not apply (Transition).
+#' Wire the reactive plumbing for one risk-type nav panel.
+#'
+#' Registers the filtered-results reactive, the result-count and
+#' card-grid outputs, the card-click/back/prev/next observers and the
+#' detail-view output for one risk panel (called once for "Physical" and
+#' once for "Transition" from app.R's server function - see thesis Section
+#' 3.3.4 / Figure 4).
+#'
+#' @param input,output,session The Shiny server function's standard
+#'   arguments.
+#' @param risk_value "Physical" or "Transition" - passed through to
+#'   filter_sources().
+#' @param prefix "physical" or "transition". Must match the output/input
+#'   ids built by risk_nav_panel() in ui_pages.R (<prefix>_card_click /
+#'   _back / _prev / _next / result_count_<prefix> / results_cards_<prefix>
+#'   / detail_view_<prefix>).
+#' @param hazard_input_id The checkbox-group input id for the Tier 2
+#'   hazard filter, or NULL where it does not apply (Transition).
+#' @return NULL (invisibly); called for its side effect of registering
+#'   reactives, observers and outputs on `output`/`session`.
 wire_risk_panel <- function(input, output, session, risk_value, prefix,
                             hazard_input_id = NULL) {
   selected_id <- reactiveVal(NULL)
@@ -24,7 +39,9 @@ wire_risk_panel <- function(input, output, session, risk_value, prefix,
       sel_search           = input$search_query,
       sel_source_type      = input$source_type,
       sel_relevance        = input$relevance_level,
-      sel_technical_effort = input$technical_effort
+      sel_technical_effort = input$technical_effort,
+      sel_output_type      = input$output_type,
+      sel_integration_step = input$integration_step
     )
   })
 

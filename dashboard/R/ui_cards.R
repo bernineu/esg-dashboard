@@ -6,6 +6,12 @@
 
 # ---- Badge helpers (shared by the card grid) ----
 
+#' Colour-coded relevance-level badge.
+#'
+#' @param level A relevance_level value ("Primary", "Supplementary" or
+#'   "Context only").
+#' @return An htmltools `tags$span` badge, background colour from
+#'   RELEVANCE_COLORS (R/config.R).
 badge_relevance <- function(level) {
   bg <- RELEVANCE_COLORS[[as.character(level)]]
   if (is.null(bg)) bg <- "#f8f9fa"
@@ -14,11 +20,21 @@ badge_relevance <- function(level) {
     as.character(level))
 }
 
+#' Colour-coded source-type badge.
+#'
+#' @param t A source_type value ("Public" or "Commercial").
+#' @return An htmltools `tags$span` badge (green for Public, grey
+#'   otherwise).
 badge_source_type <- function(t) {
   cls <- if (identical(as.character(t), "Public")) "badge bg-success" else "badge bg-secondary"
   tags$span(class = cls, as.character(t))
 }
 
+#' Colour-coded technical-effort badge.
+#'
+#' @param e A technical_effort value ("Low", "Medium" or "High").
+#' @return An htmltools `tags$span` badge reading "Effort: <e>", green/
+#'   amber/red by level.
 badge_effort <- function(e) {
   cls <- switch(as.character(e),
     "Low"    = "badge bg-success",
@@ -29,19 +45,36 @@ badge_effort <- function(e) {
   tags$span(class = cls, paste("Effort:", e))
 }
 
-badge_portfolio <- function(p) {
-  cls <- switch(as.character(p),
-    "Yes"    = "badge bg-success",
-    "Partly" = "badge bg-warning text-dark",
-    "No"     = "badge bg-secondary",
+#' Colour-coded access-mode badge.
+#'
+#' @param a An access_mode value ("bulk", "single lookup" or "none").
+#' @return An htmltools `tags$span` badge reading "Access: <a>", green/
+#'   amber/grey by level.
+badge_access_mode <- function(a) {
+  cls <- switch(as.character(a),
+    "bulk"          = "badge bg-success",
+    "single lookup" = "badge bg-warning text-dark",
+    "none"          = "badge bg-secondary",
     "badge bg-secondary"
   )
-  tags$span(class = cls, paste("Portfolio ready:", p))
+  tags$span(class = cls, paste("Access:", a))
 }
 
-# Renders the results as a responsive, clickable card grid. Clicking a card
-# sends its source_id to `click_input_id` (as a Shiny event input), which the
-# server uses to open the matching Source detail sub-tab.
+#' Render the filtered results as a responsive, clickable card grid.
+#'
+#' Clicking a card sends its source_id to `click_input_id` as a custom
+#' Shiny input event (`Shiny.setInputValue(..., {priority: 'event'})`),
+#' which server_risk_panel.R's wire_risk_panel() listens on to open the
+#' matching Source detail sub-tab.
+#'
+#' @param df The filtered results (the data frame returned by
+#'   filter_sources()).
+#' @param click_input_id The Shiny input id a card click reports its
+#'   source_id to (e.g. "physical_card_click").
+#' @param selected_id The currently open detail source_id, if any -
+#'   highlighted with a border if its card is in `df`.
+#' @return An htmltools card-grid `div`, or a "No sources match" placeholder
+#'   if `df` has zero rows.
 render_card_grid <- function(df, click_input_id, selected_id = NULL) {
   if (nrow(df) == 0) {
     return(div(class = "text-muted fst-italic text-center p-5",
@@ -69,7 +102,7 @@ render_card_grid <- function(df, click_input_id, selected_id = NULL) {
               badge_relevance(row$relevance_level),
               badge_source_type(row$source_type),
               badge_effort(row$technical_effort),
-              badge_portfolio(row$portfolio_ready)
+              badge_access_mode(row$access_mode)
             )
           )
         )
@@ -78,8 +111,15 @@ render_card_grid <- function(df, click_input_id, selected_id = NULL) {
   )
 }
 
-# Result-count line, shown above each grid. (The relevance levels are
-# explained via the "ⓘ" on the Relevance-level facet - see R/ui_pages.R.)
+#' Result-count line, shown above each grid.
+#'
+#' The relevance levels themselves are explained via the "ⓘ" on the
+#' Relevance-level facet (see FACET_TIPS in R/ui_pages.R), not here.
+#'
+#' @param count_output_id The `textOutput` id to bind (e.g.
+#'   "result_count_physical"), rendered server-side as e.g. "3 of 19
+#'   sources match your filters".
+#' @return An htmltools-wrapped `textOutput`, bold and block-level.
 result_header_ui <- function(count_output_id) {
   tagAppendAttributes(
     textOutput(count_output_id, inline = TRUE),

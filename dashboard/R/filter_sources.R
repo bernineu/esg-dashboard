@@ -5,16 +5,40 @@
 # app.R (sources_df, hazard_cov) from the global environment.
 # ============================================================
 
-# Filters sources_df for one risk-type panel. Selection parameters are
-# prefixed "sel_" so they never collide with the sources_df column names
-# of the same name inside dplyr::filter()'s data-masking evaluation.
+#' Filter the source register for one risk-type panel.
+#'
+#' Applies the Tier 1 (risk type), Tier 2 (hazard type, physical only) and
+#' facet filters described in thesis Section 3.3.2, in that order. Selection
+#' parameters are prefixed "sel_" so they never collide with the sources_df
+#' column names of the same name inside dplyr::filter()'s data-masking
+#' evaluation.
+#'
+#' @param risk_value "Physical" or "Transition" (Tier 1 selection).
+#' @param hazard_types Character vector of ticked hazard ids (Tier 2,
+#'   physical branch only); empty vector = no hazard filter applied.
+#' @param hazard_full_only If TRUE, a source must have "full" (not just
+#'   "partial") coverage of every hazard in `hazard_types`.
+#' @param sel_search Free-text search string (navbar search field).
+#' @param sel_source_type "All", "Public" or "Commercial".
+#' @param sel_relevance "All", "Primary", "Supplementary" or "Context only".
+#' @param sel_technical_effort "All", "Low", "Medium" or "High" - applied as
+#'   a maximum ceiling, not an exact match.
+#' @param sel_output_type "All", "ready-made", "indicator" or "raw variable".
+#' @param sel_integration_step "All", "point query", "download and join",
+#'   "multi-product" or "none".
+#' @return A data frame: the matching rows of sources_df, reduced to the
+#'   columns the results grid needs (source_id, source_name,
+#'   short_description, operator, source_type, relevance_level,
+#'   technical_effort, access_mode, granularity_level).
 filter_sources <- function(risk_value,
                             hazard_types         = character(0),
                             hazard_full_only     = FALSE,
                             sel_search           = "",
                             sel_source_type      = "All",
                             sel_relevance        = "All",
-                            sel_technical_effort = "All") {
+                            sel_technical_effort = "All",
+                            sel_output_type      = "All",
+                            sel_integration_step = "All") {
   df <- sources_df %>% filter(risk_type == risk_value | risk_type == "Both")
 
   # Tier 2: hazard filter (physical-risk branch only). AND semantics -
@@ -49,15 +73,23 @@ filter_sources <- function(risk_value,
     max_level <- factor(sel_technical_effort, levels = c("Low", "Medium", "High"), ordered = TRUE)
     df <- df %>% filter(technical_effort <= max_level)
   }
+  if (sel_output_type      != "All") df <- df %>% filter(output_type      == sel_output_type)
+  if (sel_integration_step != "All") df <- df %>% filter(integration_step == sel_integration_step)
 
   df %>%
     select(source_id, source_name, short_description, operator, source_type,
-           relevance_level, technical_effort, portfolio_ready, granularity_level)
+           relevance_level, technical_effort, access_mode, granularity_level)
 }
 
-# Looks up one source's full record for the detail view, independent of the
-# current filter/panel state - so a previously opened detail stays viewable
-# even if later filter changes would hide it from the results grid.
+#' Look up one source's full record for the detail view.
+#'
+#' Independent of the current filter/panel state, so a previously opened
+#' detail stays viewable even if later filter changes would hide it from
+#' the results grid.
+#'
+#' @param sid A source_id, or NULL if nothing is selected yet.
+#' @return A one-row data frame (the full sources_df record), a 0-row data
+#'   frame if `sid` matches nothing, or NULL if `sid` is NULL.
 lookup_source <- function(sid) {
   if (is.null(sid)) return(NULL)
   sources_df %>% filter(source_id == sid)

@@ -68,7 +68,7 @@ esg-dashboard/
 │   │   ├── _disable_autoload.R # turns off Shiny's own R/ auto-sourcing
 │   │   ├── load_data.R    # CSV loaders, references.bib parser, hazard
 │   │   │                  # labels, sources_covering_hazards()
-│   │   ├── config.R       # relevance / portfolio-readiness lookup tables
+│   │   ├── config.R       # relevance / output-type / integration-step / access-mode lookup tables
 │   │   ├── filter_sources.R # the results query + single-source lookup
 │   │   ├── ui_cards.R     # results grid: badges, card grid, count header
 │   │   ├── ui_detail.R    # the Source-detail pane
@@ -84,7 +84,7 @@ esg-dashboard/
 │   └── figures/             # PNG output of export_figures.R
 └── data/                  # shared by dashboard/ and results-analysis/
     ├── sources.csv         # source master table (19 rows)
-    ├── hazard_coverage.csv # long: source_id x hazard_id x coverage (+ granularity_detail)
+    ├── hazard_coverage.csv # long: source_id x hazard_id x coverage (+ hazard_granularity / hazard_indicator / coverage_rationale)
     ├── d01_mapping.csv     # long: source_id x D 01.01 data point
     ├── source_details.csv  # long: source_id x field x free text (incl. cited "Abstract")
     ├── references.bib      # supporting-literature bibliography (BibTeX)
@@ -111,23 +111,30 @@ on data model" entry in that workbook's Legend sheet.
     app: `source_id`, `source_name`, `operator`, `short_description`,
     `risk_type` (Physical/Transition/Both), `relevance_level`,
     `source_type`, `geographic_scope`, `granularity_level`,
-    `technical_effort` (ordered factor: Low \< Medium \< High), `api`
-    (Yes/No), `portfolio_ready` (No \< Partly \< Yes),
-    `portfolio_ready_reason` (technical / granularity / ready — why a
-    source is or is not portfolio-ready), `url`, `last_checked`. Fields
+    `output_type` (ready-made / indicator / raw variable — what the
+    source delivers), `integration_step` (point query / download and
+    join / multi-product / none — how a value reaches an individual
+    exposure), `technical_effort` (ordered factor: Low \< Medium \< High
+    — **derived** from `output_type` + `integration_step`, not set
+    directly), `access_mode` (bulk / single lookup / none —
+    automatability only), `api` (Yes/No), `url`, `last_checked`. Fields
     removed over successive revisions (workbook Legend, "Removed
     fields"): `research_status`, `access_status`, `cost_category`,
     `operator_type`, the boolean `web_interface` (process metadata, or
-    redundant with `source_type`); and `web_interface_type`,
+    redundant with `source_type`); `web_interface_type`,
     `download_format`, `key_limitation` were **moved into
-    `source_details.csv`** as long-form fields.
+    `source_details.csv`** as long-form fields (later renamed there to
+    `interface_type` / `data_format`); `portfolio_ready` and
+    `portfolio_ready_reason` were replaced by `output_type`,
+    `integration_step` and `access_mode` above.
 -   **`hazard_coverage.csv`** — one row per source × hazard combination,
-    `coverage` ∈ {none, partial, full}, plus a per-hazard
-    `granularity_detail` verification note where covered. Drives the
-    Tier 2 (hazard type) filter and, in the detail view, the
-    colour-coded hazard badges (green = full, amber = partial, red = not
-    covered) plus a collapsible per-hazard *Coverage detail* table for
-    the covered ones.
+    `coverage` ∈ {none, partial, full}, plus `hazard_granularity`
+    (resolution for this hazard), `hazard_indicator` (the named
+    index/layer/ dataset) and `coverage_rationale` (why coverage is full
+    or partial, plus caveats) where covered. Drives the Tier 2 (hazard
+    type) filter and, in the detail view, the colour-coded hazard badges
+    (green = full, amber = partial, red = not covered) plus a
+    collapsible per-hazard *Coverage detail* table for the covered ones.
 -   **`d01_mapping.csv`** — links each source to the specific D 01.01 /
     DPM data point(s) it is relevant for, shown as badges in the detail
     view. (No longer carries a per-mapping primary/secondary relevance -
@@ -136,8 +143,8 @@ on data model" entry in that workbook's Legend sheet.
 -   **`source_details.csv`** — one `field` / `text` row per note. Three
     get their own section in the detail view: the factual cited
     **Abstract**, the **Suitability for an SNCI** verdict and the
-    headline **Limitations** note. Everything else (pricing, download
-    format, web interface type, data update frequency, licensing notes,
+    headline **Limitations** note. Everything else (pricing, data
+    format, interface type, data update frequency, licensing notes,
     portfolio-ready pipeline, methodology notes, …) sits in the
     collapsed **Details** section. Shown only when a row is selected.
 -   **`references.bib`** — the supporting literature the abstracts cite
@@ -171,10 +178,12 @@ on data model" entry in that workbook's Legend sheet.
     classification sources apply uniformly across subsectors) — a
     one-line sidebar note says so.
 -   **Facets** (applied regardless of tier) — source type, relevance
-    level (exact match), and maximum technical effort (a ceiling: "Low"
-    also returns nothing above Low). Combine freely with the other
-    filters. API availability is shown in the detail view for
-    traceability but is not a filter facet.
+    level (exact match), maximum technical effort (a ceiling: "Low" also
+    returns nothing above Low), output type and integration step (exact
+    match). Combine freely with the other filters. API availability and
+    access mode are shown in the detail view for traceability but are
+    not filter facets (access mode is near-constant across the register,
+    so it works better as a displayed attribute).
 -   **Search** — in the **navbar** (not the sidebar), so it stays put
     across both risk panels and even in the detail view.
     Case-insensitive, token-based over source name, operator and short
@@ -210,7 +219,7 @@ on data model" entry in that workbook's Legend sheet.
 -   **Card-based results** — each matching source is a clickable card
     showing its name, short description, operator, and four at-a-glance
     badges: relevance (color-coded), source type (Public/Commercial),
-    technical effort, and portfolio-readiness.
+    technical effort, and access mode.
 -   **Hazard select all / clear** — quickly select or deselect all 12
     hazard checkboxes.
 -   **Reset all filters** — single button to restore all filters to
@@ -219,17 +228,18 @@ on data model" entry in that workbook's Legend sheet.
     detail tab. Each block carries a coloured left rule so the sections
     read apart: hero header (description, operator, external link,
     last-checked date); a row of key-metadata chips (relevance, source
-    type, geographic scope, granularity, max. effort, API access,
-    portfolio-ready + reason, the last with its definition on hover);
-    then, in order, the factual cited **Abstract**, the **Suitability
-    for an SNCI** verdict (where recorded) and the headline
-    **Limitations** note; D 01.01 mapping badges; **hazard coverage** as
-    colour-coded badges (green = full, amber = partial, red = not
-    covered) with a collapsible per-hazard detail table; and a collapsed
-    **Details** section holding everything else (pricing, formats,
-    update cadence, licensing, pipeline, methodology notes). A selected
-    source stays viewable here even if a later filter change would hide
-    it from the Results grid.
+    type, geographic scope, granularity, output type, integration step,
+    technical effort, access mode, API access — output type/integration
+    step/access mode each carry their legend definition on hover); then,
+    in order, the factual cited **Abstract**, the **Suitability for an
+    SNCI** verdict (where recorded) and the headline **Limitations**
+    note; D 01.01 mapping badges; **hazard coverage** as colour-coded
+    badges (green = full, amber = partial, red = not covered) with a
+    collapsible per-hazard detail table; and a collapsed **Details**
+    section holding everything else (pricing, formats, update cadence,
+    licensing, pipeline, methodology notes). A selected source stays
+    viewable here even if a later filter change would hide it from the
+    Results grid.
 
 ## Known limitations
 

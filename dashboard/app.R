@@ -60,6 +60,17 @@ ui <- app_ui()
 # ------------------------------------------------------------
 # Server
 # ------------------------------------------------------------
+#' The app's Shiny server function.
+#'
+#' Owns the landing/dashboard/references page switch (`current_page`,
+#' `chosen_risk`), the hazard select-all/clear and reset-filters
+#' observers, and delegates the two risk-type panels to
+#' `wire_risk_panel()` (R/server_risk_panel.R) - see thesis Section 3.3.4
+#' and Figure 4 for the overall component structure.
+#'
+#' @param input,output,session The standard Shiny server arguments,
+#'   supplied by `shinyApp()`.
+#' @return Not called directly; passed to `shinyApp(ui, server)` below.
 server <- function(input, output, session) {
 
   # ---- Landing page / dashboard / references switch ----
@@ -96,6 +107,8 @@ server <- function(input, output, session) {
     updateSelectInput(session, "source_type",     selected = "All")
     updateSelectInput(session, "relevance_level", selected = "All")
     updateSelectInput(session, "technical_effort", selected = "All")
+    updateSelectInput(session, "output_type",      selected = "All")
+    updateSelectInput(session, "integration_step", selected = "All")
   })
 
   # ---- The two risk-type panels (identical plumbing, see R/server_risk_panel.R) ----

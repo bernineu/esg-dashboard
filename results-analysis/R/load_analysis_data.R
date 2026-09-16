@@ -36,11 +36,11 @@ HAZARD_LABELS <- c(
   landslide     = "Landslide"
 )
 
-READINESS_REASON_LABELS <- c(
-  technical   = "Technical access limit",
-  granularity = "Granularity limit",
-  ready       = "Ready"
-)
+# Fixed legend order (Data Source Matrix legend) for output_type /
+# integration_step - kept in sync with R/config.R in ../dashboard by hand,
+# same rationale as HAZARD_LABELS above.
+OUTPUT_TYPE_LEVELS      <- c("ready-made", "indicator", "raw variable")
+INTEGRATION_STEP_LEVELS <- c("point query", "download and join", "multi-product", "none")
 
 load_sources_for_analysis <- function(path = file.path(DATA_DIR, "sources.csv")) {
   df <- read.csv(path, stringsAsFactors = FALSE, encoding = "UTF-8")
@@ -51,9 +51,10 @@ load_sources_for_analysis <- function(path = file.path(DATA_DIR, "sources.csv"))
   )
   df$source_type <- factor(df$source_type, levels = c("Public", "Commercial"))
   df$risk_type   <- factor(df$risk_type,   levels = c("Physical", "Transition", "Both"))
+  df$output_type      <- factor(df$output_type,      levels = OUTPUT_TYPE_LEVELS)
+  df$integration_step <- factor(df$integration_step, levels = INTEGRATION_STEP_LEVELS)
   df$technical_effort <- factor(df$technical_effort, levels = c("Low", "Medium", "High"), ordered = TRUE)
-  df$portfolio_ready  <- factor(df$portfolio_ready,  levels = c("No", "Partly", "Yes"), ordered = TRUE)
-  df$portfolio_ready_reason <- factor(df$portfolio_ready_reason, levels = c("technical", "granularity", "ready"))
+  df$access_mode      <- factor(df$access_mode,      levels = c("bulk", "single lookup", "none"))
 
   df
 }

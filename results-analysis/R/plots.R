@@ -4,12 +4,12 @@
 # app.R (renderPlot) and export_figures.R (ggsave), so the interactive
 # view and the thesis figures are always the same chart.
 #
-#   plot_distribution()       - 1 of the 4 metadata-distribution charts
-#   plot_hazard_heatmap()     - source x hazard coverage grid
-#   plot_hazard_gap()         - % of sources covering each hazard
-#   plot_mapping_coverage()   - sources mapped per D 01.01 data point
-#   plot_portfolio_by_effort()- portfolio readiness x technical effort
-#   plot_readiness_reason()   - why non-ready sources fall short
+#   plot_distribution()          - 1 of the 3 metadata-distribution charts
+#   plot_hazard_heatmap()        - source x hazard coverage grid
+#   plot_hazard_gap()            - % of sources covering each hazard
+#   plot_mapping_coverage()      - sources mapped per D 01.01 data point
+#   plot_technical_effort_matrix()- derivation of technical_effort from
+#                                  output_type x integration_step
 # ============================================================
 
 library(ggplot2)
@@ -25,7 +25,7 @@ wrap_label <- function(x, width = 30) {
 
 # ---- 1. Metadata distributions, split by risk type ----------------
 # var: column name (string) in sources_df to break down (relevance_level,
-# source_type, technical_effort or portfolio_ready). Counts are stacked
+# source_type or technical_effort). Counts are stacked
 # horizontal bars by risk_type (the only categorical breakdown used
 # across all four, so one shared legend / colour meaning throughout).
 plot_distribution <- function(sources_df, var, title, x_lab) {
@@ -139,38 +139,122 @@ plot_mapping_coverage <- function(d01_mapping, sources_df = NULL) {
     theme(panel.grid.major.y = element_blank())
 }
 
-# ---- 5. Portfolio readiness x technical effort ---------------------
-plot_portfolio_by_effort <- function(sources_df) {
-  d <- sources_df %>% count(technical_effort, portfolio_ready, name = "n")
+# ---- 5. Technical effort matrix -------------------------------------
+# Figure 3 (thesis): derivation of technical_effort from output_type
+# (rows) x integration_step (columns), the 19 assessed sources listed by
+# display name in the combination they fall into, plus the two sources
+# with no machine access at all (integration_step = "none"), set apart
+# in their own column since their effort recurs per exposure rather than
+# being incurred once.
+#
+# Cell ratings are read from the data wherever a source occupies that
+# combination. The two combinations no source falls into (ready-made x
+# multi-product, raw variable x point query) have no row to read a rating
+# from; their Medium rating is the one documented derivation-rule value
+# for that combination (Data Source Matrix legend) and is the only
+# hardcoded content in this function.
+plot_technical_effort_matrix <- function(sources_df, wrap_width = 24) {
+  output_levels <- c("ready-made", "indicator", "raw variable")
+  step_levels   <- c("point query", "download and join", "multi-product")
 
-  ggplot(d, aes(x = technical_effort, y = n, fill = portfolio_ready)) +
-    geom_col(width = 0.55) +
-    scale_fill_manual(
-      values = c(No = unname(ESG_STATUS["critical"]), Partly = unname(ESG_STATUS["warning"]), Yes = unname(ESG_STATUS["good"])),
-      name = "Portfolio-ready", drop = FALSE
+  # Manual numeric layout: the exception column sits at extra x-distance
+  # from "multi-product" so the gap reads as a visual break, not a fourth
+  # ordinary grid column (bslib::sidebar-style "set apart" per the brief).
+  col_x <- c("point query" = 1, "download and join" = 2, "multi-product" = 3,
+             "No machine access" = 4.35)
+  row_y <- c("ready-made" = 3, "indicator" = 2, "raw variable" = 1)  # top to bottom
+
+  main <- sources_df %>%
+    filter(as.character(integration_step) %in% step_levels) %>%
+    mutate(output_type = as.character(output_type), integration_step = as.character(integration_step)) %>%
+    group_by(output_type, integration_step) %>%
+    summarise(
+      effort  = dplyr::first(as.character(technical_effort)),
+      sources = paste(sort(source_name), collapse = ", "),
+      n       = dplyr::n(),
+      .groups = "drop"
+    ) %>%
+    tidyr::complete(output_type = output_levels, integration_step = step_levels,
+                     fill = list(n = 0L, sources = "")) %>%
+    mutate(col_label = integration_step)
+
+  # The two combinations with no assessed source: fall back to the
+  # documented derivation-rule rating (see function comment above) - the
+  # only hardcoded content in this function.
+  empty_rule <- c("ready-made.multi-product" = "Medium", "raw variable.point query" = "Medium")
+  main <- main %>%
+    mutate(
+      key     = paste(output_type, integration_step, sep = "."),
+      effort  = ifelse(n == 0, unname(empty_rule[key]), effort),
+      sources = ifelse(n == 0, "no source in this combination", sources)
+    )
+
+  exceptions <- sources_df %>%
+    filter(as.character(integration_step) == "none") %>%
+    mutate(
+      output_type = as.character(output_type),
+      note = case_when(
+        source_id == "hora" ~ "Note: the effort recurs for every exposure instead of being incurred once.",
+        source_id == "eba_esg_dashboard" ~ "Note: the rating refers to consulting the source, not to integrating it.",
+        TRUE ~ NA_character_
+      ),
+      sources   = paste0(source_name, "\n", vapply(note, function(nt)
+        paste(strwrap(nt, width = wrap_width + 12), collapse = "\n"), character(1))),
+      effort    = as.character(technical_effort),
+      col_label = "No machine access"
+    ) %>%
+    select(output_type, col_label, effort, sources)
+
+  cells <- bind_rows(main %>% select(output_type, col_label, effort, sources), exceptions) %>%
+    mutate(
+      x           = unname(col_x[col_label]),
+      y           = unname(row_y[output_type]),
+      tile_width  = ifelse(col_label == "No machine access", 1.25, 0.92),
+      sources_wrapped = mapply(function(s, is_note) {
+        if (!nzchar(s)) return(s)
+        if (is_note) return(s)  # already hand-wrapped with an explicit \n
+        wrap_label(s, width = wrap_width)
+      }, sources, col_label == "No machine access"),
+      effort = factor(effort, levels = c("Low", "Medium", "High"))
+    )
+
+  col_breaks <- col_x
+  row_breaks <- row_y
+
+  ggplot(cells, aes(x = x, y = y)) +
+    geom_tile(aes(fill = effort, width = tile_width), height = 0.86,
+              colour = ESG_SURFACE, linewidth = 1.6, na.rm = TRUE) +
+    geom_text(aes(y = y + 0.30, label = effort, colour = effort), fontface = "bold",
+              vjust = 1, size = 4.1, family = ESG_FONT, na.rm = TRUE, show.legend = FALSE) +
+    geom_text(aes(y = y + 0.10, label = sources_wrapped, colour = effort), vjust = 1, size = 2.6,
+              lineheight = 0.95, family = ESG_FONT, alpha = 0.92, na.rm = TRUE, show.legend = FALSE) +
+    scale_fill_manual(values = EFFORT_FILL, na.value = "transparent", guide = "none") +
+    scale_colour_manual(values = EFFORT_TEXT, na.value = "transparent", guide = "none") +
+    scale_x_continuous(breaks = col_breaks, labels = names(col_breaks), position = "top",
+                        limits = c(0.45, 5.05), expand = c(0, 0)) +
+    scale_y_continuous(breaks = row_breaks, labels = names(row_breaks),
+                        limits = c(0.45, 3.65), expand = c(0, 0)) +
+    labs(
+      x = "Integration step — how the value reaches an individual exposure",
+      y = "Output type — what the source delivers",
+      caption = paste(strwrap(paste(
+        "Effort rises with both dimensions but not additively: raw variables retrieved by download and",
+        "join remain Medium, while an indicator assembled from several products is already High."
+      ), width = 110), collapse = "\n")
     ) +
-    scale_y_continuous(breaks = scales::breaks_pretty(n = 5)) +
-    labs(title = "Portfolio readiness by technical effort", x = "Technical effort", y = "Number of sources") +
+    coord_cartesian(clip = "off") +
     theme_esg() +
-    theme(panel.grid.major.x = element_blank())
-}
-
-# ---- 6. Why non-ready sources fall short ---------------------------
-plot_readiness_reason <- function(sources_df, reason_labels = READINESS_REASON_LABELS) {
-  d <- sources_df %>%
-    filter(portfolio_ready != "Yes") %>%
-    count(portfolio_ready_reason, name = "n") %>%
-    mutate(reason_label = unname(reason_labels[as.character(portfolio_ready_reason)])) %>%
-    arrange(n)
-  d$reason_label <- factor(d$reason_label, levels = d$reason_label)
-
-  ggplot(d, aes(x = n, y = reason_label)) +
-    geom_col(fill = unname(ESG_CAT["orange"]), width = 0.5) +
-    geom_text(aes(label = n), hjust = -0.4, size = 3.3, family = ESG_FONT, colour = ESG_INK_SECONDARY) +
-    scale_x_continuous(expand = expansion(mult = c(0, 0.18)), breaks = scales::breaks_pretty(n = 4)) +
-    labs(title = "Why non-ready sources fall short",
-         subtitle = "Sources rated portfolio_ready = No or Partly",
-         x = "Number of sources", y = NULL) +
-    theme_esg() +
-    theme(panel.grid.major.y = element_blank())
+    theme(
+      panel.grid.major    = element_blank(),
+      panel.grid.minor    = element_blank(),
+      axis.line.x         = element_blank(),
+      axis.ticks.length   = unit(4, "pt"),
+      axis.text.x         = element_text(size = rel(0.88), colour = ESG_INK_PRIMARY, face = "bold"),
+      axis.text.y         = element_text(size = rel(0.88), colour = ESG_INK_PRIMARY, face = "bold"),
+      axis.title          = element_text(size = rel(0.85)),
+      plot.caption        = element_text(hjust = 0, size = rel(0.72), colour = ESG_INK_SECONDARY,
+                                          margin = margin(t = 12)),
+      plot.margin         = margin(10, 18, 10, 10),
+      plot.title.position = "plot"
+    )
 }

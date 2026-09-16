@@ -9,7 +9,9 @@ required_packages <- c(
   "dplyr",   # data manipulation
   "tidyr",   # data reshaping
   "ggplot2", # charts (app + static thesis-figure export)
-  "scales"   # axis label formatting
+  "scales",  # axis label formatting
+  "tibble",  # small literal data frames (technical effort matrix, Figure 3)
+  "svglite"  # SVG export of the thesis figures (export_figures.R)
 )
 
 to_install <- required_packages[!required_packages %in% installed.packages()[, "Package"]]

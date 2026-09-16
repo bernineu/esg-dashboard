@@ -25,6 +25,7 @@ if (!dir.exists(file.path("..", "data"))) {
 }
 
 library(ggplot2)
+library(svglite)
 
 for (.f in list.files("R", pattern = "\\.[Rr]$", full.names = TRUE)) source(.f, local = TRUE)
 
@@ -35,12 +36,15 @@ sources_df  <- load_sources_for_analysis()
 hazard_cov  <- load_hazard_coverage_for_analysis()
 d01_mapping <- load_d01_mapping_for_analysis()
 
-save_fig <- function(name, plot, width = 16, height = 10) {
+# svg = TRUE additionally exports an SVG alongside the PNG - reserved for
+# the figures actually embedded in the thesis (Figure 2, Figure 3), where
+# a vector version is wanted for print. The rest stay PNG-only, unchanged.
+save_fig <- function(name, plot, width = 16, height = 10, svg = FALSE) {
   # No in-chart title on the exported PNGs - the thesis already gives each
   # figure an "Abbildung X: ..." caption below it, so a repeated title
-  # inside the image would be redundant. Subtitles stay (they carry a
-  # data qualifier, e.g. "at least partial coverage", not a description
-  # of the chart). The Shiny app (app.R) calls the same plot_*() functions
+  # inside the image would be redundant. Subtitles/captions stay (they
+  # carry a data qualifier or derivation note, not a description of the
+  # chart). The Shiny app (app.R) calls the same plot_*() functions
   # directly and keeps titles, since it has no caption of its own.
   plot <- plot + labs(title = NULL)
   ggsave(
@@ -49,19 +53,29 @@ save_fig <- function(name, plot, width = 16, height = 10) {
     dpi = 300, bg = "white"
   )
   message("Saved ", file.path(out_dir, paste0(name, ".png")))
+  if (svg) {
+    ggsave(
+      filename = file.path(out_dir, paste0(name, ".svg")),
+      plot = plot, width = width, height = height, units = "cm",
+      device = svglite::svglite, bg = "white"
+    )
+    message("Saved ", file.path(out_dir, paste0(name, ".svg")))
+  }
 }
 
 save_fig("01_distribution_relevance",        plot_distribution(sources_df, "relevance_level", "Relevance level", "Number of sources"), height = 9)
 save_fig("02_distribution_source_type",      plot_distribution(sources_df, "source_type", "Source type", "Number of sources"), height = 7)
 save_fig("03_distribution_technical_effort", plot_distribution(sources_df, "technical_effort", "Technical effort", "Number of sources"), height = 8)
-save_fig("04_distribution_portfolio_ready",  plot_distribution(sources_df, "portfolio_ready", "Portfolio-ready", "Number of sources"), height = 8)
 
-save_fig("05_hazard_coverage_heatmap", plot_hazard_heatmap(hazard_cov, sources_df), width = 18, height = 14)
+# Figure 2 (thesis): hazard coverage across physical-risk data sources.
+save_fig("05_hazard_coverage_heatmap", plot_hazard_heatmap(hazard_cov, sources_df), width = 18, height = 14, svg = TRUE)
 save_fig("06_hazard_coverage_gap",     plot_hazard_gap(hazard_cov), width = 16, height = 12)
 
 save_fig("07_d01_mapping_coverage", plot_mapping_coverage(d01_mapping, sources_df), width = 16, height = 9)
 
-save_fig("08_portfolio_by_effort",   plot_portfolio_by_effort(sources_df), width = 16, height = 10)
-save_fig("09_readiness_reason",      plot_readiness_reason(sources_df), width = 16, height = 7)
+# Figure 3 (thesis): replaces the old "Portfolio readiness by technical
+# effort" chart (portfolio_ready no longer exists) - derivation of
+# technical_effort from output_type x integration_step.
+save_fig("08_technical_effort_matrix", plot_technical_effort_matrix(sources_df), width = 26, height = 17, svg = TRUE)
 
 message("Done. ", length(list.files(out_dir, pattern = "\\.png$")), " figures in ", normalizePath(out_dir))
