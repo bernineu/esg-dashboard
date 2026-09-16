@@ -34,8 +34,10 @@ library(tidyr)
 # results-analysis/R/load_analysis_data.R). Shiny sets the working
 # directory to the app's own folder (dashboard/) for the app's lifetime,
 # both via RStudio's "Run App" and shiny::runApp("dashboard"), so "../data"
-# is correct there.
-DATA_DIR <- file.path("..", "data")
+# is correct there. The Shinylive export (see the demo repo's build
+# script) stages data/ as a *child* of the exported app root instead - so
+# "../data" doesn't exist there and "data" is used instead.
+DATA_DIR <- if (dir.exists(file.path("..", "data"))) file.path("..", "data") else "data"
 
 # NULL/empty-coalescing helper (used by the references.bib parser)
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || (length(a) == 1 && is.na(a))) b else a
