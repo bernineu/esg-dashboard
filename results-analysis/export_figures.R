@@ -76,6 +76,12 @@ save_fig("07_d01_mapping_coverage", plot_mapping_coverage(d01_mapping, sources_d
 # Figure 3 (thesis): replaces the old "Portfolio readiness by technical
 # effort" chart (portfolio_ready no longer exists) - derivation of
 # technical_effort from output_type x integration_step.
-save_fig("08_technical_effort_matrix", plot_technical_effort_matrix(sources_df), width = 26, height = 17, svg = TRUE)
+save_fig("08_technical_effort_matrix", plot_technical_effort_matrix(sources_df, part = "main"), width = 26, height = 17, svg = TRUE)
+save_fig("08b_technical_effort_exceptions", plot_technical_effort_matrix(sources_df, part = "exceptions"), width = 14, height = 9, svg = TRUE)
+
+# Methods-chapter version of Figure 3: same rating grid, no source names.
+save_fig("08_technical_effort_matrix_methods",
+         plot_technical_effort_matrix(sources_df, part = "methods"),
+         width = 26, height = 11, svg = TRUE)
 
 message("Done. ", length(list.files(out_dir, pattern = "\\.png$")), " figures in ", normalizePath(out_dir))

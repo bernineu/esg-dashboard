@@ -153,7 +153,20 @@ plot_mapping_coverage <- function(d01_mapping, sources_df = NULL) {
 # from; their Medium rating is the one documented derivation-rule value
 # for that combination (Data Source Matrix legend) and is the only
 # hardcoded content in this function.
-plot_technical_effort_matrix <- function(sources_df, wrap_width = 24) {
+#
+# part selects what is drawn:
+#   "all"        - grid + exception column in one chart (Shiny app)
+#   "main"       - only the 3 x 3 grid with sources, larger type (thesis)
+#   "exceptions" - only the two no-machine-access sources (thesis)
+#   "methods"    - only the 3 x 3 rating grid, no source names: the
+#                  Methods-chapter version, where the derivation rule is
+#                  explained before any results are shown.
+plot_technical_effort_matrix <- function(sources_df, wrap_width = 24,
+                                         part = c("all", "main", "exceptions", "methods")) {
+  part <- match.arg(part)
+  show_sources <- part != "methods"
+  big <- part %in% c("main", "exceptions")
+  if (big && part == "main") wrap_width <- 31
   output_levels <- c("ready-made", "indicator", "raw variable")
   step_levels   <- c("point query", "download and join", "multi-product")
 
@@ -205,11 +218,18 @@ plot_technical_effort_matrix <- function(sources_df, wrap_width = 24) {
     ) %>%
     select(output_type, col_label, effort, sources)
 
+  # Methods version: the exception column's ratings come from two specific
+  # sources (results), not from the derivation rule, so leave it out.
+  if (part %in% c("methods", "main")) exceptions <- exceptions[0, ]
+  if (part == "exceptions") main <- main[0, ]
+
+  if (part == "exceptions") col_x <- c("No machine access" = 1)
+
   cells <- bind_rows(main %>% select(output_type, col_label, effort, sources), exceptions) %>%
     mutate(
       x           = unname(col_x[col_label]),
       y           = unname(row_y[output_type]),
-      tile_width  = ifelse(col_label == "No machine access", 1.25, 0.92),
+      tile_width  = ifelse(col_label == "No machine access", if (part == "exceptions") 0.92 else 1.25, 0.92),
       sources_wrapped = mapply(function(s, is_note) {
         if (!nzchar(s)) return(s)
         if (is_note) return(s)  # already hand-wrapped with an explicit \n
@@ -220,24 +240,41 @@ plot_technical_effort_matrix <- function(sources_df, wrap_width = 24) {
 
   col_breaks <- col_x
   row_breaks <- row_y
+  x_limits   <- c(0.45, if (part == "all") 5.05 else if (part == "exceptions") 1.55 else 3.55)
+  y_limits   <- c(0.45, 3.65)
+  if (part == "exceptions") {
+    row_breaks <- row_y[names(row_y) %in% cells$output_type]
+    y_limits   <- c(min(row_breaks) - 0.55, max(row_breaks) + 0.65)
+  }
+  lab_size <- if (big) 5.4 else 4.1
+  src_size <- if (big) 3.7 else 2.6
 
-  ggplot(cells, aes(x = x, y = y)) +
+  p <- ggplot(cells, aes(x = x, y = y)) +
     geom_tile(aes(fill = effort, width = tile_width), height = 0.86,
-              colour = ESG_SURFACE, linewidth = 1.6, na.rm = TRUE) +
-    geom_text(aes(y = y + 0.30, label = effort, colour = effort), fontface = "bold",
-              vjust = 1, size = 4.1, family = ESG_FONT, na.rm = TRUE, show.legend = FALSE) +
-    geom_text(aes(y = y + 0.10, label = sources_wrapped, colour = effort), vjust = 1, size = 2.6,
-              lineheight = 0.95, family = ESG_FONT, alpha = 0.92, na.rm = TRUE, show.legend = FALSE) +
+              colour = ESG_SURFACE, linewidth = 1.6, na.rm = TRUE)
+  p <- if (show_sources) {
+    p +
+      geom_text(aes(y = y + 0.36, label = effort, colour = effort), fontface = "bold",
+                vjust = 1, size = lab_size, family = ESG_FONT, na.rm = TRUE, show.legend = FALSE) +
+      geom_text(aes(y = y + (if (big) 0.17 else 0.10), label = sources_wrapped, colour = effort), vjust = 1, size = src_size,
+                lineheight = 0.95, family = ESG_FONT, alpha = 0.92, na.rm = TRUE, show.legend = FALSE)
+  } else {
+    p +
+      geom_text(aes(label = effort, colour = effort), fontface = "bold",
+                vjust = 0.5, size = 5, family = ESG_FONT, na.rm = TRUE, show.legend = FALSE)
+  }
+
+  p +
     scale_fill_manual(values = EFFORT_FILL, na.value = "transparent", guide = "none") +
     scale_colour_manual(values = EFFORT_TEXT, na.value = "transparent", guide = "none") +
     scale_x_continuous(breaks = col_breaks, labels = names(col_breaks), position = "top",
-                        limits = c(0.45, 5.05), expand = c(0, 0)) +
+                        limits = x_limits, expand = c(0, 0)) +
     scale_y_continuous(breaks = row_breaks, labels = names(row_breaks),
-                        limits = c(0.45, 3.65), expand = c(0, 0)) +
+                        limits = y_limits, expand = c(0, 0)) +
     labs(
-      x = "Integration step — how the value reaches an individual exposure",
+      x = if (part == "exceptions") NULL else "Integration step — how the value reaches an individual exposure",
       y = "Output type — what the source delivers",
-      caption = paste(strwrap(paste(
+      caption = if (part == "exceptions") NULL else paste(strwrap(paste(
         "Effort rises with both dimensions but not additively: raw variables retrieved by download and",
         "join remain Medium, while an indicator assembled from several products is already High."
       ), width = 110), collapse = "\n")
@@ -252,6 +289,7 @@ plot_technical_effort_matrix <- function(sources_df, wrap_width = 24) {
       axis.text.x         = element_text(size = rel(0.88), colour = ESG_INK_PRIMARY, face = "bold"),
       axis.text.y         = element_text(size = rel(0.88), colour = ESG_INK_PRIMARY, face = "bold"),
       axis.title          = element_text(size = rel(0.85)),
+      axis.title.x        = element_text(margin = margin(b = 10)),
       plot.caption        = element_text(hjust = 0, size = rel(0.72), colour = ESG_INK_SECONDARY,
                                           margin = margin(t = 12)),
       plot.margin         = margin(10, 18, 10, 10),
